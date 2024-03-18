@@ -1,0 +1,27 @@
+{
+  "name": "com.paps.unity-toolbar-extender-ui-toolkit",
+  "displayName": "Unity Toolbar Extender UI Toolkit",
+  "version": "0.0.1",
+  "unity": "2022.3.10",
+  "description": "Unity Toolbar Extender UI Toolkit lets you obstain a wrapper of the Unity's main toolbar to manipulate its content.",
+  "keywords": [
+    "unity",
+	"unity3d",
+	"upm",
+    "paps",
+    "utility"
+  ],
+  "homepage": "https://github.com/Sammmte/unity-toolbar-extender-ui-toolkit",
+  "bugs": {
+    "url": "https://github.com/Sammmte/unity-toolbar-extender-ui-toolkit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:Sammmte/unity-toolbar-extender-ui-toolkit.git"
+  },
+  "license": "MIT",
+  "author": "SAMMMTE",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
