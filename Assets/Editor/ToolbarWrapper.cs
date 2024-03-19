@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -81,69 +80,5 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             else
                 OnInitialized += action;
         }
-    }
-
-    public static class ToolbarExtender
-    {
-        public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer(FlexDirection.RowReverse);
-        public static VisualElement RightCustomContainer { get; private set; } = CreateContainer(FlexDirection.Row);
-
-        static ToolbarExtender()
-        {
-            
-        }
-
-        private static VisualElement[] GetMainToolbarElements()
-        {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes())
-                .Where(type => IsValidVisualElementType(type))
-                .Select(type => (VisualElement)Activator.CreateInstance(type))
-                .ToArray();
-        }
-
-        private static bool IsValidVisualElementType(Type type)
-        {
-            var visualElementType = typeof(VisualElement);
-
-            return visualElementType != type &&
-                visualElementType.IsAssignableFrom(type) &&
-                !type.IsAbstract &&
-                type.GetCustomAttribute<MainToolbarElementAttribute>() != null;
-        }
-
-        private static VisualElement CreateContainer(FlexDirection flexDirection)
-        {
-            var container = new VisualElement()
-            {
-                style = {
-                flexGrow = 1,
-                flexDirection = flexDirection,
-                alignItems = Align.Center,
-                alignContent = Align.Center
-                }
-            };
-
-            return container;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class MainToolbarElementAttribute : Attribute
-    {
-        public ToolbarAlign Align { get; }
-        public string Group { get; }
-
-        public MainToolbarElementAttribute(ToolbarAlign align = ToolbarAlign.Left, string group = "")
-        {
-            Align = align;
-            Group = group;
-        }
-    }
-
-    public enum ToolbarAlign
-    {
-        Left,
-        Right
     }
 }
