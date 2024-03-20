@@ -17,13 +17,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static Type _toolbarType = typeof(Editor).Assembly.GetType("UnityEditor.Toolbar");
         private static ScriptableObject _innerToolbarObject;
 
-        private static event Action OnInitialized;
+        public static event Action OnNativeToolbarWrapped;
+
+        private static VisualElement _unityToolbarRootElement;
 
         public static VisualElement LeftContainer { get; private set; }
         public static VisualElement CenterContainer { get; private set; }
         public static VisualElement RightContainer { get; private set; }
 
-        public static bool IsInitialized { get; private set; }
+        public static bool IsAvailable => _innerToolbarObject != null;
 
         static ToolbarWrapper()
         {
@@ -38,14 +40,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return;
             AddToolbarSpacesToNativeToolbar();
 
-            var wasInitialized = IsInitialized;
-            IsInitialized = true;
-
-            if (!wasInitialized)
-            {
-                OnInitialized?.Invoke();
-                OnInitialized = null;
-            }
+            OnNativeToolbarWrapped?.Invoke();
         }
 
         private static void FindUnityToolbar()
@@ -58,27 +53,24 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             var unityToolbarRootFieldInfo = _innerToolbarObject.GetType()
                 .GetField(TOOLBAR_ROOT_ELEMENT_FIELD_NAME, BindingFlags.NonPublic | BindingFlags.Instance);
-            var unityToolbarRoot = unityToolbarRootFieldInfo.GetValue(_innerToolbarObject) as VisualElement;
+            _unityToolbarRootElement = unityToolbarRootFieldInfo.GetValue(_innerToolbarObject) as VisualElement;
 
-            LeftContainer = unityToolbarRoot.Q(TOOLBAR_LEFT_CONTAINER_NAME);
-            CenterContainer = unityToolbarRoot.Q(TOOLBAR_CENTER_CONTAINER_NAME);
-            RightContainer = unityToolbarRoot.Q(TOOLBAR_RIGHT_CONTAINER_NAME);
+            LeftContainer = _unityToolbarRootElement.Q(TOOLBAR_LEFT_CONTAINER_NAME);
+            CenterContainer = _unityToolbarRootElement.Q(TOOLBAR_CENTER_CONTAINER_NAME);
+            RightContainer = _unityToolbarRootElement.Q(TOOLBAR_RIGHT_CONTAINER_NAME);
         }
 
         private static void OnUpdate()
         {
-            if (_innerToolbarObject == null)
+            if (NeedsRebuild())
             {
                 Build();
             }
         }
 
-        public static void ExecuteIfOrWhenIsInitialized(Action action)
+        private static bool NeedsRebuild()
         {
-            if (IsInitialized)
-                action?.Invoke();
-            else
-                OnInitialized += action;
+            return _innerToolbarObject == null;
         }
     }
 }

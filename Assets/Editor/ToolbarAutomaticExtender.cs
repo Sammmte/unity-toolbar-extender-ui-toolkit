@@ -10,8 +10,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [InitializeOnLoad]
     public static class ToolbarAutomaticExtender
     {
-        public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer(FlexDirection.RowReverse);
-        public static VisualElement RightCustomContainer { get; private set; } = CreateContainer(FlexDirection.Row);
+        public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
+        public static VisualElement RightCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
         static ToolbarAutomaticExtender()
         {
@@ -25,11 +25,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             AddSingleElementOrGroupElement(leftGroups, LeftCustomContainer);
             AddSingleElementOrGroupElement(rightGroups, RightCustomContainer);
 
-            ToolbarWrapper.ExecuteIfOrWhenIsInitialized(() =>
+            ToolbarWrapper.OnNativeToolbarWrapped += () =>
             {
                 ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
                 ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
-            });
+            };
         }
 
         private static void AddSingleElementOrGroupElement(IEnumerable<IGrouping<string, (VisualElement, MainToolbarElementAttribute)>> groups, VisualElement container)
@@ -78,10 +78,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 type.GetCustomAttribute<MainToolbarElementAttribute>() != null;
         }
 
-        private static VisualElement CreateContainer(FlexDirection flexDirection)
+        private static VisualElement CreateContainer(string name, FlexDirection flexDirection)
         {
             var container = new VisualElement()
             {
+                name = name,
                 style = {
                 flexGrow = 1,
                 flexDirection = flexDirection,
