@@ -1,9 +1,10 @@
 using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEditor.Toolbars;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-[MainToolbarElement(group: "EL MAS PIJA")]
-public class TestButton : EditorToolbarButton
+[MainToolbarElement(group: "Left Test Group")]
+public class TestButton : Button
 {
     public TestButton() : base(() => Debug.Log("This is a test"))
     {
@@ -11,56 +12,21 @@ public class TestButton : EditorToolbarButton
     }
 }
 
-[MainToolbarElement(group: "EL MAS PIJA")]
-public class TestButton1 : EditorToolbarButton
+[MainToolbarElement(group: "Left Test Group")]
+public class ComplexElement : VisualElement
 {
-    public TestButton1() : base(() => Debug.Log("This is a test"))
+    public ComplexElement()
     {
-        text = "Test Button";
-    }
-}
+        Add(new Label("This is a complex element"));
 
-[MainToolbarElement(group: "EL MAS CHORI")]
-public class TestButton2 : EditorToolbarButton
-{
-    public TestButton2() : base(() => Debug.Log("This is a test"))
-    {
-        text = "Test Button";
-    }
-}
+        var button1 = new Button(() => Debug.Log("ComplexElement button pressed"));
+        button1.text = "Button 1";
 
-[MainToolbarElement(group: "EL MAS PIJA")]
-public class TestButton3 : EditorToolbarButton
-{
-    public TestButton3() : base(() => Debug.Log("This is a test"))
-    {
-        text = "Test Button";
-    }
-}
+        var button2 = new Button(() => Debug.Log("another ComplexElement button pressed"));
+        button2.text = "Button 2";
 
-[MainToolbarElement(group: "EL MAS PIJA")]
-public class TestButton4 : EditorToolbarButton
-{
-    public TestButton4() : base(() => Debug.Log("This is a test"))
-    {
-        text = "Test Button";
-    }
-}
-
-[MainToolbarElement(group: "EL MAS PIJA")]
-public class TestButton5 : EditorToolbarButton
-{
-    public TestButton5() : base(() => Debug.Log("This is a test"))
-    {
-        text = "Test Button";
-    }
-}
-
-[MainToolbarElement(align: ToolbarAlign.Right, group: "EL MAS PIJA")]
-public class TestButton6 : EditorToolbarButton
-{
-    public TestButton6() : base(() => Debug.Log("AAAAAAAAA"))
-    {
-        text = "Test Button";
+        Add(button1);
+        Add(button2);
+        Add(new Toggle("Just a toggle"));
     }
 }
