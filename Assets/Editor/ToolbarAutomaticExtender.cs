@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
@@ -19,17 +20,37 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             var leftElements = elementsWithAttributes.Where(tuple => tuple.Item2.Align == ToolbarAlign.Left);
             var rightElements = elementsWithAttributes.Where(tuple => tuple.Item2.Align == ToolbarAlign.Right);
 
-            foreach (var elementWithAttribute in leftElements)
-                LeftCustomContainer.Add(elementWithAttribute.Item1);
-
-            foreach (var elementWithAttribute in rightElements)
-                RightCustomContainer.Add(elementWithAttribute.Item1);
+            var leftGroups = leftElements.GroupBy(tuple => tuple.Item2.Group);
+            var rightGroups = rightElements.GroupBy(tuple => tuple.Item2.Group);
+            AddSingleElementOrGroupElement(leftGroups, LeftCustomContainer);
+            AddSingleElementOrGroupElement(rightGroups, RightCustomContainer);
 
             ToolbarWrapper.ExecuteIfOrWhenIsInitialized(() =>
             {
                 ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
                 ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
             });
+        }
+
+        private static void AddSingleElementOrGroupElement(IEnumerable<IGrouping<string, (VisualElement, MainToolbarElementAttribute)>> groups, VisualElement container)
+        {
+            foreach (var group in groups)
+            {
+                if (string.IsNullOrEmpty(group.Key))
+                {
+                    foreach (var elementWithAttribute in group)
+                    {
+                        container.Add(elementWithAttribute.Item1);
+                    }
+                }
+                else
+                {
+                    var groupElement = new GroupElement(group.Key,
+                        group.ToArray().Select(tuple => tuple.Item1).ToArray());
+
+                    container.Add(groupElement);
+                }
+            }
         }
 
         private static (VisualElement, MainToolbarElementAttribute)[] GetMainToolbarElements()

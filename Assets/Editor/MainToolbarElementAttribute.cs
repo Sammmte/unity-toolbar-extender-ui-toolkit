@@ -7,11 +7,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public ToolbarAlign Align { get; }
         public string Group { get; }
+        public int Order { get; }
 
-        public MainToolbarElementAttribute(ToolbarAlign align = ToolbarAlign.Left, string group = "")
+        public MainToolbarElementAttribute(ToolbarAlign align = ToolbarAlign.Left, string group = "", int order = 0)
         {
             Align = align;
             Group = group;
+            Order = order;
         }
     }
 }
