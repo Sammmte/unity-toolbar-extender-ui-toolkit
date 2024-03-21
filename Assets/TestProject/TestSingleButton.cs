@@ -3,10 +3,10 @@ using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[MainToolbarElement(group: "Left Test Group")]
-public class TestButton : Button
+[MainToolbarElement]
+public class TestSingleButton : EditorToolbarButton
 {
-    public TestButton() : base(() => Debug.Log("This is a test"))
+    public TestSingleButton() : base(() => Debug.Log("Test single button"))
     {
         text = "Test Button";
     }
