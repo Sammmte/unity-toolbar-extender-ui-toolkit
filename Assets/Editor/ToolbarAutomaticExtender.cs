@@ -17,11 +17,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             var elementsWithAttributes = GetMainToolbarElements();
 
-            var leftElements = elementsWithAttributes.Where(tuple => tuple.Item2.Align == ToolbarAlign.Left);
-            var rightElements = elementsWithAttributes.Where(tuple => tuple.Item2.Align == ToolbarAlign.Right);
+            var leftElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Left);
+            var rightElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Right);
 
-            var leftGroups = leftElements.GroupBy(tuple => tuple.Item2.Group);
-            var rightGroups = rightElements.GroupBy(tuple => tuple.Item2.Group);
+            var leftGroups = leftElements.GroupBy(tuple => tuple.Attribute.Group);
+            var rightGroups = rightElements.GroupBy(tuple => tuple.Attribute.Group);
             AddSingleElementOrGroupElement(leftGroups, LeftCustomContainer);
             AddSingleElementOrGroupElement(rightGroups, RightCustomContainer);
 
@@ -32,7 +32,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             };
         }
 
-        private static void AddSingleElementOrGroupElement(IEnumerable<IGrouping<string, (VisualElement, MainToolbarElementAttribute)>> groups, VisualElement container)
+        private static void AddSingleElementOrGroupElement(IEnumerable<IGrouping<string, (VisualElement Element, MainToolbarElementAttribute Attribute)>> groups, VisualElement container)
         {
             foreach (var group in groups)
             {
@@ -40,20 +40,20 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 {
                     foreach (var elementWithAttribute in group)
                     {
-                        container.Add(elementWithAttribute.Item1);
+                        container.Add(elementWithAttribute.Element);
                     }
                 }
                 else
                 {
                     var groupElement = new GroupElement(group.Key,
-                        group.ToArray().Select(tuple => tuple.Item1).ToArray());
+                        group.ToArray().Select(tuple => tuple.Element).ToArray());
 
                     container.Add(groupElement);
                 }
             }
         }
 
-        private static (VisualElement, MainToolbarElementAttribute)[] GetMainToolbarElements()
+        private static (VisualElement Element, MainToolbarElementAttribute Attribute)[] GetMainToolbarElements()
         {
             return AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes())
@@ -84,10 +84,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             {
                 name = name,
                 style = {
-                flexGrow = 1,
-                flexDirection = flexDirection,
-                alignItems = Align.Center,
-                alignContent = Align.Center
+                    flexGrow = 1,
+                    flexDirection = flexDirection,
+                    alignItems = Align.Center,
+                    alignContent = Align.Center,
                 }
             };
 
