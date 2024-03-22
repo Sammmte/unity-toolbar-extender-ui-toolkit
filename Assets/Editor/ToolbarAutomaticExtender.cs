@@ -25,6 +25,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var elementsWithAttributes = GetMainToolbarElements(allTypes);
 
+            if (elementsWithAttributes.Count() == 0)
+                return;
+
             var leftElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Left);
             var rightElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Right);
 
@@ -36,11 +39,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             ToolbarWrapper.OnNativeToolbarWrapped += () =>
             {
-                if (leftElements.Count() > 0)
-                    ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
+                ToolbarWrapper.LeftContainer.style.maxWidth = Length.Percent(10);
+                ToolbarWrapper.LeftContainer.style.justifyContent = Justify.FlexStart;
 
-                if (rightElements.Count() > 0)
-                    ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
+                ToolbarWrapper.RightContainer.style.maxWidth = Length.Percent(17);
+                ToolbarWrapper.RightContainer.style.justifyContent = Justify.FlexStart;
+
+                ToolbarWrapper.CenterContainer.style.flexGrow = 1;
+
+                ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
+                ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
             };
         }
 
@@ -130,6 +138,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     flexDirection = flexDirection,
                     alignItems = Align.Center,
                     alignContent = Align.Center,
+                    maxWidth = Length.Percent(50)
                 }
             };
 

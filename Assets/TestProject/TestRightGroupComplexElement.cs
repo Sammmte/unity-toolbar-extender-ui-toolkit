@@ -2,10 +2,10 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[MainToolbarElement(group: "Left Test Group")]
-public class ComplexElement : VisualElement
+[MainToolbarElement(align: ToolbarAlign.Right, group: TestGroups.RightGroup)]
+public class TestRightGroupComplexElement : VisualElement
 {
-    public ComplexElement()
+    public TestRightGroupComplexElement()
     {
         Add(new Label("This is a complex element"));
 
