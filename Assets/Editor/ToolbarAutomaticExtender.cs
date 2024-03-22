@@ -11,10 +11,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [InitializeOnLoad]
     public static class ToolbarAutomaticExtender
     {
-        private const int TOOLBAR_LEFT_CONTAINER_MIN_WIDTH_PERCENTAGE = 9;
-        private const int TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH_PERCENTAGE = 16;
+        private const int TOOLBAR_LEFT_CONTAINER_MIN_WIDTH_PERCENTAGE = 10;
+        private const int TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH_PERCENTAGE = 18;
         private const int TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH_PERCENTAGE = 9;
-        private const int CUSTOM_CONTAINER_MAX_WIDTH = 45;
+        private const int CUSTOM_CONTAINER_MAX_WIDTH = 50;
 
         public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         public static VisualElement RightCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
