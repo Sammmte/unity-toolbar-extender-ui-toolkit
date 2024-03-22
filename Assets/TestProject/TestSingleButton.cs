@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [MainToolbarElement]
-public class TestSingleButton : EditorToolbarButton
+public class TestSingleButton : MainToolbarButton
 {
-    public TestSingleButton() : base(() => Debug.Log("Test single button"))
+    public TestSingleButton() : base("Test Single Button", () => Debug.Log("Test single button"))
     {
-        text = "Test Button";
     }
 }

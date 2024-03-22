@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -15,13 +16,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         static ToolbarAutomaticExtender()
         {
-            var elementsWithAttributes = GetMainToolbarElements();
+            var allTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes());
+
+            var elementsWithAttributes = GetMainToolbarElements(allTypes);
 
             var leftElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Left);
             var rightElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Right);
 
             var leftGroups = leftElements.GroupBy(tuple => tuple.Attribute.Group);
             var rightGroups = rightElements.GroupBy(tuple => tuple.Attribute.Group);
+
             AddSingleElementOrGroupElement(leftGroups, LeftCustomContainer);
             AddSingleElementOrGroupElement(rightGroups, RightCustomContainer);
 
@@ -53,10 +58,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
-        private static (VisualElement Element, MainToolbarElementAttribute Attribute)[] GetMainToolbarElements()
+        private static (VisualElement Element, MainToolbarElementAttribute Attribute)[] GetMainToolbarElements(IEnumerable<Type> types)
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes())
+            return types
                 .Where(type => IsValidVisualElementType(type))
                 .Select(type =>
                 {
@@ -65,6 +69,18 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
                     return (elementInstance, attribute);
                 })
+                .Concat(types
+                    .Where(type => IsValidElementProviderType(type))
+                    .Select(type =>
+                    {
+                        var providerInstance = (IMainToolbarElementProvider)Activator.CreateInstance(type);
+                        var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
+                        var element = providerInstance.GetElement(!string.IsNullOrEmpty(attribute.Group));
+
+                        return (element, attribute);
+                    }
+                    )
+                )
                 .ToArray();
         }
 
@@ -74,6 +90,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             return visualElementType != type &&
                 visualElementType.IsAssignableFrom(type) &&
+                !type.IsAbstract &&
+                type.GetCustomAttribute<MainToolbarElementAttribute>() != null;
+        }
+
+        private static bool IsValidElementProviderType(Type type)
+        {
+            var elementProviderType = typeof(IMainToolbarElementProvider);
+
+            return elementProviderType != type &&
+                elementProviderType.IsAssignableFrom(type) &&
                 !type.IsAbstract &&
                 type.GetCustomAttribute<MainToolbarElementAttribute>() != null;
         }
