@@ -10,6 +10,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [InitializeOnLoad]
     public static class ToolbarAutomaticExtender
     {
+        private const int TOOLBAR_LEFT_CONTAINER_MAX_WIDTH_PERCENTAGE = 10;
+        private const int TOOLBAR_RIGHT_CONTAINER_MAX_WIDTH_PERCENTAGE = 17;
+
         public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         public static VisualElement RightCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
@@ -39,10 +42,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             ToolbarWrapper.OnNativeToolbarWrapped += () =>
             {
-                ToolbarWrapper.LeftContainer.style.maxWidth = Length.Percent(10);
+                ToolbarWrapper.LeftContainer.style.maxWidth = Length.Percent(TOOLBAR_LEFT_CONTAINER_MAX_WIDTH_PERCENTAGE);
                 ToolbarWrapper.LeftContainer.style.justifyContent = Justify.FlexStart;
 
-                ToolbarWrapper.RightContainer.style.maxWidth = Length.Percent(17);
+                ToolbarWrapper.RightContainer.style.maxWidth = Length.Percent(TOOLBAR_RIGHT_CONTAINER_MAX_WIDTH_PERCENTAGE);
                 ToolbarWrapper.RightContainer.style.justifyContent = Justify.FlexStart;
 
                 ToolbarWrapper.CenterContainer.style.flexGrow = 1;
