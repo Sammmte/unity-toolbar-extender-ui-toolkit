@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -15,6 +14,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public static VisualElement RightCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
         static ToolbarAutomaticExtender()
+        {
+            Initialize();
+        }
+
+        private static void Initialize()
         {
             var allTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes());
@@ -32,8 +36,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             ToolbarWrapper.OnNativeToolbarWrapped += () =>
             {
-                ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
-                ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
+                if (leftElements.Count() > 0)
+                    ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
+
+                if (rightElements.Count() > 0)
+                    ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
             };
         }
 
@@ -60,7 +67,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static (VisualElement Element, MainToolbarElementAttribute Attribute)[] GetMainToolbarElements(IEnumerable<Type> types)
         {
-            return types
+            return FilterRawElements(types)
+                .Concat(GetElementsFromProviders(types))
+                .ToArray();
+        }
+
+        private static IEnumerable<(VisualElement Element, MainToolbarElementAttribute Attribute)> FilterRawElements(IEnumerable<Type> allTypes)
+        {
+            return allTypes
                 .Where(type => IsValidVisualElementType(type))
                 .Select(type =>
                 {
@@ -68,9 +82,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
 
                     return (elementInstance, attribute);
-                })
-                .Concat(types
-                    .Where(type => IsValidElementProviderType(type))
+                });
+        }
+
+        private static IEnumerable<(VisualElement Element, MainToolbarElementAttribute Attribute)> GetElementsFromProviders(IEnumerable<Type> allTypes)
+        {
+            return allTypes
+                .Where(type => IsValidElementProviderType(type))
                     .Select(type =>
                     {
                         var providerInstance = (IMainToolbarElementProvider)Activator.CreateInstance(type);
@@ -79,9 +97,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
                         return (element, attribute);
                     }
-                    )
-                )
-                .ToArray();
+                );
         }
 
         private static bool IsValidVisualElementType(Type type)
