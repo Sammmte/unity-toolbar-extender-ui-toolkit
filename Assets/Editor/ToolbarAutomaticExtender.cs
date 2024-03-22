@@ -33,23 +33,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             AddToolbarElementsToContainers(elementsWithAttributes);
 
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            var types = assemblies.SelectMany(assembly => assembly.GetTypes());
-
-            foreach(var type in types)
-            {
-                if (type.Name.Contains("UILayout"))
-                    Debug.Log(type.FullName);
-            }
-
-            var textContentMethod = typeof(EditorGUIUtility).GetMethod("TextContent", BindingFlags.Static | BindingFlags.NonPublic);
-            var windowLayoutType = types.First(type => type.Name == "UILayoutDebuggerWindow");
-            Debug.Log(windowLayoutType);
-            var windowName = windowLayoutType.GetField("WindowName", BindingFlags.Static | BindingFlags.Public);
-            Debug.Log(windowName);
-            Debug.Log(textContentMethod.Invoke(null, new object[] { windowName }));
-
-
             ToolbarWrapper.OnNativeToolbarWrapped += () =>
             {
                 ConfigureStyleOfContainers();
