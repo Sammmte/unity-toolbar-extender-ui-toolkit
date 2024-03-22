@@ -44,8 +44,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void AddToolbarElementsToContainers((VisualElement Element, MainToolbarElementAttribute Attribute)[] elementsWithAttributes)
         {
-            var leftElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Left);
-            var rightElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Right);
+            var leftElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Left)
+                .OrderBy(tuple => tuple.Attribute.Order);
+            var rightElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Right)
+                .OrderBy(tuple => tuple.Attribute.Order);
 
             var leftGroups = leftElements.GroupBy(tuple => tuple.Attribute.Group);
             var rightGroups = rightElements.GroupBy(tuple => tuple.Attribute.Group);
