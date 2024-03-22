@@ -13,17 +13,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const string TOOLBAR_CENTER_CONTAINER_NAME = "ToolbarZonePlayMode";
         private const string TOOLBAR_LEFT_CONTAINER_NAME = "ToolbarZoneLeftAlign";
         private const string TOOLBAR_RIGHT_CONTAINER_NAME = "ToolbarZoneRightAlign";
+        private const string TOOLBAR_PLAY_MODE_BUTTONS_CONTAINER_NAME = "PlayMode";
 
         private static Type _toolbarType = typeof(Editor).Assembly.GetType("UnityEditor.Toolbar");
         private static ScriptableObject _innerToolbarObject;
 
         public static event Action OnNativeToolbarWrapped;
 
-        private static VisualElement _unityToolbarRootElement;
+        public static VisualElement UnityToolbarRoot { get; private set; }
 
         public static VisualElement LeftContainer { get; private set; }
         public static VisualElement CenterContainer { get; private set; }
         public static VisualElement RightContainer { get; private set; }
+        public static VisualElement PlayModeButtonsContainer { get; private set; }
 
         public static bool IsAvailable => _innerToolbarObject != null;
 
@@ -53,11 +55,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             var unityToolbarRootFieldInfo = _innerToolbarObject.GetType()
                 .GetField(TOOLBAR_ROOT_ELEMENT_FIELD_NAME, BindingFlags.NonPublic | BindingFlags.Instance);
-            _unityToolbarRootElement = unityToolbarRootFieldInfo.GetValue(_innerToolbarObject) as VisualElement;
+            UnityToolbarRoot = unityToolbarRootFieldInfo.GetValue(_innerToolbarObject) as VisualElement;
 
-            LeftContainer = _unityToolbarRootElement.Q(TOOLBAR_LEFT_CONTAINER_NAME);
-            CenterContainer = _unityToolbarRootElement.Q(TOOLBAR_CENTER_CONTAINER_NAME);
-            RightContainer = _unityToolbarRootElement.Q(TOOLBAR_RIGHT_CONTAINER_NAME);
+            LeftContainer = UnityToolbarRoot.Q(TOOLBAR_LEFT_CONTAINER_NAME);
+            CenterContainer = UnityToolbarRoot.Q(TOOLBAR_CENTER_CONTAINER_NAME);
+            RightContainer = UnityToolbarRoot.Q(TOOLBAR_RIGHT_CONTAINER_NAME);
+            PlayModeButtonsContainer = CenterContainer.Q(TOOLBAR_PLAY_MODE_BUTTONS_CONTAINER_NAME);
         }
 
         private static void OnUpdate()

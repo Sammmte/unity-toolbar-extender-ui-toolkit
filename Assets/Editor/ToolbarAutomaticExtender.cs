@@ -10,8 +10,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [InitializeOnLoad]
     public static class ToolbarAutomaticExtender
     {
-        private const int TOOLBAR_LEFT_CONTAINER_MAX_WIDTH_PERCENTAGE = 10;
-        private const int TOOLBAR_RIGHT_CONTAINER_MAX_WIDTH_PERCENTAGE = 17;
+        private const int TOOLBAR_LEFT_CONTAINER_MIN_WIDTH_PERCENTAGE = 9;
+        private const int TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH_PERCENTAGE = 16;
+        private const int TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH_PERCENTAGE = 9;
+        private const int CUSTOM_CONTAINER_MAX_WIDTH = 45;
 
         public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         public static VisualElement RightCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
@@ -23,14 +25,24 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void Initialize()
         {
-            var allTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes());
-
-            var elementsWithAttributes = GetMainToolbarElements(allTypes);
+            var elementsWithAttributes = GetMainToolbarElements();
 
             if (elementsWithAttributes.Count() == 0)
                 return;
 
+            AddToolbarElementsToContainers(elementsWithAttributes);
+
+            ToolbarWrapper.OnNativeToolbarWrapped += () =>
+            {
+                ConfigureStyleOfContainers();
+
+                ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
+                ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
+            };
+        }
+
+        private static void AddToolbarElementsToContainers((VisualElement Element, MainToolbarElementAttribute Attribute)[] elementsWithAttributes)
+        {
             var leftElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Left);
             var rightElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Right);
 
@@ -39,20 +51,23 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             AddSingleElementOrGroupElement(leftGroups, LeftCustomContainer);
             AddSingleElementOrGroupElement(rightGroups, RightCustomContainer);
+        }
 
-            ToolbarWrapper.OnNativeToolbarWrapped += () =>
-            {
-                ToolbarWrapper.LeftContainer.style.maxWidth = Length.Percent(TOOLBAR_LEFT_CONTAINER_MAX_WIDTH_PERCENTAGE);
-                ToolbarWrapper.LeftContainer.style.justifyContent = Justify.FlexStart;
+        private static void ConfigureStyleOfContainers()
+        {
+            ToolbarWrapper.LeftContainer.style.minWidth = Length.Percent(TOOLBAR_LEFT_CONTAINER_MIN_WIDTH_PERCENTAGE);
+            ToolbarWrapper.LeftContainer.style.justifyContent = Justify.FlexStart;
 
-                ToolbarWrapper.RightContainer.style.maxWidth = Length.Percent(TOOLBAR_RIGHT_CONTAINER_MAX_WIDTH_PERCENTAGE);
-                ToolbarWrapper.RightContainer.style.justifyContent = Justify.FlexStart;
+            ToolbarWrapper.RightContainer.style.minWidth = Length.Percent(TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH_PERCENTAGE);
+            ToolbarWrapper.RightContainer.style.justifyContent = Justify.FlexStart;
 
-                ToolbarWrapper.CenterContainer.style.flexGrow = 1;
+            ToolbarWrapper.PlayModeButtonsContainer.style.minWidth = Length.Percent(TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH_PERCENTAGE);
+            ToolbarWrapper.PlayModeButtonsContainer.style.justifyContent = Justify.Center;
 
-                ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
-                ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
-            };
+            ToolbarWrapper.CenterContainer.style.flexGrow = 1;
+            ToolbarWrapper.CenterContainer.style.justifyContent = Justify.Center;
+
+            ToolbarWrapper.CenterContainer.parent.style.justifyContent = Justify.SpaceBetween;
         }
 
         private static void AddSingleElementOrGroupElement(IEnumerable<IGrouping<string, (VisualElement Element, MainToolbarElementAttribute Attribute)>> groups, VisualElement container)
@@ -76,8 +91,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
-        private static (VisualElement Element, MainToolbarElementAttribute Attribute)[] GetMainToolbarElements(IEnumerable<Type> types)
+        private static (VisualElement Element, MainToolbarElementAttribute Attribute)[] GetMainToolbarElements()
         {
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(assembly => assembly.GetTypes());
+
             return FilterRawElements(types)
                 .Concat(GetElementsFromProviders(types))
                 .ToArray();
@@ -141,7 +159,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     flexDirection = flexDirection,
                     alignItems = Align.Center,
                     alignContent = Align.Center,
-                    maxWidth = Length.Percent(50)
+                    maxWidth = Length.Percent(CUSTOM_CONTAINER_MAX_WIDTH)
                 }
             };
 
