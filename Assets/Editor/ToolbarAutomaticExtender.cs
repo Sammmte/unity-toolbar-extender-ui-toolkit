@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -15,6 +14,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const int TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH_PERCENTAGE = 18;
         private const int TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH_PERCENTAGE = 9;
         private const int CUSTOM_CONTAINER_MAX_WIDTH = 50;
+        private const int SCROLL_VIEW_SCROLLER_HEIGHT = 4;
+        private const int SCROLLER_LOW_BUTTON_HEIGHT = 7;
+        private const int SCROLLER_HIGH_BUTTON_HEIGHT = 7;
+        private const int SCROLLER_SLIDER_HEIGHT = 7;
+        private const int SCROLL_VIEW_HORIZONTAL_PADDING = 4;
 
         public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         public static VisualElement RightCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
@@ -166,7 +170,34 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 }
             };
 
-            return container;
+            ScrollView scrollView = CreateSrollContainer();
+
+            container.Add(scrollView);
+
+            return scrollView;
+        }
+
+        private static ScrollView CreateSrollContainer()
+        {
+            var scrollView = new ScrollView(ScrollViewMode.Horizontal);
+
+            scrollView.style.paddingLeft = SCROLL_VIEW_HORIZONTAL_PADDING;
+            scrollView.style.paddingRight = SCROLL_VIEW_HORIZONTAL_PADDING;
+
+            scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
+
+            var scroller = scrollView.horizontalScroller;
+
+            var leftButton = scroller.lowButton;
+            var rightButton = scroller.highButton;
+            var slider = scroller.slider;
+
+            scroller.style.height = SCROLL_VIEW_SCROLLER_HEIGHT;
+            leftButton.style.height = SCROLLER_LOW_BUTTON_HEIGHT;
+            rightButton.style.height = SCROLLER_HIGH_BUTTON_HEIGHT;
+            slider.style.height = SCROLLER_SLIDER_HEIGHT;
+
+            return scrollView;
         }
     }
 }
