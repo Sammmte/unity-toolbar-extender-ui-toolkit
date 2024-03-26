@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEditor.Graphs;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     [InitializeOnLoad]
-    public static class ToolbarAutomaticExtender
+    public static class MainToolbarAutomaticExtender
     {
         private class Group
         {
@@ -50,7 +49,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
         private static Dictionary<string, List<MainToolbarElement>> _elementsByGroup = new Dictionary<string, List<MainToolbarElement>>();
 
-        static ToolbarAutomaticExtender()
+        static MainToolbarAutomaticExtender()
         {
             EditorApplication.projectChanged += OnProjectChange;
 

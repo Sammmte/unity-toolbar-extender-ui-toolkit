@@ -34,7 +34,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void Refresh()
         {
-            ToolbarAutomaticExtender.Refresh();
+            MainToolbarAutomaticExtender.Refresh();
         }
     }
 }
