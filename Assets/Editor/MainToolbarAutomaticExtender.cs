@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -35,7 +36,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const int TOOLBAR_LEFT_CONTAINER_MIN_WIDTH_PERCENTAGE = 10;
         private const int TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH_PERCENTAGE = 18;
         private const int TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH_PERCENTAGE = 9;
-        private const int CUSTOM_CONTAINER_MAX_WIDTH = 50;
         private const int SCROLL_VIEW_SCROLLER_HEIGHT = 4;
         private const int SCROLLER_LOW_BUTTON_HEIGHT = 7;
         private const int SCROLLER_HIGH_BUTTON_HEIGHT = 7;
@@ -60,7 +60,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             ToolbarWrapper.OnNativeToolbarWrapped += () =>
             {
-                ApplyToToolbar();
+                ApplyFixedChangesToToolbar();
             };
         }
 
@@ -71,7 +71,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             ResetCustomContainers();
             BuildCustomToolbarContainers();
-            ApplyToToolbar();
         }
 
         private static void ResetCustomContainers()
@@ -99,10 +98,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             AddOrderedAlignedElementsToContainers(orderedAlignedElements);
         }
 
-        private static void ApplyToToolbar()
+        private static void ApplyFixedChangesToToolbar()
         {
             ConfigureStyleOfContainers();
             AddCustomContainers();
+            AddOptionsButton();
         }
 
         private static void AddCustomContainers()
@@ -192,13 +192,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .GroupBy(groupDefinition => groupDefinition.Name)
                 .Select(group => group.First())
                 .ToArray();
-        } 
+        }
 
         private static OrderedAlignedElement[] GetOrderedAlignedElements(Group[] groups, MainToolbarElement[] singles)
         {
             var orderedAlignedElements = new List<OrderedAlignedElement>();
 
-            foreach(var group in groups)
+            foreach (var group in groups)
             {
                 orderedAlignedElements.Add(
                     new OrderedAlignedElement()
@@ -209,7 +209,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     });
             }
 
-            foreach(var single in singles)
+            foreach (var single in singles)
             {
                 orderedAlignedElements.Add(
                     new OrderedAlignedElement()
@@ -302,28 +302,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static VisualElement CreateContainer(string name, FlexDirection flexDirection)
         {
-            var container = new VisualElement()
-            {
-                name = name,
-                style = {
-                    flexGrow = 1,
-                    flexDirection = flexDirection,
-                    alignItems = Align.Center,
-                    alignContent = Align.Center,
-                    maxWidth = Length.Percent(CUSTOM_CONTAINER_MAX_WIDTH)
-                }
-            };
-
-            ScrollView scrollView = CreateSrollContainer();
-
-            container.Add(scrollView);
-
-            return scrollView;
-        }
-
-        private static ScrollView CreateSrollContainer()
-        {
             var scrollView = new ScrollView(ScrollViewMode.Horizontal);
+
+            scrollView.name = name;
 
             scrollView.style.paddingLeft = SCROLL_VIEW_HORIZONTAL_PADDING;
             scrollView.style.paddingRight = SCROLL_VIEW_HORIZONTAL_PADDING;
@@ -347,6 +328,22 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static void OnProjectChange()
         {
             Refresh();
+        }
+
+        private static void AddOptionsButton()
+        {
+            ToolbarWrapper.RightContainer.Insert(0, CreateOptionsButton());
+        }
+
+        private static MainToolbarAutomaticExtenderOptionsButton CreateOptionsButton()
+        {
+            return new MainToolbarAutomaticExtenderOptionsButton(
+                new MainToolbarAutomaticExtenderOptionsButton.Option()
+                {
+                    Text = "Refresh",
+                    Action = Refresh
+                }
+                );
         }
     }
 }
