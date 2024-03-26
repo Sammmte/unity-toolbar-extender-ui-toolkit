@@ -42,8 +42,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const int SCROLLER_SLIDER_HEIGHT = 7;
         private const int SCROLL_VIEW_HORIZONTAL_PADDING = 4;
 
-        public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
-        public static VisualElement RightCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
+        private static VisualElement _leftCustomContainer = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
+        private static VisualElement _rightCustomContainer = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
+        private static MainToolbarAutomaticExtenderOptionsButton _optionsButton = CreateOptionsButton();
 
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
@@ -75,8 +76,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void ResetCustomContainers()
         {
-            LeftCustomContainer.Clear();
-            RightCustomContainer.Clear();
+            _leftCustomContainer.Clear();
+            _rightCustomContainer.Clear();
         }
 
         private static void BuildCustomToolbarContainers()
@@ -107,8 +108,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void AddCustomContainers()
         {
-            ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
-            ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
+            ToolbarWrapper.CenterContainer.Insert(0, _leftCustomContainer);
+            ToolbarWrapper.CenterContainer.Add(_rightCustomContainer);
         }
 
         private static void AddOrderedAlignedElementsToContainers(OrderedAlignedElement[] orderedAlignedElements)
@@ -120,10 +121,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .OrderBy(el => el.Order);
 
             foreach (var orderedAlignedElement in leftElements)
-                LeftCustomContainer.Add(orderedAlignedElement.VisualElement);
+                _leftCustomContainer.Add(orderedAlignedElement.VisualElement);
 
             foreach (var orderedAlignedElement in rightElements)
-                RightCustomContainer.Add(orderedAlignedElement.VisualElement);
+                _rightCustomContainer.Add(orderedAlignedElement.VisualElement);
         }
 
         private static Group[] GetGroups()
@@ -332,7 +333,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void AddOptionsButton()
         {
-            ToolbarWrapper.RightContainer.Insert(0, CreateOptionsButton());
+            ToolbarWrapper.RightContainer.Insert(0, _optionsButton);
         }
 
         private static MainToolbarAutomaticExtenderOptionsButton CreateOptionsButton()
