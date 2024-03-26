@@ -41,6 +41,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static MainToolbarCustomContainer _rightCustomContainer = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
         private static MainToolbarAutomaticExtenderOptionsButton _optionsButton = CreateOptionsButton();
 
+        internal static Type[] MainToolbarElementTypesInProject { get; private set; } = new Type[0];
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
         private static Dictionary<string, List<MainToolbarElement>> _elementsByGroup = new Dictionary<string, List<MainToolbarElement>>();
@@ -78,7 +79,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static void BuildCustomToolbarContainers()
         {
             _groupDefinitions = LoadGroupDefinitions();
-
             _mainToolbarElements = GetMainToolbarElements();
 
             if (_mainToolbarElements.Count() == 0)
@@ -233,41 +233,47 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static MainToolbarElement[] GetMainToolbarElements()
         {
             var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes());
+                .SelectMany(assembly => assembly.GetTypes())
+                .ToArray();
 
-            return FilterRawElements(types)
-                .Concat(GetElementsFromProviders(types))
+            MainToolbarElementTypesInProject = GetMainToolbarElementTaggedTypes(types);
+
+            return GetMainToolbarElementsFromTypes();
+        }
+
+        private static Type[] GetMainToolbarElementTaggedTypes(IEnumerable<Type> allTypes)
+        {
+            return allTypes
+                .Where(type => IsValidVisualElementType(type) || IsValidElementProviderType(type))
                 .ToArray();
         }
 
-        private static IEnumerable<MainToolbarElement> FilterRawElements(IEnumerable<Type> allTypes)
+        private static MainToolbarElement[] GetMainToolbarElementsFromTypes()
         {
-            return allTypes
-                .Where(type => IsValidVisualElementType(type))
-                .Select(type =>
-                {
-                    var elementInstance = (VisualElement)Activator.CreateInstance(type);
-                    var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
-
-                    return new MainToolbarElement() { VisualElement = elementInstance, Attribute = attribute, DecoratedType = type };
-                });
+            return MainToolbarElementTypesInProject
+                .Select(type => GetMainToolbarElementFromType(type))
+                .ToArray();
         }
 
-        private static IEnumerable<MainToolbarElement> GetElementsFromProviders(IEnumerable<Type> allTypes)
+        private static MainToolbarElement GetMainToolbarElementFromType(Type type)
         {
-            return allTypes
-                .Where(type => IsValidElementProviderType(type))
-                    .Select(type =>
-                    {
-                        var providerInstance = (IMainToolbarElementProvider)Activator.CreateInstance(type);
-                        var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
-                        var isGrouped = _groupDefinitions.Any(groupDefinition => groupDefinition.ToolbarElementsTypes
-                                .Contains(type.FullName));
-                        var element = providerInstance.CreateElement(isGrouped);
+            if(type == typeof(VisualElement))
+            {
+                var elementInstance = (VisualElement)Activator.CreateInstance(type);
+                var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
 
-                        return new MainToolbarElement() { VisualElement = element, Attribute = attribute, DecoratedType = type };
-                    }
-                );
+                return new MainToolbarElement() { VisualElement = elementInstance, Attribute = attribute, DecoratedType = type };
+            }
+            else
+            {
+                var providerInstance = (IMainToolbarElementProvider)Activator.CreateInstance(type);
+                var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
+                var isGrouped = _groupDefinitions.Any(groupDefinition => groupDefinition.ToolbarElementsTypes
+                        .Contains(type.FullName));
+                var element = providerInstance.CreateElement(isGrouped);
+
+                return new MainToolbarElement() { VisualElement = element, Attribute = attribute, DecoratedType = type };
+            }
         }
 
         private static bool IsValidVisualElementType(Type type)

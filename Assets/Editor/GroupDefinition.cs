@@ -8,7 +8,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         [SerializeField] private string _name;
         [SerializeField] private ToolbarAlign _alignment;
         [SerializeField] private int _order;
-        [SerializeField] private string[] _toolbarElementsTypes;
+        [SerializeField] [MainToolbarElementTypeDropdown] private string[] _toolbarElementsTypes;
 
         public string Name => _name;
         public ToolbarAlign Alignment => _alignment;

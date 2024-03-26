@@ -18,10 +18,3 @@ MonoBehaviour:
   _toolbarElementsTypes:
   - TestGroupButton4
   - TestGroupButton5
-  - TestGroupButton6
-  - TestGroupDropdown
-  - TestGroupDropdown2
-  - TestGroupDropdown3
-  - TestGroupToggle
-  - TestGroupToggle2
-  - TestGroupToggle3
