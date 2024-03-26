@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Graphs;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -53,10 +52,31 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         static ToolbarAutomaticExtender()
         {
-            Initialize();
+            BuildCustomToolbarContainers();
+
+            if (_mainToolbarElements.Length == 0)
+                return;
+
+            ToolbarWrapper.OnNativeToolbarWrapped += () =>
+            {
+                ApplyToToolbar();
+            };
         }
 
-        private static void Initialize()
+        public static void Refresh()
+        {
+            ResetCustomContainers();
+            BuildCustomToolbarContainers();
+            ApplyToToolbar();
+        }
+
+        private static void ResetCustomContainers()
+        {
+            LeftCustomContainer.Clear();
+            RightCustomContainer.Clear();
+        }
+
+        private static void BuildCustomToolbarContainers()
         {
             _groupDefinitions = LoadGroupDefinitions();
 
@@ -73,15 +93,18 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             var orderedAlignedElements = GetOrderedAlignedElements(groups, singles);
 
             AddOrderedAlignedElementsToContainers(orderedAlignedElements);
+        }
 
-            ToolbarWrapper.OnNativeToolbarWrapped += () =>
-            {
-                ConfigureStyleOfContainers();
+        private static void ApplyToToolbar()
+        {
+            ConfigureStyleOfContainers();
+            AddCustomContainers();
+        }
 
-                ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
-                ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
-
-            };
+        private static void AddCustomContainers()
+        {
+            ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
+            ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
         }
 
         private static void AddOrderedAlignedElementsToContainers(OrderedAlignedElement[] orderedAlignedElements)
