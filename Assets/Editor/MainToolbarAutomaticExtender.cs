@@ -33,17 +33,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             public MainToolbarElementAttribute Attribute;
         }
 
-        private const int TOOLBAR_LEFT_CONTAINER_MIN_WIDTH_PERCENTAGE = 10;
-        private const int TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH_PERCENTAGE = 18;
-        private const int TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH_PERCENTAGE = 9;
-        private const int SCROLL_VIEW_SCROLLER_HEIGHT = 4;
-        private const int SCROLLER_LOW_BUTTON_HEIGHT = 7;
-        private const int SCROLLER_HIGH_BUTTON_HEIGHT = 7;
-        private const int SCROLLER_SLIDER_HEIGHT = 7;
-        private const int SCROLL_VIEW_HORIZONTAL_PADDING = 4;
+        private static readonly Length TOOLBAR_LEFT_CONTAINER_MIN_WIDTH = 130;
+        private static readonly Length TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH = 288;
+        private static readonly Length TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH = Length.Percent(9);
 
-        private static VisualElement _leftCustomContainer = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
-        private static VisualElement _rightCustomContainer = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
+        private static MainToolbarCustomContainer _leftCustomContainer = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
+        private static MainToolbarCustomContainer _rightCustomContainer = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
         private static MainToolbarAutomaticExtenderOptionsButton _optionsButton = CreateOptionsButton();
 
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
@@ -76,8 +71,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void ResetCustomContainers()
         {
-            _leftCustomContainer.Clear();
-            _rightCustomContainer.Clear();
+            _leftCustomContainer.ClearScroll();
+            _rightCustomContainer.ClearScroll();
         }
 
         private static void BuildCustomToolbarContainers()
@@ -121,10 +116,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .OrderBy(el => el.Order);
 
             foreach (var orderedAlignedElement in leftElements)
-                _leftCustomContainer.Add(orderedAlignedElement.VisualElement);
+                _leftCustomContainer.AddToScroll(orderedAlignedElement.VisualElement);
 
             foreach (var orderedAlignedElement in rightElements)
-                _rightCustomContainer.Add(orderedAlignedElement.VisualElement);
+                _rightCustomContainer.AddToScroll(orderedAlignedElement.VisualElement);
         }
 
         private static Group[] GetGroups()
@@ -226,19 +221,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void ConfigureStyleOfContainers()
         {
-            ToolbarWrapper.LeftContainer.style.minWidth = Length.Percent(TOOLBAR_LEFT_CONTAINER_MIN_WIDTH_PERCENTAGE);
-            ToolbarWrapper.LeftContainer.style.justifyContent = Justify.FlexStart;
+            ToolbarWrapper.LeftContainer.style.flexGrow = 0;
+            ToolbarWrapper.LeftContainer.style.width = Length.Auto();
 
-            ToolbarWrapper.RightContainer.style.minWidth = Length.Percent(TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH_PERCENTAGE);
-            ToolbarWrapper.RightContainer.style.justifyContent = Justify.FlexStart;
-
-            ToolbarWrapper.PlayModeButtonsContainer.style.minWidth = Length.Percent(TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH_PERCENTAGE);
-            ToolbarWrapper.PlayModeButtonsContainer.style.justifyContent = Justify.Center;
+            ToolbarWrapper.RightContainer.style.flexGrow = 0;
+            ToolbarWrapper.RightContainer.style.width = Length.Auto();
 
             ToolbarWrapper.CenterContainer.style.flexGrow = 1;
-            ToolbarWrapper.CenterContainer.style.justifyContent = Justify.Center;
-
-            ToolbarWrapper.CenterContainer.parent.style.justifyContent = Justify.SpaceBetween;
         }
 
         private static MainToolbarElement[] GetMainToolbarElements()
@@ -299,31 +288,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 elementProviderType.IsAssignableFrom(type) &&
                 !type.IsAbstract &&
                 type.GetCustomAttribute<MainToolbarElementAttribute>() != null;
-        }
-
-        private static VisualElement CreateContainer(string name, FlexDirection flexDirection)
-        {
-            var scrollView = new ScrollView(ScrollViewMode.Horizontal);
-
-            scrollView.name = name;
-
-            scrollView.style.paddingLeft = SCROLL_VIEW_HORIZONTAL_PADDING;
-            scrollView.style.paddingRight = SCROLL_VIEW_HORIZONTAL_PADDING;
-
-            scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
-
-            var scroller = scrollView.horizontalScroller;
-
-            var leftButton = scroller.lowButton;
-            var rightButton = scroller.highButton;
-            var slider = scroller.slider;
-
-            scroller.style.height = SCROLL_VIEW_SCROLLER_HEIGHT;
-            leftButton.style.height = SCROLLER_LOW_BUTTON_HEIGHT;
-            rightButton.style.height = SCROLLER_HIGH_BUTTON_HEIGHT;
-            slider.style.height = SCROLLER_SLIDER_HEIGHT;
-
-            return scrollView;
         }
 
         private static void OnProjectChange()
