@@ -5,11 +5,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     public class GroupElement : VisualElement
     {
+        public string GroupName { get; }
+
         private EditorToolbarDropdown _dropdown;
         private VisualElement[] _groupedElements;
 
         public GroupElement(string groupName, VisualElement[] groupedElements)
         {
+            GroupName = groupName;
             _groupedElements = groupedElements;
             _dropdown = new EditorToolbarDropdown(groupName, ShowOrHideDropdown);
 

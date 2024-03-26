@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Graphs;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -10,6 +12,28 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [InitializeOnLoad]
     public static class ToolbarAutomaticExtender
     {
+        private class Group
+        {
+            public string Name;
+            public ToolbarAlign Alignment;
+            public int Order;
+            public MainToolbarElement[] MainToolbarElements;
+        }
+
+        private class OrderedAlignedElement
+        {
+            public VisualElement VisualElement;
+            public ToolbarAlign Alignment;
+            public int Order;
+        }
+
+        private class MainToolbarElement
+        {
+            public VisualElement VisualElement;
+            public Type DecoratedType;
+            public MainToolbarElementAttribute Attribute;
+        }
+
         private const int TOOLBAR_LEFT_CONTAINER_MIN_WIDTH_PERCENTAGE = 10;
         private const int TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH_PERCENTAGE = 18;
         private const int TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH_PERCENTAGE = 9;
@@ -23,6 +47,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         public static VisualElement RightCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
+        private static MainToolbarElement[] _mainToolbarElements;
+        private static GroupDefinition[] _groupDefinitions;
+        private static Dictionary<string, List<MainToolbarElement>> _elementsByGroup;
+
         static ToolbarAutomaticExtender()
         {
             Initialize();
@@ -30,12 +58,21 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void Initialize()
         {
-            var elementsWithAttributes = GetMainToolbarElements();
+            _groupDefinitions = LoadGroupDefinitions();
 
-            if (elementsWithAttributes.Count() == 0)
+            _mainToolbarElements = GetMainToolbarElements();
+
+            if (_mainToolbarElements.Count() == 0)
                 return;
 
-            AddToolbarElementsToContainers(elementsWithAttributes);
+            _elementsByGroup = CacheElementsByGroup();
+
+            var groups = GetGroups();
+            var singles = GetSingles();
+
+            var orderedAlignedElements = GetOrderedAlignedElements(groups, singles);
+
+            AddOrderedAlignedElementsToContainers(orderedAlignedElements);
 
             ToolbarWrapper.OnNativeToolbarWrapped += () =>
             {
@@ -43,21 +80,120 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
                 ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
                 ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
+
             };
         }
 
-        private static void AddToolbarElementsToContainers((VisualElement Element, MainToolbarElementAttribute Attribute)[] elementsWithAttributes)
+        private static void AddOrderedAlignedElementsToContainers(OrderedAlignedElement[] orderedAlignedElements)
         {
-            var leftElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Left)
-                .OrderBy(tuple => tuple.Attribute.Order);
-            var rightElements = elementsWithAttributes.Where(tuple => tuple.Attribute.Align == ToolbarAlign.Right)
-                .OrderBy(tuple => tuple.Attribute.Order);
+            var leftElements = orderedAlignedElements.Where(el => el.Alignment == ToolbarAlign.Left)
+                .OrderBy(el => el.Order);
 
-            var leftGroups = leftElements.GroupBy(tuple => tuple.Attribute.Group);
-            var rightGroups = rightElements.GroupBy(tuple => tuple.Attribute.Group);
+            var rightElements = orderedAlignedElements.Where(el => el.Alignment == ToolbarAlign.Right)
+                .OrderBy(el => el.Order);
 
-            AddSingleElementOrGroupElement(leftGroups, LeftCustomContainer);
-            AddSingleElementOrGroupElement(rightGroups, RightCustomContainer);
+            foreach (var orderedAlignedElement in leftElements)
+                LeftCustomContainer.Add(orderedAlignedElement.VisualElement);
+
+            foreach (var orderedAlignedElement in rightElements)
+                RightCustomContainer.Add(orderedAlignedElement.VisualElement);
+        }
+
+        private static Group[] GetGroups()
+        {
+            var groups = new List<Group>();
+
+            foreach (var groupDefinition in _groupDefinitions)
+            {
+                var elementsOfThisGroup = _elementsByGroup[groupDefinition.Name];
+
+                if (elementsOfThisGroup.Count == 0)
+                    continue;
+
+                groups.Add(new Group()
+                {
+                    Name = groupDefinition.Name,
+                    Alignment = groupDefinition.Alignment,
+                    Order = groupDefinition.Order,
+                    MainToolbarElements = elementsOfThisGroup.ToArray()
+                });
+            }
+
+            return groups.ToArray();
+        }
+
+        private static MainToolbarElement[] GetSingles()
+        {
+            var elementsInGroups = _elementsByGroup.Values.SelectMany(list => list);
+
+            return _mainToolbarElements
+                .Where(mainToolbarElement => !elementsInGroups.Contains(mainToolbarElement))
+                .ToArray();
+        }
+
+        private static Dictionary<string, List<MainToolbarElement>> CacheElementsByGroup()
+        {
+            var elementsByGroup = new Dictionary<string, List<MainToolbarElement>>();
+
+            foreach (var groupDefinition in _groupDefinitions)
+            {
+                elementsByGroup.Add(groupDefinition.Name, new List<MainToolbarElement>());
+            }
+
+            foreach (var element in _mainToolbarElements)
+            {
+                var containingGroupDefinition = _groupDefinitions
+                    .Where(groupDefinition => groupDefinition.ToolbarElementsTypes.
+                        Contains(element.DecoratedType.FullName))
+                    .FirstOrDefault();
+
+                if (containingGroupDefinition != null)
+                    elementsByGroup[containingGroupDefinition.Name].Add(element);
+            }
+
+            return elementsByGroup;
+        }
+
+        private static GroupDefinition[] LoadGroupDefinitions()
+        {
+            var paths = AssetDatabase.FindAssets("t:" + nameof(GroupDefinition))
+                .Select(guid => AssetDatabase.GUIDToAssetPath(guid));
+
+            return paths
+                .Select(path => AssetDatabase.LoadAssetAtPath<GroupDefinition>(path))
+                .Where(groupDefinition => !string.IsNullOrEmpty(groupDefinition.name))
+                .GroupBy(groupDefinition => groupDefinition.Name)
+                .Select(group => group.First())
+                .ToArray();
+        } 
+
+        private static OrderedAlignedElement[] GetOrderedAlignedElements(Group[] groups, MainToolbarElement[] singles)
+        {
+            var orderedAlignedElements = new List<OrderedAlignedElement>();
+
+            foreach(var group in groups)
+            {
+                orderedAlignedElements.Add(
+                    new OrderedAlignedElement()
+                    {
+                        Alignment = group.Alignment,
+                        Order = group.Order,
+                        VisualElement = new GroupElement(group.Name, group.MainToolbarElements.Select(m => m.VisualElement).ToArray())
+                    });
+            }
+
+            foreach(var single in singles)
+            {
+                orderedAlignedElements.Add(
+                    new OrderedAlignedElement()
+                    {
+                        Alignment = single.Attribute.AlignWhenSingle,
+                        Order = single.Attribute.Order,
+                        VisualElement = single.VisualElement
+                    });
+            }
+
+            return orderedAlignedElements.ToArray();
         }
 
         private static void ConfigureStyleOfContainers()
@@ -77,28 +213,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             ToolbarWrapper.CenterContainer.parent.style.justifyContent = Justify.SpaceBetween;
         }
 
-        private static void AddSingleElementOrGroupElement(IEnumerable<IGrouping<string, (VisualElement Element, MainToolbarElementAttribute Attribute)>> groups, VisualElement container)
-        {
-            foreach (var group in groups)
-            {
-                if (string.IsNullOrEmpty(group.Key))
-                {
-                    foreach (var elementWithAttribute in group)
-                    {
-                        container.Add(elementWithAttribute.Element);
-                    }
-                }
-                else
-                {
-                    var groupElement = new GroupElement(group.Key,
-                        group.ToArray().Select(tuple => tuple.Element).ToArray());
-
-                    container.Add(groupElement);
-                }
-            }
-        }
-
-        private static (VisualElement Element, MainToolbarElementAttribute Attribute)[] GetMainToolbarElements()
+        private static MainToolbarElement[] GetMainToolbarElements()
         {
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(assembly => assembly.GetTypes());
@@ -108,7 +223,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .ToArray();
         }
 
-        private static IEnumerable<(VisualElement Element, MainToolbarElementAttribute Attribute)> FilterRawElements(IEnumerable<Type> allTypes)
+        private static IEnumerable<MainToolbarElement> FilterRawElements(IEnumerable<Type> allTypes)
         {
             return allTypes
                 .Where(type => IsValidVisualElementType(type))
@@ -117,11 +232,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     var elementInstance = (VisualElement)Activator.CreateInstance(type);
                     var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
 
-                    return (elementInstance, attribute);
+                    return new MainToolbarElement() { VisualElement = elementInstance, Attribute = attribute, DecoratedType = type };
                 });
         }
 
-        private static IEnumerable<(VisualElement Element, MainToolbarElementAttribute Attribute)> GetElementsFromProviders(IEnumerable<Type> allTypes)
+        private static IEnumerable<MainToolbarElement> GetElementsFromProviders(IEnumerable<Type> allTypes)
         {
             return allTypes
                 .Where(type => IsValidElementProviderType(type))
@@ -129,9 +244,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     {
                         var providerInstance = (IMainToolbarElementProvider)Activator.CreateInstance(type);
                         var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
-                        var element = providerInstance.GetElement(!string.IsNullOrEmpty(attribute.Group));
+                        var isGrouped = _groupDefinitions.Any(groupDefinition => groupDefinition.ToolbarElementsTypes
+                                .Contains(type.FullName));
+                        var element = providerInstance.GetElement(isGrouped);
 
-                        return (element, attribute);
+                        return new MainToolbarElement() { VisualElement = element, Attribute = attribute, DecoratedType = type };
                     }
                 );
         }
