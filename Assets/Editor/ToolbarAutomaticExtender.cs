@@ -46,12 +46,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public static VisualElement LeftCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         public static VisualElement RightCustomContainer { get; private set; } = CreateContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
-        private static MainToolbarElement[] _mainToolbarElements;
-        private static GroupDefinition[] _groupDefinitions;
-        private static Dictionary<string, List<MainToolbarElement>> _elementsByGroup;
+        private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
+        private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
+        private static Dictionary<string, List<MainToolbarElement>> _elementsByGroup = new Dictionary<string, List<MainToolbarElement>>();
 
         static ToolbarAutomaticExtender()
         {
+            EditorApplication.projectChanged += OnProjectChange;
+
             BuildCustomToolbarContainers();
 
             if (_mainToolbarElements.Length == 0)
@@ -65,6 +67,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public static void Refresh()
         {
+            if (!ToolbarWrapper.IsAvailable)
+                return;
+
             ResetCustomContainers();
             BuildCustomToolbarContainers();
             ApplyToToolbar();
@@ -338,6 +343,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             slider.style.height = SCROLLER_SLIDER_HEIGHT;
 
             return scrollView;
+        }
+
+        private static void OnProjectChange()
+        {
+            Refresh();
         }
     }
 }

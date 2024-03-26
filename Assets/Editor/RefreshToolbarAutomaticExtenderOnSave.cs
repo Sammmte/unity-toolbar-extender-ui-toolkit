@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public class RefreshToolbarAutomaticExtenderByEvents : AssetModificationProcessor
+    public class RefreshToolbarAutomaticExtenderOnSave : AssetModificationProcessor
     {
         private static string[] OnWillSaveAssets(string[] paths)
         {
