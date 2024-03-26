@@ -263,7 +263,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                         var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
                         var isGrouped = _groupDefinitions.Any(groupDefinition => groupDefinition.ToolbarElementsTypes
                                 .Contains(type.FullName));
-                        var element = providerInstance.GetElement(isGrouped);
+                        var element = providerInstance.CreateElement(isGrouped);
 
                         return new MainToolbarElement() { VisualElement = element, Attribute = attribute, DecoratedType = type };
                     }

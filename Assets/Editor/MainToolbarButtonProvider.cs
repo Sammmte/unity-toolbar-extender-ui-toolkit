@@ -1,36 +1,33 @@
 ﻿using System;
 using UnityEditor.Toolbars;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public class MainToolbarButton : IMainToolbarElementProvider
+    public class MainToolbarButtonProvider : SimpleMainToolbarElementProvider
     {
         private Action _onClick;
         private string _label;
-        private VisualElement _finalVisualElement;
 
-        public MainToolbarButton(string label, Action onClick)
+        public MainToolbarButtonProvider(string label, Action onClick)
         {
             _label = label;
             _onClick = onClick;
         }
 
-        public VisualElement GetElement(bool isGrouped)
+        protected override VisualElement BuildElement(bool isGrouped)
         {
             if(isGrouped)
             {
                 var button = new Button(_onClick);
                 button.text = _label;
-                _finalVisualElement = button;
+
+                return button;
             }
             else
             {
-                _finalVisualElement = new EditorToolbarButton(_label, _onClick);
+                return new EditorToolbarButton(_label, _onClick);
             }
-
-            return _finalVisualElement;
         }
     }
 }

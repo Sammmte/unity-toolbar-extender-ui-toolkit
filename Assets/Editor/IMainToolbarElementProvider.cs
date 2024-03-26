@@ -4,6 +4,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     public interface IMainToolbarElementProvider
     {
-        public VisualElement GetElement(bool isGrouped);
+        public VisualElement VisualElement { get; }
+
+        public VisualElement CreateElement(bool isGrouped);
     }
 }
