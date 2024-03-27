@@ -15,7 +15,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private MainToolbarElementController[] _controllers;
 
-        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Main Toolbar Control Panel")]
         public static void OpenWindow()
         {
             var window = GetWindow<MainToolbarControlPanelWindow>();

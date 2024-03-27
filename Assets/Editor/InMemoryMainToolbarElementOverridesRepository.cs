@@ -24,5 +24,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             _overrides[elementOverride.ElementId] = elementOverride;
         }
+
+        public void Clear()
+        {
+            _overrides.Clear();
+        }
     }
 }

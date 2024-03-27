@@ -40,6 +40,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static GroupElement[] _groupElements = new GroupElement[0];
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
         private static Dictionary<string, List<MainToolbarElement>> _elementsByGroup = new Dictionary<string, List<MainToolbarElement>>();
+        private static Dictionary<string, MainToolbarElementOverride> _nativeElementsInitialState = new Dictionary<string, MainToolbarElementOverride>();
 
         public static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         public static MainToolbarCustomContainer RightCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
@@ -66,7 +67,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             };
         }
 
-        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Refresh")]
         public static void Refresh()
         {
             if (!ToolbarWrapper.IsAvailable)
@@ -74,7 +74,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             ResetCustomContainers();
             BuildCustomToolbarContainers();
-            ApplyOverridesOnNativeElements(GetNativeElements());
+            var nativeElements = GetNativeElements();
+            SetNativeElementsDefaultState(nativeElements);
+            ApplyOverridesOnNativeElements(nativeElements);
             OnRefresh?.Invoke();
         }
 
@@ -112,6 +114,36 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             {
                 ApplyOverride(element.VisualElement);
             }
+        }
+
+        private static void SaveNativeElementsInitialState(VisualElement[] nativeElements)
+        {
+            if (_nativeElementsInitialState.Count > 0)
+                return;
+
+            foreach (var element in nativeElements)
+            {
+                var overrideId = MainToolbarElementOverrideIdProvider.IdOf(element);
+
+                _nativeElementsInitialState[overrideId] =
+                    new MainToolbarElementOverride(
+                        overrideId,
+                        element.resolvedStyle.display == DisplayStyle.Flex
+                        );
+            }
+        }
+
+        private static void SetNativeElementsDefaultState(VisualElement[] nativeElements)
+        {
+            SaveNativeElementsInitialState(nativeElements);
+
+            foreach (var element in nativeElements)
+            {
+                var overrideId = MainToolbarElementOverrideIdProvider.IdOf(element);
+                var defaultStateOverride = _nativeElementsInitialState[overrideId];
+
+                element.style.display = defaultStateOverride.Visible ? DisplayStyle.Flex : DisplayStyle.None;
+            }    
         }
 
         private static void ApplyOverridesOnNativeElements(VisualElement[] nativeElements)
@@ -155,7 +187,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             ConfigureStyleOfContainers();
             AddCustomContainers();
-            ApplyOverridesOnNativeElements(GetNativeElements());
+            var nativeElements = GetNativeElements();
+            SetNativeElementsDefaultState(nativeElements);
+            ApplyOverridesOnNativeElements(nativeElements);
         }
 
         private static void AddCustomContainers()
