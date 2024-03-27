@@ -18,3 +18,4 @@ MonoBehaviour:
   _toolbarElementsTypes:
   - TestGroupButton4
   - TestGroupButton5
+  - TestButtonWithIcon
