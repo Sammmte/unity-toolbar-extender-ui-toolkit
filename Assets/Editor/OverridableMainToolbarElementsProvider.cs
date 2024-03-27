@@ -15,6 +15,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .Concat(ToolbarWrapper.RightContainer.Children())
                 .Concat(ToolbarWrapper.PlayModeButtonsContainer.Children())
                 .Concat(MainToolbarAutomaticExtender.CustomMainToolbarElements)
+                .Concat(MainToolbarAutomaticExtender.GroupElements)
                 .Select(visualElement => new OverridableMainToolbarElement(
                     MainToolbarElementIdProvider.IdOf(visualElement),
                     visualElement

@@ -39,6 +39,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         internal static Type[] MainToolbarElementTypesInProject { get; private set; } = new Type[0];
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
+        private static GroupElement[] _groupElements = new GroupElement[0];
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
         private static Dictionary<string, List<MainToolbarElement>> _elementsByGroup = new Dictionary<string, List<MainToolbarElement>>();
 
@@ -46,6 +47,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public static MainToolbarCustomContainer RightCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
         public static VisualElement[] CustomMainToolbarElements => _mainToolbarElements.Select(m => m.VisualElement).ToArray();
+        public static VisualElement[] GroupElements => _groupElements.ToArray();
 
         public static event Action OnRefresh;
         public static event Action OnAddedCustomContainersToToolbar;
@@ -95,9 +97,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             var groups = GetGroups();
             var singles = GetSingles();
 
+            _groupElements = GetGroupElements(groups);
+
             var orderedAlignedElements = GetOrderedAlignedElements(groups, singles);
 
             AddOrderedAlignedElementsToContainers(orderedAlignedElements);
+        }
+
+        private static GroupElement[] GetGroupElements(Group[] groups)
+        {
+            return groups.Select(group => new GroupElement(group.Name, group.MainToolbarElements.Select(m => m.VisualElement).ToArray()))
+                .ToArray();
         }
 
         private static void ApplyFixedChangesToToolbar()
@@ -202,14 +212,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             foreach (var group in groups)
             {
-                var groupElement = new GroupElement(group.Name, group.MainToolbarElements.Select(m => m.VisualElement).ToArray());
-
                 orderedAlignedElements.Add(
                     new OrderedAlignedElement()
                     {
                         Alignment = group.Alignment,
                         Order = group.Order,
-                        VisualElement = groupElement
+                        VisualElement = _groupElements.First(el => el.GroupName == group.Name)
                     });
             }
 
