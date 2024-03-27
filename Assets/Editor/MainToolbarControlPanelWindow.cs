@@ -21,6 +21,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             MainToolbarAutomaticExtender.OnAddedCustomContainersToToolbar += Refresh;
             MainToolbarAutomaticExtender.OnRefresh += Refresh;
+
+            if (ToolbarWrapper.IsAvailable)
+                Refresh();
         }
 
         private void Refresh()
