@@ -15,6 +15,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             icon = (Texture2D)EditorGUIUtility.IconContent("_Menu@2x").image;
             clicked += ShowOptionsMenu;
+            name = "MainToolbarAutomaticExtenderOptionsButton";
             tooltip = "Main Toolbar Automatic Extender options";
         }
 
