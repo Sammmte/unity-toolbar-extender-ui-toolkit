@@ -74,6 +74,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             ResetCustomContainers();
             BuildCustomToolbarContainers();
+            ApplyOverridesOnNativeElements(GetNativeElements());
             OnRefresh?.Invoke();
         }
 
@@ -100,7 +101,48 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var orderedAlignedElements = GetOrderedAlignedElements(groups, singles);
 
+            ApplyOverridesOnCustomElements(orderedAlignedElements);
+
             AddOrderedAlignedElementsToContainers(orderedAlignedElements);
+        }
+
+        private static void ApplyOverridesOnCustomElements(OrderedAlignedElement[] defaultElements)
+        {
+            foreach(var element in defaultElements)
+            {
+                ApplyOverride(element.VisualElement);
+            }
+        }
+
+        private static void ApplyOverridesOnNativeElements(VisualElement[] nativeElements)
+        {
+            foreach(var nativeElement in nativeElements)
+            {
+                ApplyOverride(nativeElement);
+            }
+        }
+
+        private static VisualElement[] GetNativeElements()
+        {
+            return ToolbarWrapper.LeftContainer.Children()
+                .Concat(ToolbarWrapper.RightContainer.Children())
+                .Concat(ToolbarWrapper.PlayModeButtonsContainer.Children())
+                .ToArray();
+        }
+
+        private static void ApplyOverride(VisualElement visualElement)
+        {
+            var elementOverrideId = MainToolbarElementOverrideIdProvider.IdOf(visualElement);
+
+            if (elementOverrideId == null)
+                return;
+
+            var userOverride = ServicesAndRepositories.MainToolbarElementOverridesRepository.Get(elementOverrideId);
+
+            if (userOverride == null)
+                return;
+
+            visualElement.style.display = userOverride.Value.Visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         private static GroupElement[] GetGroupElements(Group[] groups)
@@ -113,6 +155,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             ConfigureStyleOfContainers();
             AddCustomContainers();
+            ApplyOverridesOnNativeElements(GetNativeElements());
         }
 
         private static void AddCustomContainers()

@@ -2,7 +2,7 @@
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public static class MainToolbarElementIdProvider
+    public static class MainToolbarElementOverrideIdProvider
     {
         public static string IdOf(VisualElement visualElement)
         {

@@ -7,6 +7,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     public class MainToolbarControlPanelWindow : EditorWindow
     {
+        private struct OverridableElement
+        {
+            public string Id;
+            public VisualElement VisualElement;
+        }
+
         private MainToolbarElementController[] _controllers;
 
         [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Main Toolbar Control Panel")]
@@ -60,13 +66,28 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private MainToolbarElementController[] CreateControllers()
         {
-            return OverridableMainToolbarElementsProvider.GetEligibleElements()
+            return GetOverridableElements()
                 .OrderBy(overridableElement => overridableElement.Id)
                 .Select(overridableElement => new MainToolbarElementController(
                     overridableElement.Id,
                     overridableElement.VisualElement, 
                     ServicesAndRepositories.MainToolbarElementOverridesRepository)
                 )
+                .ToArray();
+        }
+
+        private OverridableElement[] GetOverridableElements()
+        {
+            return ToolbarWrapper.LeftContainer.Children()
+                .Concat(ToolbarWrapper.RightContainer.Children())
+                .Concat(ToolbarWrapper.PlayModeButtonsContainer.Children())
+                .Concat(MainToolbarAutomaticExtender.CustomMainToolbarElements)
+                .Concat(MainToolbarAutomaticExtender.GroupElements)
+                .Select(visualElement => new OverridableElement() 
+                { 
+                    Id = MainToolbarElementOverrideIdProvider.IdOf(visualElement), 
+                    VisualElement = visualElement 
+                })
                 .ToArray();
         }
     }
