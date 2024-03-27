@@ -35,8 +35,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static readonly Length TOOLBAR_LEFT_CONTAINER_MIN_WIDTH = 130;
         private static readonly Length TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH = 288;
 
-        private static MainToolbarAutomaticExtenderOptionsButton _optionsButton = CreateOptionsButton();
-
         internal static Type[] MainToolbarElementTypesInProject { get; private set; } = new Type[0];
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
         private static GroupElement[] _groupElements = new GroupElement[0];
@@ -68,6 +66,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             };
         }
 
+        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Refresh")]
         public static void Refresh()
         {
             if (!ToolbarWrapper.IsAvailable)
@@ -114,7 +113,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             ConfigureStyleOfContainers();
             AddCustomContainers();
-            AddOptionsButton();
         }
 
         private static void AddCustomContainers()
@@ -321,22 +319,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static void OnProjectChange()
         {
             Refresh();
-        }
-
-        private static void AddOptionsButton()
-        {
-            ToolbarWrapper.RightContainer.Insert(0, _optionsButton);
-        }
-
-        private static MainToolbarAutomaticExtenderOptionsButton CreateOptionsButton()
-        {
-            return new MainToolbarAutomaticExtenderOptionsButton(
-                new MainToolbarAutomaticExtenderOptionsButton.Option()
-                {
-                    Text = "Refresh",
-                    Action = Refresh
-                }
-                );
         }
     }
 }
