@@ -5,8 +5,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MainToolbarElementController : VisualElement
     {
-        private const bool DEFAULT_VISIBILITY_VALUE = true;
-
         public string Id { get; }
         public VisualElement ControlledVisualElement { get; }
         private readonly IMainToolbarElementOverridesRepository _overridesRepository;
@@ -46,7 +44,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             var possibleOverride = _overridesRepository.Get(Id);
 
             if (possibleOverride == null)
-                return !(ControlledVisualElement.style.display == DisplayStyle.None);
+                return CurrentDisplayValueAsBool();
 
             var overrideValue = possibleOverride.Value;
 
@@ -77,7 +75,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             if (visible)
                 return Icons.VisibilityOnOverrideIcon;
-            
+
             return Icons.VisibilityOffOverrideIcon;
         }
 
@@ -88,7 +86,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             bool newValue;
 
             if (currentOverrideValue == null)
-                newValue = !DEFAULT_VISIBILITY_VALUE;
+                newValue = !CurrentDisplayValueAsBool();
             else
                 newValue = !currentOverrideValue.Value.Visible;
 
@@ -96,6 +94,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             UpdateButtonStatus(newValue);
 
             MainToolbarAutomaticExtender.Refresh();
+        }
+
+        private bool CurrentDisplayValueAsBool()
+        {
+            if (ControlledVisualElement.style.display == DisplayStyle.None)
+                return false;
+            else
+                return true;
         }
 
         private void UpdateButtonStatus(bool visible)
@@ -109,7 +115,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if (visible)
                 return _defaultButtonColor;
             else
-                return new StyleColor(new Color32(160, 44, 13, 1));
+                return new StyleColor(Color.black);
         }
     }
 }
