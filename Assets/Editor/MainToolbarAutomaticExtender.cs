@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -35,7 +34,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static readonly Length TOOLBAR_LEFT_CONTAINER_MIN_WIDTH = 130;
         private static readonly Length TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH = 288;
-        private static readonly Length TOOLBAR_PLAYMODE_CONTAINER_MIN_WIDTH = Length.Percent(9);
 
         private static MainToolbarCustomContainer _leftCustomContainer = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         private static MainToolbarCustomContainer _rightCustomContainer = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
