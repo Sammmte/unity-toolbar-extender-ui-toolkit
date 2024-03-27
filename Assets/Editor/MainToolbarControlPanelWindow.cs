@@ -50,7 +50,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .Concat(ToolbarWrapper.RightContainer.Children())
                 .Concat(ToolbarWrapper.PlayModeButtonsContainer.Children())
                 .Select(visualElement => new MainToolbarElementController(
-                    IdFor(visualElement), 
+                    MainToolbarElementIdProvider.IdOf(visualElement), 
                     visualElement, 
                     ServicesAndRepositories.MainToolbarElementOverridesRepository)
                 )
@@ -58,23 +58,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .GroupBy(controller => controller.Id)
                 .Select(group => group.First())
                 .ToArray();
-        }
-
-        private string IdFor(VisualElement visualElement)
-        {
-            if (HasFixedId(visualElement, out string id))
-                return id;
-
-            var idByName = string.IsNullOrEmpty(visualElement.name) ? null : visualElement.name;
-
-            return idByName;
-        }
-
-        private bool HasFixedId(VisualElement visualElement, out string id)
-        {
-            id = UnityNativeElementsIds.IdOf(visualElement);
-
-            return id != null;
         }
     }
 }
