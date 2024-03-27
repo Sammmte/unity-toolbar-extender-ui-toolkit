@@ -128,14 +128,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             foreach (var groupDefinition in _groupDefinitions)
             {
-                var elementsOfThisGroup = _elementsByGroup[groupDefinition.Name];
+                var elementsOfThisGroup = _elementsByGroup[groupDefinition.GroupName];
 
                 if (elementsOfThisGroup.Count == 0)
                     continue;
 
                 groups.Add(new Group()
                 {
-                    Name = groupDefinition.Name,
+                    Name = groupDefinition.GroupName,
                     Alignment = groupDefinition.Alignment,
                     Order = groupDefinition.Order,
                     MainToolbarElements = elementsOfThisGroup.ToArray()
@@ -160,7 +160,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             foreach (var groupDefinition in _groupDefinitions)
             {
-                elementsByGroup.Add(groupDefinition.Name, new List<MainToolbarElement>());
+                elementsByGroup.Add(groupDefinition.GroupName, new List<MainToolbarElement>());
             }
 
             foreach (var element in _mainToolbarElements)
@@ -171,7 +171,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     .FirstOrDefault();
 
                 if (containingGroupDefinition != null)
-                    elementsByGroup[containingGroupDefinition.Name].Add(element);
+                    elementsByGroup[containingGroupDefinition.GroupName].Add(element);
             }
 
             return elementsByGroup;
@@ -184,8 +184,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             return paths
                 .Select(path => AssetDatabase.LoadAssetAtPath<GroupDefinition>(path))
-                .Where(groupDefinition => !string.IsNullOrEmpty(groupDefinition.name))
-                .GroupBy(groupDefinition => groupDefinition.Name)
+                .Where(groupDefinition => !string.IsNullOrEmpty(groupDefinition.GroupName))
+                .GroupBy(groupDefinition => groupDefinition.GroupName)
                 .Select(group => group.First())
                 .ToArray();
         }
