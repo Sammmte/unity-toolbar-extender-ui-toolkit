@@ -10,7 +10,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public string Id { get; }
         public VisualElement ControlledVisualElement { get; }
         private readonly IMainToolbarElementOverridesRepository _overridesRepository;
+        private Label _label;
+        private Button _button;
         private Image _buttonIconImage;
+
+        private StyleColor _defaultButtonColor;
 
         public MainToolbarElementController(string id, VisualElement controlledVisualElement,
             IMainToolbarElementOverridesRepository overridesRepository)
@@ -18,10 +22,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             Id = id;
             ControlledVisualElement = controlledVisualElement;
             _overridesRepository = overridesRepository;
-        }
 
-        public void Initialize()
-        {
             _buttonIconImage = new Image();
 
             style.flexDirection = FlexDirection.Row;
@@ -29,8 +30,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             style.paddingLeft =
                 style.paddingRight = 10;
 
-            Add(CreateLabel());
-            Add(CreateButton());
+            _label = CreateLabel();
+            _button = CreateButton();
+
+            _defaultButtonColor = _button.style.backgroundColor;
+
+            UpdateButtonStatus(VisibleValueOrDefault());
+
+            Add(_label);
+            Add(_button);
         }
 
         private bool VisibleValueOrDefault()
@@ -38,7 +46,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             var possibleOverride = _overridesRepository.Get(Id);
 
             if (possibleOverride == null)
-                return true;
+                return !(ControlledVisualElement.style.display == DisplayStyle.None);
 
             var overrideValue = possibleOverride.Value;
 
@@ -47,26 +55,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private Label CreateLabel()
         {
-            var label = new Label(GetName());
+            var label = new Label(Id);
 
             label.style.alignSelf = Align.Center;
 
             return label;
         }
 
-        private string GetName()
-        {
-            if (!string.IsNullOrEmpty(ControlledVisualElement.name))
-                return ControlledVisualElement.name;
-
-            return "Nameless element. Id: " + Id;
-        }
-
         private Button CreateButton()
         {
             var button = new Button(ChangeVisibilityValue);
-
-            UpdateIconImage(VisibleValueOrDefault());
 
             button.Add(_buttonIconImage);
 
@@ -95,12 +93,23 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 newValue = !currentOverrideValue.Value.Visible;
 
             _overridesRepository.Save(new MainToolbarElementOverride(Id, newValue));
-            UpdateIconImage(newValue);
+            UpdateButtonStatus(newValue);
+
+            MainToolbarAutomaticExtender.Refresh();
         }
 
-        private void UpdateIconImage(bool visible)
+        private void UpdateButtonStatus(bool visible)
         {
             _buttonIconImage.image = IconByVisibilityValue(visible);
+            _button.style.backgroundColor = GetButtonColor(visible);
+        }
+
+        private StyleColor GetButtonColor(bool visible)
+        {
+            if (visible)
+                return _defaultButtonColor;
+            else
+                return new StyleColor(new Color32(160, 44, 13, 1));
         }
     }
 }

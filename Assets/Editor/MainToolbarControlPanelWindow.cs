@@ -19,13 +19,24 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void CreateGUI()
         {
-            _controllers = GetEligibleElements();
+            MainToolbarAutomaticExtender.OnAddedCustomContainersToToolbar += Refresh;
+            MainToolbarAutomaticExtender.OnRefresh += Refresh;
+        }
+
+        private void Refresh()
+        {
+            rootVisualElement.Clear();
+            BuildGUI();
+        }
+
+        private void BuildGUI()
+        {
+            _controllers = CreateControllers();
 
             var containingBox = GetContainingBox();
 
-            foreach(var controller in _controllers)
+            foreach (var controller in _controllers)
             {
-                controller.Initialize();
                 containingBox.Add(controller);
             }
 
@@ -44,19 +55,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             return box;
         }
 
-        private MainToolbarElementController[] GetEligibleElements()
+        private MainToolbarElementController[] CreateControllers()
         {
-            return ToolbarWrapper.LeftContainer.Children()
-                .Concat(ToolbarWrapper.RightContainer.Children())
-                .Concat(ToolbarWrapper.PlayModeButtonsContainer.Children())
-                .Select(visualElement => new MainToolbarElementController(
-                    MainToolbarElementIdProvider.IdOf(visualElement), 
-                    visualElement, 
+            return OverridableMainToolbarElementsProvider.GetEligibleElements()
+                .OrderBy(overridableElement => overridableElement.Id)
+                .Select(overridableElement => new MainToolbarElementController(
+                    overridableElement.Id,
+                    overridableElement.VisualElement, 
                     ServicesAndRepositories.MainToolbarElementOverridesRepository)
                 )
-                .Where(controller => controller.Id != null)
-                .GroupBy(controller => controller.Id)
-                .Select(group => group.First())
                 .ToArray();
         }
     }

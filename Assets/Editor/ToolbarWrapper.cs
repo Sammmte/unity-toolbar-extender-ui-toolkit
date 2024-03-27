@@ -13,7 +13,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const string TOOLBAR_CENTER_CONTAINER_NAME = "ToolbarZonePlayMode";
         private const string TOOLBAR_LEFT_CONTAINER_NAME = "ToolbarZoneLeftAlign";
         private const string TOOLBAR_RIGHT_CONTAINER_NAME = "ToolbarZoneRightAlign";
-        private const string TOOLBAR_PLAY_MODE_BUTTONS_CONTAINER_NAME = "PlayMode";
+        private const string TOOLBAR_PLAY_BUTTON_NAME = "Play";
 
         private static Type _toolbarType = typeof(Editor).Assembly.GetType("UnityEditor.Toolbar");
         private static ScriptableObject _innerToolbarObject;
@@ -60,7 +60,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             LeftContainer = UnityToolbarRoot.Q(TOOLBAR_LEFT_CONTAINER_NAME);
             CenterContainer = UnityToolbarRoot.Q(TOOLBAR_CENTER_CONTAINER_NAME);
             RightContainer = UnityToolbarRoot.Q(TOOLBAR_RIGHT_CONTAINER_NAME);
-            PlayModeButtonsContainer = CenterContainer.Q(TOOLBAR_PLAY_MODE_BUTTONS_CONTAINER_NAME);
+            PlayModeButtonsContainer = CenterContainer.Q(TOOLBAR_PLAY_BUTTON_NAME).parent;
         }
 
         private static void OnUpdate()

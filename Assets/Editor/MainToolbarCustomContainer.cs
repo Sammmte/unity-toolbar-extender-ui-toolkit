@@ -1,4 +1,5 @@
-﻿using UnityEngine.UIElements;
+﻿using System.Linq;
+using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -47,14 +48,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             return scrollView;
         }
 
-        public void AddToScroll(VisualElement child)
+        public void AddToContainer(VisualElement child)
         {
             _scrollView.Add(child);
         }
 
-        public void ClearScroll()
+        public void ClearContainer()
         {
             _scrollView.Clear();
+        }
+
+        public VisualElement[] GetContainerChilds()
+        {
+            return _scrollView.Children().ToArray();
         }
     }
 }
