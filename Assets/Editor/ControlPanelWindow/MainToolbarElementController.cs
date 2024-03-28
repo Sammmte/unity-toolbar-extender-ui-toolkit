@@ -9,8 +9,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const float LEFT_PADDING_SINGLE = 19;
         private const float RIGHT_PADDING = 10;
 
-        public string Id { get; }
-        public VisualElement ControlledVisualElement { get; }
         private readonly IMainToolbarElementOverridesRepository _overridesRepository;
         private Label _label;
         private Button _button;
@@ -19,11 +17,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private StyleColor _defaultButtonColor;
 
+        public string Id { get; }
+        public VisualElement ControlledVisualElement { get; }
+        public bool HoldsAGroup => _foldout != null;
+        public bool HoldsANativeElement { get; private set; }
+
         public MainToolbarElementController(OverridableElement overridableElement,
             IMainToolbarElementOverridesRepository overridesRepository, params OverridableElement[] subElements)
         {
             Id = overridableElement.Id;
             ControlledVisualElement = overridableElement.VisualElement;
+            HoldsANativeElement = overridableElement.IsNative;
             name = Id + "-Controller";
             _overridesRepository = overridesRepository;
 

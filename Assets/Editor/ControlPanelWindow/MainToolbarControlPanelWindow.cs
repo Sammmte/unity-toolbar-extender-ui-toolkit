@@ -1,18 +1,26 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    internal struct OverridableElement
-    {
-        public string Id;
-        public VisualElement VisualElement;
-    }
-
     public class MainToolbarControlPanelWindow : EditorWindow
     {
+        private const string NATIVE_ELEMENTS_CONTAINER_NAME = "UnityNativeElementsContainer";
+        private const string NATIVE_ELEMENTS_FOLDOUT_TEXT = "Unity Native Elements";
+
+        private const string SINGLE_ELEMENTS_CONTAINER_NAME = "SingleElementsContainer";
+        private const string SINGLE_ELEMENTS_FOLDOUT_TEXT = "Single Elements";
+
+        private const string GROUP_ELEMENTS_CONTAINER_NAME = "GroupElementsContainer";
+        private const string GROUP_ELEMENTS_FOLDOUT_TEXT = "Groups";
+
+        private const float MAIN_CONTAINER_PADDING_TOP = 5;
+
+        private static readonly Color ORGANIZATIONAL_FOLDABLE_CONTAINER_BORDER_COLOR = new Color(153f / 255f, 153f / 255f, 153f / 255f);
+
         private MainToolbarElementController[] _controllers;
 
         public static void OpenWindow()
@@ -41,24 +49,38 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             _controllers = CreateControllers();
 
-            var containingBox = GetContainer();
+            var windowContainer = GetContainer();
 
-            foreach (var controller in _controllers)
+            var controllersOfNativeElements = _controllers
+                .Where(controller => controller.HoldsANativeElement);
+            var controllersOfGroups = _controllers
+                .Where(controller => controller.HoldsAGroup);
+            var controllersOfSingleElements = _controllers
+                .Where(controller => !controller.HoldsAGroup && !controller.HoldsANativeElement);
+
+            var foldableContainers = new VisualElement[]
             {
-                containingBox.Add(controller);
+                CreateOrganizationalFoldableContainer(
+                    SINGLE_ELEMENTS_CONTAINER_NAME, SINGLE_ELEMENTS_FOLDOUT_TEXT, controllersOfSingleElements),
+                CreateOrganizationalFoldableContainer(
+                    GROUP_ELEMENTS_CONTAINER_NAME, GROUP_ELEMENTS_FOLDOUT_TEXT, controllersOfGroups),
+                CreateOrganizationalFoldableContainer(
+                    NATIVE_ELEMENTS_CONTAINER_NAME, NATIVE_ELEMENTS_FOLDOUT_TEXT, controllersOfNativeElements)
+            };
+
+            foreach (var controllersContainer in foldableContainers)
+            {
+                windowContainer.Add(controllersContainer);
             }
 
-            rootVisualElement.Add(containingBox);
+            rootVisualElement.Add(windowContainer);
         }
 
         private VisualElement GetContainer()
         {
             var scrollView = new ScrollView(ScrollViewMode.Vertical);
 
-            scrollView.style.paddingBottom =
-                scrollView.style.paddingTop =
-                scrollView.style.paddingLeft =
-                scrollView.style.paddingRight = 20;
+            scrollView.style.paddingTop = MAIN_CONTAINER_PADDING_TOP;
 
             return scrollView;
         }
@@ -80,11 +102,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if(visualElement is GroupElement groupElement)
             {
                 return groupElement.GroupedElements
-                    .Select(el => new OverridableElement()
-                    {
-                        Id = MainToolbarElementOverrideIdProvider.IdOf(el),
-                        VisualElement = el
-                    })
+                    .Select(el => new OverridableElement(
+                        MainToolbarElementOverrideIdProvider.IdOf(el),
+                        el,
+                        false)
+                    )
                     .ToArray();
             }
 
@@ -93,17 +115,48 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private OverridableElement[] GetOverridableElements()
         {
-            return ToolbarWrapper.LeftContainer.Children()
+            var nativeElements = ToolbarWrapper.LeftContainer.Children()
                 .Concat(ToolbarWrapper.RightContainer.Children())
                 .Concat(ToolbarWrapper.PlayModeButtonsContainer.Children())
-                .Concat(MainToolbarAutomaticExtender.CustomMainToolbarElements)
+                .Select(visualElement => new OverridableElement(
+                    MainToolbarElementOverrideIdProvider.IdOf(visualElement),
+                    visualElement,
+                    true
+                    )
+                );
+
+            var customElements = MainToolbarAutomaticExtender.CustomMainToolbarElements
                 .Concat(MainToolbarAutomaticExtender.GroupElements)
-                .Select(visualElement => new OverridableElement() 
-                { 
-                    Id = MainToolbarElementOverrideIdProvider.IdOf(visualElement), 
-                    VisualElement = visualElement 
-                })
+                .Select(visualElement => new OverridableElement(
+                    MainToolbarElementOverrideIdProvider.IdOf(visualElement),
+                    visualElement,
+                    false
+                    )
+                );
+
+            return nativeElements.Concat(customElements)
                 .ToArray();
+        }
+
+        private VisualElement CreateOrganizationalFoldableContainer(
+            string containerName, string foldoutText, 
+            IEnumerable<MainToolbarElementController> controllers)
+        {
+            var box = new Box() { name = containerName };
+            box.style.borderTopColor = ORGANIZATIONAL_FOLDABLE_CONTAINER_BORDER_COLOR;
+            box.style.borderTopWidth = 1;
+
+            var foldout = new Foldout() { text = foldoutText };
+            foldout.value = false;
+
+            foreach(var controller in controllers)
+            {
+                foldout.Add(controller);
+            }
+
+            box.Add(foldout);
+
+            return box;
         }
     }
 }
