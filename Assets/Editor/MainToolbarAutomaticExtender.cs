@@ -44,12 +44,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         static MainToolbarAutomaticExtender()
         {
-            EditorApplication.projectChanged += OnProjectChange;
-
             BuildCustomToolbarContainers();
 
             if (_mainToolbarElements.Length == 0)
                 return;
+
+            EditorApplication.projectChanged += OnProjectChange;
 
             ToolbarWrapper.OnNativeToolbarWrapped += () =>
             {
