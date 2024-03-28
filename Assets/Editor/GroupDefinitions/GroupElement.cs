@@ -9,6 +9,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private EditorToolbarDropdown _dropdown;
         private VisualElement[] _groupedElements;
+        public VisualElement[] GroupedElements => _groupedElements;
 
         public GroupElement(string groupName, VisualElement[] groupedElements)
         {

@@ -5,14 +5,14 @@ using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
+    internal struct OverridableElement
+    {
+        public string Id;
+        public VisualElement VisualElement;
+    }
+
     public class MainToolbarControlPanelWindow : EditorWindow
     {
-        private struct OverridableElement
-        {
-            public string Id;
-            public VisualElement VisualElement;
-        }
-
         private MainToolbarElementController[] _controllers;
 
         public static void OpenWindow()
@@ -68,11 +68,27 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             return GetOverridableElements()
                 .OrderBy(overridableElement => overridableElement.Id)
                 .Select(overridableElement => new MainToolbarElementController(
-                    overridableElement.Id,
-                    overridableElement.VisualElement, 
-                    ServicesAndRepositories.MainToolbarElementOverridesRepository)
+                    overridableElement,
+                    ServicesAndRepositories.MainToolbarElementOverridesRepository,
+                    GetSubElementsIfAny(overridableElement.VisualElement))
                 )
                 .ToArray();
+        }
+
+        private OverridableElement[] GetSubElementsIfAny(VisualElement visualElement)
+        {
+            if(visualElement is GroupElement groupElement)
+            {
+                return groupElement.GroupedElements
+                    .Select(el => new OverridableElement()
+                    {
+                        Id = MainToolbarElementOverrideIdProvider.IdOf(el),
+                        VisualElement = el
+                    })
+                    .ToArray();
+            }
+
+            return new OverridableElement[0];
         }
 
         private OverridableElement[] GetOverridableElements()

@@ -1,32 +1,37 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MainToolbarElementController : VisualElement
     {
+        private const float LEFT_PADDING_SINGLE = 19;
+        private const float RIGHT_PADDING = 10;
+
         public string Id { get; }
         public VisualElement ControlledVisualElement { get; }
         private readonly IMainToolbarElementOverridesRepository _overridesRepository;
         private Label _label;
         private Button _button;
         private Image _buttonIconImage;
+        private Foldout _foldout;
 
         private StyleColor _defaultButtonColor;
 
-        public MainToolbarElementController(string id, VisualElement controlledVisualElement,
-            IMainToolbarElementOverridesRepository overridesRepository)
+        public MainToolbarElementController(OverridableElement overridableElement,
+            IMainToolbarElementOverridesRepository overridesRepository, params OverridableElement[] subElements)
         {
-            Id = id;
-            ControlledVisualElement = controlledVisualElement;
+            Id = overridableElement.Id;
+            ControlledVisualElement = overridableElement.VisualElement;
+            name = Id + "-Controller";
             _overridesRepository = overridesRepository;
 
             _buttonIconImage = new Image();
 
             style.flexDirection = FlexDirection.Row;
             style.justifyContent = Justify.SpaceBetween;
-            style.paddingLeft =
-                style.paddingRight = 10;
+            style.paddingRight = RIGHT_PADDING;
 
             _label = CreateLabel();
             _button = CreateButton();
@@ -34,8 +39,40 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _defaultButtonColor = _button.style.backgroundColor;
 
             UpdateButtonStatus(VisibleValueOrDefault());
+            BuildAsGroupOrSingle(subElements);
+        }
+
+        private void BuildAsGroupOrSingle(OverridableElement[] subElements)
+        {
+            if (subElements.Length > 0)
+                BuildFoldout(subElements);
+            else
+                BuildSingleElement();
+        }
+
+        private void BuildSingleElement()
+        {
+            style.paddingLeft = LEFT_PADDING_SINGLE;
 
             Add(_label);
+            Add(_button);
+        }
+
+        private void BuildFoldout(OverridableElement[] subElements)
+        {
+            _foldout = new Foldout() { text = _label.text };
+            
+
+            foreach (var overridable in subElements)
+            {
+                var subController = new MainToolbarElementController(overridable, _overridesRepository);
+
+                _foldout.Add(subController);
+
+                _foldout.value = false;
+            }
+
+            Add(_foldout);
             Add(_button);
         }
 
@@ -67,6 +104,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             button.Add(_buttonIconImage);
 
             button.tooltip = "Change the visibility of this toolbar element";
+
+            button.style.alignSelf = Align.FlexStart;
 
             return button;
         }
