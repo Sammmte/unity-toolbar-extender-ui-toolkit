@@ -266,12 +266,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             foreach (var element in _mainToolbarElements)
             {
                 var containingGroupDefinition = _groupDefinitions
-                    .Where(groupDefinition => groupDefinition.ToolbarElementsTypes.
+                    .Select(groupDefinition => (GroupDefinition?)groupDefinition)
+                    .Where(groupDefinition => groupDefinition.Value.ToolbarElementsTypes.
                         Contains(element.DecoratedType.FullName))
                     .FirstOrDefault();
 
                 if (containingGroupDefinition != null)
-                    elementsByGroup[containingGroupDefinition.GroupName].Add(element);
+                    elementsByGroup[containingGroupDefinition.Value.GroupName].Add(element);
             }
 
             return elementsByGroup;
@@ -279,15 +280,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static GroupDefinition[] LoadGroupDefinitions()
         {
-            var paths = AssetDatabase.FindAssets("t:" + nameof(GroupDefinition))
-                .Select(guid => AssetDatabase.GUIDToAssetPath(guid));
-
-            return paths
-                .Select(path => AssetDatabase.LoadAssetAtPath<GroupDefinition>(path))
-                .Where(groupDefinition => !string.IsNullOrEmpty(groupDefinition.GroupName))
-                .GroupBy(groupDefinition => groupDefinition.GroupName)
-                .Select(group => group.First())
-                .ToArray();
+            return ServicesAndRepositories.GroupDefinitionRepository.GetAll();
         }
 
         private static void ConfigureStyleOfContainers()

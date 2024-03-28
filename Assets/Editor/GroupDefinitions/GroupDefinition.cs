@@ -1,18 +1,18 @@
-﻿using UnityEngine;
-
-namespace Paps.UnityToolbarExtenderUIToolkit
+﻿namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    [CreateAssetMenu(menuName = ToolInfo.EDITOR_MENU_BASE + "/Group Definition")]
-    public sealed class GroupDefinition : ScriptableObject
+    public readonly struct GroupDefinition
     {
-        [SerializeField] private string _groupName;
-        [SerializeField] private ToolbarAlign _alignment;
-        [SerializeField] private int _order;
-        [SerializeField] [MainToolbarElementTypeDropdown] private string[] _toolbarElementsTypes;
+        public string GroupName { get; }
+        public ToolbarAlign Alignment { get; }
+        public int Order { get; }
+        public string[] ToolbarElementsTypes { get; }
 
-        public string GroupName => _groupName;
-        public ToolbarAlign Alignment => _alignment;
-        public int Order => _order;
-        public string[] ToolbarElementsTypes => _toolbarElementsTypes;
+        public GroupDefinition(string groupName, ToolbarAlign alignment, int order, string[] toolbarElementsTypes)
+        {
+            GroupName = groupName;
+            Alignment = alignment;
+            Order = order;
+            ToolbarElementsTypes = toolbarElementsTypes;
+        }
     }
 }

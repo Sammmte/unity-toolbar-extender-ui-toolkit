@@ -9,7 +9,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         private static string[] OnWillSaveAssets(string[] paths)
         {
-            var groupDefinitionsAssetsPaths = AssetDatabase.FindAssets("t:" + nameof(GroupDefinition))
+            var groupDefinitionsAssetsPaths = AssetDatabase.FindAssets("t:" + nameof(ScriptableGroupDefinition))
                 .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
                 .ToArray();
 
