@@ -14,5 +14,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
 
         }
+
+        public MainToolbarButton() : base()
+        {
+
+        }
     }
 }
