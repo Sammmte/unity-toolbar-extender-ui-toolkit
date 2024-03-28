@@ -103,16 +103,18 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var orderedAlignedElements = GetOrderedAlignedElements(groups, singles);
 
-            ApplyOverridesOnCustomElements(orderedAlignedElements);
+            ApplyOverridesOnCustomElements();
 
             AddOrderedAlignedElementsToContainers(orderedAlignedElements);
         }
 
-        private static void ApplyOverridesOnCustomElements(OrderedAlignedElement[] defaultElements)
+        private static void ApplyOverridesOnCustomElements()
         {
-            foreach(var element in defaultElements)
+            var allElements = CustomMainToolbarElements.Concat(GroupElements);
+
+            foreach(var element in allElements)
             {
-                ApplyOverride(element.VisualElement);
+                ApplyOverride(element);
             }
         }
 
