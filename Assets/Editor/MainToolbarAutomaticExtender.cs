@@ -335,7 +335,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static Type[] GetMainToolbarElementTaggedTypes(IEnumerable<Type> allTypes)
         {
             return allTypes
-                .Where(type => IsValidVisualElementType(type) || IsValidElementProviderType(type))
+                .Where(type => IsValidVisualElementType(type))
                 .ToArray();
         }
 
@@ -348,29 +348,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static MainToolbarElement GetMainToolbarElementFromType(Type type)
         {
-            if(type == typeof(VisualElement))
-            {
-                var elementInstance = (VisualElement)Activator.CreateInstance(type);
-                var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
+            var elementInstance = (VisualElement)Activator.CreateInstance(type);
+            var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
 
-                if (string.IsNullOrEmpty(elementInstance.name))
-                    elementInstance.name = elementInstance.GetType().Name;
+            if (string.IsNullOrEmpty(elementInstance.name))
+                elementInstance.name = elementInstance.GetType().Name;
 
-                return new MainToolbarElement() { VisualElement = elementInstance, Attribute = attribute, DecoratedType = type };
-            }
-            else
-            {
-                var providerInstance = (IMainToolbarElementProvider)Activator.CreateInstance(type);
-                var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
-                var isGrouped = _groupDefinitions.Any(groupDefinition => groupDefinition.ToolbarElementsTypes
-                        .Contains(type.FullName));
-                var elementInstance = providerInstance.CreateElement(isGrouped);
-
-                if (string.IsNullOrEmpty(elementInstance.name))
-                    elementInstance.name = providerInstance.GetType().Name;
-
-                return new MainToolbarElement() { VisualElement = elementInstance, Attribute = attribute, DecoratedType = type };
-            }
+            return new MainToolbarElement() { VisualElement = elementInstance, Attribute = attribute, DecoratedType = type };
         }
 
         private static bool IsValidVisualElementType(Type type)
@@ -379,16 +363,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             return visualElementType != type &&
                 visualElementType.IsAssignableFrom(type) &&
-                !type.IsAbstract &&
-                type.GetCustomAttribute<MainToolbarElementAttribute>() != null;
-        }
-
-        private static bool IsValidElementProviderType(Type type)
-        {
-            var elementProviderType = typeof(IMainToolbarElementProvider);
-
-            return elementProviderType != type &&
-                elementProviderType.IsAssignableFrom(type) &&
                 !type.IsAbstract &&
                 type.GetCustomAttribute<MainToolbarElementAttribute>() != null;
         }

@@ -1,7 +1,7 @@
 using Paps.UnityToolbarExtenderUIToolkit;
 
 [MainToolbarElement]
-public class TestGroupToggle : MainToolbarToggleProvider
+public class TestGroupToggle : MainToolbarToggle
 {
     public TestGroupToggle() : base("Toggle 1")
     {
@@ -10,7 +10,7 @@ public class TestGroupToggle : MainToolbarToggleProvider
 }
 
 [MainToolbarElement]
-public class TestGroupToggle2 : MainToolbarToggleProvider
+public class TestGroupToggle2 : MainToolbarToggle
 {
     public TestGroupToggle2() : base("Toggle 2")
     {
@@ -19,7 +19,7 @@ public class TestGroupToggle2 : MainToolbarToggleProvider
 }
 
 [MainToolbarElement]
-public class TestGroupToggle3 : MainToolbarToggleProvider
+public class TestGroupToggle3 : MainToolbarToggle
 {
     public TestGroupToggle3() : base("Toggle 3")
     {

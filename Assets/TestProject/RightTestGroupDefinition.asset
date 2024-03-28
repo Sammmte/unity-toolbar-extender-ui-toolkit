@@ -15,5 +15,4 @@ MonoBehaviour:
   _groupName: Right Test Group
   _alignment: 1
   _order: 0
-  _toolbarElementsTypes:
-  - TestButtonWithIcon
+  _toolbarElementsTypes: []
