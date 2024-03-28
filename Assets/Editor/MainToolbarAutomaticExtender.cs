@@ -24,9 +24,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             public MainToolbarElementAttribute Attribute;
         }
 
-        private static readonly Length TOOLBAR_LEFT_CONTAINER_MIN_WIDTH = 130;
-        private static readonly Length TOOLBAR_RIGHT_CONTAINER_MIN_WIDTH = 288;
-
         internal static Type[] MainToolbarElementTypesInProject { get; private set; } = new Type[0];
 
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
