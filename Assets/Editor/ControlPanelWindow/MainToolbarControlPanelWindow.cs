@@ -39,6 +39,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 Refresh();
         }
 
+        private void OnDestroy()
+        {
+            MainToolbarAutomaticExtender.OnAddedCustomContainersToToolbar -= Refresh;
+            MainToolbarAutomaticExtender.OnRefresh -= Refresh;
+        }
+
         private void Refresh()
         {
             rootVisualElement.Clear();
