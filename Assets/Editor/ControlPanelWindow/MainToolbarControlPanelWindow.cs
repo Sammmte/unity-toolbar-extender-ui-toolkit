@@ -41,7 +41,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             _controllers = CreateControllers();
 
-            var containingBox = GetContainingBox();
+            var containingBox = GetContainer();
 
             foreach (var controller in _controllers)
             {
@@ -51,16 +51,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             rootVisualElement.Add(containingBox);
         }
 
-        private Box GetContainingBox()
+        private VisualElement GetContainer()
         {
-            var box = new Box();
+            var scrollView = new ScrollView(ScrollViewMode.Vertical);
 
-            box.style.paddingBottom = 
-                box.style.paddingTop = 
-                box.style.paddingLeft = 
-                box.style.paddingRight = 20;
+            scrollView.style.paddingBottom =
+                scrollView.style.paddingTop =
+                scrollView.style.paddingLeft =
+                scrollView.style.paddingRight = 20;
 
-            return box;
+            return scrollView;
         }
 
         private MainToolbarElementController[] CreateControllers()
