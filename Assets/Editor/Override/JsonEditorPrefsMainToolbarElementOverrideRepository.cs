@@ -19,7 +19,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public JsonEditorPrefsMainToolbarElementOverrideRepository()
         {
-            DeleteSave();
             _overrides = LoadOverrides();
         }
 
