@@ -125,9 +125,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private OverridableElement[] GetOverridableElements()
         {
-            var nativeElements = ToolbarWrapper.LeftContainer.Children()
-                .Concat(ToolbarWrapper.RightContainer.Children())
-                .Concat(ToolbarWrapper.PlayModeButtonsContainer.Children())
+            var nativeElements = MainToolbarAutomaticExtender.NativeElements
                 .Select(visualElement => new OverridableElement(
                     MainToolbarElementOverrideIdProvider.IdOf(visualElement),
                     visualElement,

@@ -41,22 +41,22 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         // ------------------- FIXED IDS ---------------------
 
         // LEFT
-        private const string ACCOUNT_DROPDOWN_ID = "AccountDropdown";
-        private const string CLOUD_BUTTON_ID = "CloudButton";
-        private const string VERSION_CONTROL_ID = "VersionControlButton";
+        public const string ACCOUNT_DROPDOWN_ID = "AccountDropdown";
+        public const string CLOUD_BUTTON_ID = "CloudButton";
+        public const string VERSION_CONTROL_ID = "VersionControlButton";
 
         // CENTER
-        private const string PLAY_BUTTON_ID = "PlayButton";
-        private const string PAUSE_BUTTON_ID = "PauseButton";
-        private const string FRAME_STEP_BUTTON_ID = "FrameStepButton";
+        public const string PLAY_BUTTON_ID = "PlayButton";
+        public const string PAUSE_BUTTON_ID = "PauseButton";
+        public const string FRAME_STEP_BUTTON_ID = "FrameStepButton";
 
         // RIGHT
-        private const string LAYOUT_DROPDOWN_ID = "LayoutDropdown";
-        private const string LAYERS_DROPDOWN_ID = "LayersDropdown";
-        private const string SEARCH_BUTTON_ID = "SearchButton";
-        private const string MODES_DROPDOWN_ID = "ModesDropdown";
-        private const string PREVIEW_PACKAGES_IN_USE_DROPDOWN_ID = "PreviewPackagesInUseDropdown";
-        private const string UNDO_BUTTON_ID = "UndoButton";
+        public const string LAYOUT_DROPDOWN_ID = "LayoutDropdown";
+        public const string LAYERS_DROPDOWN_ID = "LayersDropdown";
+        public const string SEARCH_BUTTON_ID = "SearchButton";
+        public const string MODES_DROPDOWN_ID = "ModesDropdown";
+        public const string PREVIEW_PACKAGES_IN_USE_DROPDOWN_ID = "PreviewPackagesInUseDropdown";
+        public const string UNDO_BUTTON_ID = "UndoButton";
 
         private static readonly Dictionary<string, string> IDS_BY_TYPE = new Dictionary<string, string>()
         {

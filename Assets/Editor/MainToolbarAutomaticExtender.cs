@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -24,20 +25,36 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             public MainToolbarElementAttribute Attribute;
         }
 
-        internal static Type[] MainToolbarElementTypesInProject { get; private set; } = new Type[0];
+        private class HiddenRemovedElement
+        {
+            public VisualElement RemovedVisualElement;
+            public VisualElement Parent;
+            public int Index;
+        }
+
+        private static readonly string[] EXCEPTIONAL_ELEMENTS_FOR_VISIBILITY =
+        {
+            UnityNativeElementsIds.ACCOUNT_DROPDOWN_ID,
+            UnityNativeElementsIds.CLOUD_BUTTON_ID
+        };
 
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
         private static GroupElement[] _groupElements = new GroupElement[0];
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
         private static RootMainToolbarElement[] _rootElements = new RootMainToolbarElement[0];
+        private static VisualElement[] _nativeElements = new VisualElement[0];
+        private static Dictionary<string, HiddenRemovedElement> _hiddenElementsByRemotion = new Dictionary<string, HiddenRemovedElement>();
 
         private static Dictionary<string, MainToolbarElementOverride> _nativeElementsInitialState = new Dictionary<string, MainToolbarElementOverride>();
+
+        internal static Type[] MainToolbarElementTypesInProject { get; private set; } = new Type[0];
 
         public static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         public static MainToolbarCustomContainer RightCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
         public static VisualElement[] CustomMainToolbarElements => _mainToolbarElements.Select(m => m.VisualElement).ToArray();
         public static VisualElement[] GroupElements => _groupElements.ToArray();
+        public static VisualElement[] NativeElements => _nativeElements.ToArray();
 
         public static event Action OnRefresh;
         public static event Action OnAddedCustomContainersToToolbar;
@@ -53,9 +70,21 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             ToolbarWrapper.OnNativeToolbarWrapped += () =>
             {
+                CacheNativeElements();
                 ApplyFixedChangesToToolbar();
                 OnAddedCustomContainersToToolbar?.Invoke();
             };
+        }
+
+        private static void CacheNativeElements()
+        {
+            var nativeElements = GetNativeElements();
+            if (nativeElements.Length != 0)
+            {
+                _nativeElements = nativeElements;
+                SaveNativeElementsInitialState();
+                SetNativeElementsDefaultState();
+            }
         }
 
         public static void Refresh()
@@ -65,7 +94,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             ResetCustomContainers();
             BuildCustomToolbarContainers();
-            ManageOverridesOnNativeElements();
+            SetNativeElementsDefaultState();
+            ApplyOverridesOnNativeElements();
             OnRefresh?.Invoke();
         }
 
@@ -116,12 +146,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
-        private static void SaveNativeElementsInitialState(VisualElement[] nativeElements)
+        private static void SaveNativeElementsInitialState()
         {
             if (_nativeElementsInitialState.Count > 0)
                 return;
 
-            foreach (var element in nativeElements)
+            foreach (var element in _nativeElements)
             {
                 var overrideId = MainToolbarElementOverrideIdProvider.IdOf(element);
 
@@ -133,22 +163,20 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
-        private static void SetNativeElementsDefaultState(VisualElement[] nativeElements)
+        private static void SetNativeElementsDefaultState()
         {
-            SaveNativeElementsInitialState(nativeElements);
-
-            foreach (var element in nativeElements)
+            foreach (var element in _nativeElements)
             {
                 var overrideId = MainToolbarElementOverrideIdProvider.IdOf(element);
                 var defaultStateOverride = _nativeElementsInitialState[overrideId];
 
-                element.style.display = defaultStateOverride.Visible ? DisplayStyle.Flex : DisplayStyle.None;
+                ApplyOverride(element, defaultStateOverride);
             }    
         }
 
-        private static void ApplyOverridesOnNativeElements(VisualElement[] nativeElements)
+        private static void ApplyOverridesOnNativeElements()
         {
-            foreach(var nativeElement in nativeElements)
+            foreach(var nativeElement in _nativeElements)
             {
                 ApplyOverride(nativeElement);
             }
@@ -159,6 +187,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             return ToolbarWrapper.LeftContainer.Children()
                 .Concat(ToolbarWrapper.RightContainer.Children())
                 .Concat(ToolbarWrapper.PlayModeButtonsContainer.Children())
+                .Where(visualElement => UnityNativeElementsIds.IdOf(visualElement) != null)
                 .ToArray();
         }
 
@@ -174,21 +203,77 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if (userOverride == null)
                 return;
 
-            visualElement.style.display = userOverride.Value.Visible ? DisplayStyle.Flex : DisplayStyle.None;
+            ApplyVisibilityOverride(elementOverrideId, visualElement, userOverride.Value.Visible);
+        }
+
+        private static void ApplyOverride(VisualElement visualElement, MainToolbarElementOverride overrideData)
+        {
+            var elementOverrideId = MainToolbarElementOverrideIdProvider.IdOf(visualElement);
+
+            if (elementOverrideId == null)
+                return;
+
+            ApplyVisibilityOverride(elementOverrideId, visualElement, overrideData.Visible);
+        }
+
+        private static void ApplyVisibilityOverride(string elementId, VisualElement visualElement, bool visible)
+        {
+            if(IsExceptionElementForVisibility(elementId))
+                HandleVisibilityApplicationOnExceptions(elementId, visualElement, visible);
+            else
+                visualElement.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        private static bool IsExceptionElementForVisibility(string elementId)
+        {
+            return EXCEPTIONAL_ELEMENTS_FOR_VISIBILITY.Contains(elementId);
+        }
+
+        private static void HandleVisibilityApplicationOnExceptions(string elementId, VisualElement visualElement, bool visible)
+        {
+            if (visible)
+                HandleExceptionalElementVisibleCase(elementId, visualElement);
+            else
+                HandleExceptionalElementInvisibleCase(elementId, visualElement);
+        }
+
+        private static void HandleExceptionalElementInvisibleCase(string elementId, VisualElement visualElement)
+        {
+            var parent = visualElement.parent;
+            var index = parent.IndexOf(visualElement);
+
+            if (parent.Contains(visualElement))
+                parent.Remove(visualElement);
+
+            if (!_hiddenElementsByRemotion.ContainsKey(elementId))
+                _hiddenElementsByRemotion.Add(elementId, new HiddenRemovedElement()
+                {
+                    RemovedVisualElement = visualElement,
+                    Parent = parent,
+                    Index = index
+                });
+        }
+
+        private static void HandleExceptionalElementVisibleCase(string elementId, VisualElement visualElement)
+        {
+            if (_hiddenElementsByRemotion.ContainsKey(elementId))
+            {
+                var removedElement = _hiddenElementsByRemotion[elementId];
+
+                var parent = removedElement.Parent;
+
+                if (!parent.Contains(visualElement))
+                    parent.Insert(removedElement.Index, visualElement);
+
+                _hiddenElementsByRemotion.Remove(elementId);
+            }
         }
 
         private static void ApplyFixedChangesToToolbar()
         {
             ConfigureStyleOfContainers();
             AddCustomContainers();
-            ManageOverridesOnNativeElements();
-        }
-
-        private static void ManageOverridesOnNativeElements()
-        {
-            var nativeElements = GetNativeElements();
-            SetNativeElementsDefaultState(nativeElements);
-            ApplyOverridesOnNativeElements(nativeElements);
+            ApplyOverridesOnNativeElements();
         }
 
         private static void AddCustomContainers()
