@@ -19,13 +19,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public JsonEditorPrefsMainToolbarElementOverrideRepository()
         {
+            DeleteSave();
             _overrides = LoadOverrides();
         }
 
         public void Clear()
         {
             _overrides.Clear();
-            DeleteSave();
         }
 
         public MainToolbarElementOverride? Get(string elementId)
@@ -43,7 +43,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public void Save(MainToolbarElementOverride elementOverride)
         {
-            _overrides.Add(elementOverride.ElementId, elementOverride);
+            _overrides[elementOverride.ElementId] = elementOverride;
             SaveOverrides();
         }
 
