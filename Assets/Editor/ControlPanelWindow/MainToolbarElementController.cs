@@ -107,7 +107,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             button.Add(_buttonIconImage);
 
-            button.tooltip = "Change the visibility of this toolbar element";
+            button.tooltip = "Change the visibility of element with id " + Id;
 
             button.style.alignSelf = Align.FlexStart;
 
