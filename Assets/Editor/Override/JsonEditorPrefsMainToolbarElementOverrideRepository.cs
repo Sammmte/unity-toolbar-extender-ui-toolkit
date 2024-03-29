@@ -25,6 +25,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public void Clear()
         {
             _overrides.Clear();
+            DeleteSave();
         }
 
         public MainToolbarElementOverride? Get(string elementId)
