@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -19,8 +18,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private const float MAIN_CONTAINER_PADDING_TOP = 5;
 
-        private static readonly Color ORGANIZATIONAL_FOLDABLE_CONTAINER_BORDER_COLOR = new Color(153f / 255f, 153f / 255f, 153f / 255f);
-
+        private OrganizationalFoldableContainer _nativeElementsContainer;
+        private OrganizationalFoldableContainer _singleElementsContainer;
+        private OrganizationalFoldableContainer _groupElementsContainer;
         private MainToolbarElementController[] _controllers;
 
         public static void OpenWindow()
@@ -35,6 +35,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             MainToolbarAutomaticExtender.OnAddedCustomContainersToToolbar += Refresh;
             MainToolbarAutomaticExtender.OnRefresh += Refresh;
 
+            BuildFixedGUI();
+
             if (ToolbarWrapper.IsAvailable)
                 Refresh();
         }
@@ -47,15 +49,30 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void Refresh()
         {
-            rootVisualElement.Clear();
-            BuildGUI();
+            BuildDynamicGUI();
         }
 
-        private void BuildGUI()
+        private void BuildFixedGUI()
+        {
+            var windowContainer = GetContainer();
+
+            _singleElementsContainer = new OrganizationalFoldableContainer(
+                    SINGLE_ELEMENTS_CONTAINER_NAME, SINGLE_ELEMENTS_FOLDOUT_TEXT);
+            _groupElementsContainer = new OrganizationalFoldableContainer(
+                    GROUP_ELEMENTS_CONTAINER_NAME, GROUP_ELEMENTS_FOLDOUT_TEXT);
+            _nativeElementsContainer = new OrganizationalFoldableContainer(
+                    NATIVE_ELEMENTS_CONTAINER_NAME, NATIVE_ELEMENTS_FOLDOUT_TEXT);
+
+            windowContainer.Add(_singleElementsContainer);
+            windowContainer.Add(_groupElementsContainer);
+            windowContainer.Add(_nativeElementsContainer);
+
+            rootVisualElement.Add(windowContainer);
+        }
+
+        private void BuildDynamicGUI()
         {
             _controllers = CreateControllers();
-
-            var windowContainer = GetContainer();
 
             var controllersOfNativeElements = _controllers
                 .Where(controller => controller.HoldsANativeElement);
@@ -64,22 +81,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             var controllersOfSingleElements = _controllers
                 .Where(controller => !controller.HoldsAGroup && !controller.HoldsANativeElement);
 
-            var foldableContainers = new VisualElement[]
-            {
-                CreateOrganizationalFoldableContainer(
-                    SINGLE_ELEMENTS_CONTAINER_NAME, SINGLE_ELEMENTS_FOLDOUT_TEXT, controllersOfSingleElements),
-                CreateOrganizationalFoldableContainer(
-                    GROUP_ELEMENTS_CONTAINER_NAME, GROUP_ELEMENTS_FOLDOUT_TEXT, controllersOfGroups),
-                CreateOrganizationalFoldableContainer(
-                    NATIVE_ELEMENTS_CONTAINER_NAME, NATIVE_ELEMENTS_FOLDOUT_TEXT, controllersOfNativeElements)
-            };
-
-            foreach (var controllersContainer in foldableContainers)
-            {
-                windowContainer.Add(controllersContainer);
-            }
-
-            rootVisualElement.Add(windowContainer);
+            _singleElementsContainer.SetControllers(controllersOfSingleElements);
+            _groupElementsContainer.SetControllers(controllersOfGroups);
+            _nativeElementsContainer.SetControllers(controllersOfNativeElements);
         }
 
         private VisualElement GetContainer()
@@ -145,24 +149,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         }
 
         private VisualElement CreateOrganizationalFoldableContainer(
-            string containerName, string foldoutText, 
-            IEnumerable<MainToolbarElementController> controllers)
+            string containerName, string foldoutText)
         {
-            var box = new Box() { name = containerName };
-            box.style.borderTopColor = ORGANIZATIONAL_FOLDABLE_CONTAINER_BORDER_COLOR;
-            box.style.borderTopWidth = 1;
-
-            var foldout = new Foldout() { text = foldoutText };
-            foldout.value = false;
-
-            foreach(var controller in controllers)
-            {
-                foldout.Add(controller);
-            }
-
-            box.Add(foldout);
-
-            return box;
+            return new OrganizationalFoldableContainer(containerName, foldoutText);
         }
     }
 }
