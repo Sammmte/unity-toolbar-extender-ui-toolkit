@@ -264,11 +264,24 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
                 if (!parent.Contains(visualElement))
                 {
-                    parent.Insert(removedElement.Index, visualElement);
+                    var bestIndex = GetIndexEqualOrLessThan(removedElement.Index, parent);
+
+                    parent.Insert(bestIndex, visualElement);
                 }
 
                 _hiddenElementsByRemotion.Remove(elementId);
             }
+        }
+
+        private static int GetIndexEqualOrLessThan(int removedElementIndex, VisualElement parent)
+        {
+            for (int i = parent.childCount - 1; i >= 0; i--)
+            {
+                if (removedElementIndex <= i)
+                    return i;
+            }
+
+            return 0;
         }
 
         private static void ApplyFixedChangesToToolbar()
