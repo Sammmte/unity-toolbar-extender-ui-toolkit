@@ -263,7 +263,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 var parent = removedElement.Parent;
 
                 if (!parent.Contains(visualElement))
+                {
                     parent.Insert(removedElement.Index, visualElement);
+                }
 
                 _hiddenElementsByRemotion.Remove(elementId);
             }

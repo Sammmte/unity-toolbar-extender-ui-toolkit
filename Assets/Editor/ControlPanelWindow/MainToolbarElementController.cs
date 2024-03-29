@@ -9,7 +9,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const float LEFT_PADDING_SINGLE = 19;
         private const float RIGHT_PADDING = 10;
 
-        private readonly IMainToolbarElementOverridesRepository _overridesRepository;
+        private readonly IMainToolbarElementOverrideRepository _overridesRepository;
         private Label _label;
         private Button _button;
         private Image _buttonIconImage;
@@ -23,7 +23,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public bool HoldsANativeElement { get; private set; }
 
         public MainToolbarElementController(OverridableElement overridableElement,
-            IMainToolbarElementOverridesRepository overridesRepository, params OverridableElement[] subElements)
+            IMainToolbarElementOverrideRepository overridesRepository, params OverridableElement[] subElements)
         {
             Id = overridableElement.Id;
             ControlledVisualElement = overridableElement.VisualElement;

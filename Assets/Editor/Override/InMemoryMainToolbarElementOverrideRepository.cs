@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public class InMemoryMainToolbarElementOverridesRepository : IMainToolbarElementOverridesRepository
+    public class InMemoryMainToolbarElementOverrideRepository : IMainToolbarElementOverrideRepository
     {
         private Dictionary<string, MainToolbarElementOverride> _overrides = new Dictionary<string, MainToolbarElementOverride>();
 
