@@ -9,7 +9,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const int SCROLLER_LOW_BUTTON_HEIGHT = 6;
         private const int SCROLLER_HIGH_BUTTON_HEIGHT = 6;
         private const int SCROLLER_SLIDER_HEIGHT = 6;
-        private const int SCROLL_VIEW_HORIZONTAL_PADDING = 0;
+        private const int SCROLL_VIEW_HORIZONTAL_PADDING = 5;
         private const int SCROLL_VIEW_SCROLLER_BORDER_TOP_WIDTH = 0;
 
         private ScrollView _scrollView;
