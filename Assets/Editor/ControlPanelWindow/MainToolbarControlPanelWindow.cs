@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -79,11 +80,21 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             var controllersOfGroups = _controllers
                 .Where(controller => controller.HoldsAGroup);
             var controllersOfSingleElements = _controllers
-                .Where(controller => !controller.HoldsAGroup && !controller.HoldsANativeElement);
+                .Where(controller => !controller.HoldsAGroup && !controller.HoldsANativeElement)
+                .Where(controller => SingleControllerIsNotInsideAGroupController(controller, controllersOfGroups));
 
             _singleElementsContainer.SetControllers(controllersOfSingleElements);
             _groupElementsContainer.SetControllers(controllersOfGroups);
             _nativeElementsContainer.SetControllers(controllersOfNativeElements);
+        }
+
+        private static bool SingleControllerIsNotInsideAGroupController(MainToolbarElementController controller, IEnumerable<MainToolbarElementController> controllersOfGroups)
+        {
+            foreach (var groupController in controllersOfGroups)
+                if (groupController.ContainsSubController(controller.Id))
+                    return false;
+
+            return true;
         }
 
         private VisualElement GetContainer()

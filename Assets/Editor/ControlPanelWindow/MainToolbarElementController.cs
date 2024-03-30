@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Collections.Generic;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -16,6 +17,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private Foldout _foldout;
 
         private StyleColor _defaultButtonColor;
+        private List<MainToolbarElementController> _subControllers = new List<MainToolbarElementController>();
 
         public string Id { get; }
         public VisualElement ControlledVisualElement { get; }
@@ -46,6 +48,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             BuildAsGroupOrSingle(subElements);
         }
 
+        public bool ContainsSubController(string id)
+        {
+            return _subControllers.Any(controller => controller.Id == id);
+        }
+
         private void BuildAsGroupOrSingle(OverridableElement[] subElements)
         {
             if (subElements.Length > 0)
@@ -65,11 +72,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private void BuildFoldout(OverridableElement[] subElements)
         {
             _foldout = new Foldout() { text = _label.text };
-            
 
             foreach (var overridable in subElements)
             {
                 var subController = new MainToolbarElementController(overridable, _overridesRepository);
+
+                _subControllers.Add(subController);
 
                 _foldout.Add(subController);
 
