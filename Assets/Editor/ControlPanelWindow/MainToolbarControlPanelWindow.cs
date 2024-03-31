@@ -38,7 +38,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             BuildFixedGUI();
 
-            if (ToolbarWrapper.IsAvailable)
+            if (MainToolbar.IsAvailable)
                 Refresh();
         }
 

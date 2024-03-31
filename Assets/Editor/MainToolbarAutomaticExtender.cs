@@ -61,19 +61,21 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         static MainToolbarAutomaticExtender()
         {
+            MainToolbar.OnInitialized += Initialize;
+        }
+
+        private static void Initialize()
+        {
             BuildCustomToolbarContainers();
 
             if (_mainToolbarElements.Length == 0)
                 return;
 
             EditorApplication.projectChanged += OnProjectChange;
+            MainToolbar.OnRefresh += ApplyFixedChangesToToolbar;
 
-            ToolbarWrapper.OnNativeToolbarWrapped += () =>
-            {
-                CacheNativeElements();
-                ApplyFixedChangesToToolbar();
-                OnAddedCustomContainersToToolbar?.Invoke();
-            };
+            CacheNativeElements();
+            ApplyFixedChangesToToolbar();
         }
 
         private static void CacheNativeElements()
@@ -89,7 +91,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public static void Refresh()
         {
-            if (!ToolbarWrapper.IsAvailable)
+            if (!MainToolbar.IsAvailable)
                 return;
 
             ResetCustomContainers();
@@ -184,9 +186,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static VisualElement[] GetNativeElements()
         {
-            return ToolbarWrapper.LeftContainer.Children()
-                .Concat(ToolbarWrapper.RightContainer.Children())
-                .Concat(ToolbarWrapper.PlayModeButtonsContainer.Children())
+            return MainToolbar.LeftContainer.Children()
+                .Concat(MainToolbar.RightContainer.Children())
+                .Concat(MainToolbar.PlayModeButtonsContainer.Children())
                 .Where(visualElement => UnityNativeElementsIds.IdOf(visualElement) != null)
                 .ToArray();
         }
@@ -289,12 +291,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             ConfigureStyleOfContainers();
             AddCustomContainers();
             ApplyOverridesOnNativeElements();
+            OnAddedCustomContainersToToolbar?.Invoke();
         }
 
         private static void AddCustomContainers()
         {
-            ToolbarWrapper.CenterContainer.Insert(0, LeftCustomContainer);
-            ToolbarWrapper.CenterContainer.Add(RightCustomContainer);
+            MainToolbar.CenterContainer.Insert(0, LeftCustomContainer);
+            MainToolbar.CenterContainer.Add(RightCustomContainer);
         }
 
         private static void AddRootElementsToContainers()
@@ -382,13 +385,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void ConfigureStyleOfContainers()
         {
-            ToolbarWrapper.LeftContainer.style.flexGrow = 0;
-            ToolbarWrapper.LeftContainer.style.width = Length.Auto();
+            MainToolbar.LeftContainer.style.flexGrow = 0;
+            MainToolbar.LeftContainer.style.width = Length.Auto();
 
-            ToolbarWrapper.RightContainer.style.flexGrow = 0;
-            ToolbarWrapper.RightContainer.style.width = Length.Auto();
+            MainToolbar.RightContainer.style.flexGrow = 0;
+            MainToolbar.RightContainer.style.width = Length.Auto();
 
-            ToolbarWrapper.CenterContainer.style.flexGrow = 1;
+            MainToolbar.CenterContainer.style.flexGrow = 1;
         }
 
         private static MainToolbarElement[] GetMainToolbarElements()

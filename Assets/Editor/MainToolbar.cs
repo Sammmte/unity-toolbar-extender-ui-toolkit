@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     [InitializeOnLoad]
-    public static class ToolbarWrapper
+    public static class MainToolbar
     {
         private const string TOOLBAR_ROOT_ELEMENT_FIELD_NAME = "m_Root";
         private const string TOOLBAR_CENTER_CONTAINER_NAME = "ToolbarZonePlayMode";
@@ -18,7 +18,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static Type _toolbarType = typeof(Editor).Assembly.GetType("UnityEditor.Toolbar");
         private static ScriptableObject _innerToolbarObject;
 
-        public static event Action OnNativeToolbarWrapped;
+        public static event Action OnInitialized;
+        public static event Action OnRefresh;
 
         public static VisualElement UnityToolbarRoot { get; private set; }
 
@@ -29,7 +30,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public static bool IsAvailable => _innerToolbarObject != null;
 
-        static ToolbarWrapper()
+        private static bool _initialized;
+
+        static MainToolbar()
         {
             EditorApplication.update -= OnUpdate;
             EditorApplication.update += OnUpdate;
@@ -42,7 +45,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return;
             AddToolbarSpacesToNativeToolbar();
 
-            OnNativeToolbarWrapped?.Invoke();
+            if(!_initialized)
+            {
+                _initialized = true;
+                OnInitialized?.Invoke();
+            }
+            else
+                OnRefresh?.Invoke();
         }
 
         private static void FindUnityToolbar()
