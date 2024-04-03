@@ -2,14 +2,14 @@
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public class MainToolbarToggle : Toggle
+    public class MainToolbarToggleField : Toggle
     {
-        public MainToolbarToggle()
+        public MainToolbarToggleField()
         {
             Initialize();
         }
 
-        public MainToolbarToggle(string label) : base(label)
+        public MainToolbarToggleField(string label) : base(label)
         {
             Initialize();
         }
