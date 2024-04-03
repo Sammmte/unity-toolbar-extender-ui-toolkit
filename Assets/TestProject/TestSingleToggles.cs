@@ -1,7 +1,8 @@
 using Paps.UnityToolbarExtenderUIToolkit;
+using UnityEngine.UIElements;
 
 [MainToolbarElement]
-public class TestSingleToggle : MainToolbarToggleField
+public class TestSingleToggle : Toggle
 {
     public TestSingleToggle() : base("Toggle 1")
     {
@@ -10,7 +11,7 @@ public class TestSingleToggle : MainToolbarToggleField
 }
 
 [MainToolbarElement]
-public class TestSingleToggle2 : MainToolbarToggleField
+public class TestSingleToggle2 : Toggle
 {
     public TestSingleToggle2() : base("Toggle 2")
     {
@@ -19,7 +20,7 @@ public class TestSingleToggle2 : MainToolbarToggleField
 }
 
 [MainToolbarElement]
-public class TestSingleToggle3 : MainToolbarToggleField
+public class TestSingleToggle3 : Toggle
 {
     public TestSingleToggle3() : base("Toggle 3")
     {
