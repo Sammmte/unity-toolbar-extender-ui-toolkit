@@ -4,14 +4,14 @@ using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public class MainToolbarDropdown : DropdownField
+    public class MainToolbarDropdownField : DropdownField
     {
-        public MainToolbarDropdown()
+        public MainToolbarDropdownField()
         {
             Initialize();
         }
 
-        public MainToolbarDropdown(string label, List<string> choices, int defaultIndex) : base(
+        public MainToolbarDropdownField(string label, List<string> choices, int defaultIndex) : base(
             label, choices, defaultIndex)
         {
             Initialize();

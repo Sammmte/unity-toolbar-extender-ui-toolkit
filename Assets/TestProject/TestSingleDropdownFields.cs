@@ -2,7 +2,7 @@ using Paps.UnityToolbarExtenderUIToolkit;
 using System.Collections.Generic;
 
 [MainToolbarElement]
-public class TestSingleDropdown : MainToolbarDropdown
+public class TestSingleDropdown : MainToolbarDropdownField
 {
     public TestSingleDropdown() : base(
         nameof(TestSingleDropdown), 
@@ -14,7 +14,7 @@ public class TestSingleDropdown : MainToolbarDropdown
 }
 
 [MainToolbarElement]
-public class TestSingleDropdown2 : MainToolbarDropdown
+public class TestSingleDropdown2 : MainToolbarDropdownField
 {
     public TestSingleDropdown2() : base(
         nameof(TestSingleDropdown2),
@@ -26,7 +26,7 @@ public class TestSingleDropdown2 : MainToolbarDropdown
 }
 
 [MainToolbarElement]
-public class TestSingleDropdown3 : MainToolbarDropdown
+public class TestSingleDropdown3 : MainToolbarDropdownField
 {
     public TestSingleDropdown3() : base(
         nameof(TestSingleDropdown3),
