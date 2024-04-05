@@ -5,12 +5,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     public class MainToolbarCustomContainer : VisualElement
     {
-        private const int SCROLL_VIEW_SCROLLER_HEIGHT = 2;
-        private const int SCROLLER_LOW_BUTTON_HEIGHT = 6;
-        private const int SCROLLER_HIGH_BUTTON_HEIGHT = 6;
-        private const int SCROLLER_SLIDER_HEIGHT = 6;
-        private const int SCROLL_VIEW_HORIZONTAL_PADDING = 5;
-        private const int SCROLL_VIEW_SCROLLER_BORDER_TOP_WIDTH = 0;
+        private const float SCROLL_VIEW_SCROLLER_HEIGHT = 1;
+        private const float SCROLLER_HEIGHT = 5;
+        private const float SCROLL_VIEW_HORIZONTAL_PADDING = 5;
+        private const float SCROLL_VIEW_SCROLLER_BORDER_TOP_WIDTH = 0;
 
         private ScrollView _scrollView;
 
@@ -43,9 +41,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             scroller.style.height = SCROLL_VIEW_SCROLLER_HEIGHT;
             scroller.style.borderTopWidth = SCROLL_VIEW_SCROLLER_BORDER_TOP_WIDTH;
-            leftButton.style.height = SCROLLER_LOW_BUTTON_HEIGHT;
-            rightButton.style.height = SCROLLER_HIGH_BUTTON_HEIGHT;
-            slider.style.height = SCROLLER_SLIDER_HEIGHT;
+            leftButton.style.height = SCROLLER_HEIGHT;
+            rightButton.style.height = SCROLLER_HEIGHT;
+            slider.style.height = SCROLLER_HEIGHT;
 
             return scrollView;
         }
