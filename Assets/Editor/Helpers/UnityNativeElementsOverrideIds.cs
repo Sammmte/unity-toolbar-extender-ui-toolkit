@@ -11,6 +11,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const string ACCOUNT_DROPDOWN_TYPE_NAME = "AccountDropdown";
         private const string CLOUD_BUTTON_TYPE_NAME = "CloudButton";
         private const string VERSION_CONTROL_BUTTON_TYPE_NAME = "MainToolbarImguiContainer";
+        private const string STORE_BUTTON_TYPE_NAME = "StoreButton";
 
         // RIGHT
         private const string LAYOUT_DROPDOWN_TYPE_NAME = "LayoutDropdown";
@@ -19,6 +20,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const string MODES_DROPDOWN_TYPE_NAME = "ModesDropdown";
         private const string PREVIEW_PACKAGES_IN_USE_DROPDOWN_TYPE_NAME = "PreviewPackagesInUseDropdown";
         private const string UNDO_BUTTON_TYPE_NAME = "UndoButton";
+        private const string MULTIPLAYER_ROLE_DROPDOWN_TYPE_NAME = "MultiplayerRoleDropdown";
 
         // ------------------- ELEMENTS NAMES ---------------------
 
@@ -44,6 +46,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public const string ACCOUNT_DROPDOWN_ID = "AccountDropdown";
         public const string CLOUD_BUTTON_ID = "CloudButton";
         public const string VERSION_CONTROL_ID = "VersionControlButton";
+        public const string STORE_BUTTON_ID = "StoreButton";
 
         // CENTER
         public const string PLAY_BUTTON_ID = "PlayButton";
@@ -57,6 +60,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public const string MODES_DROPDOWN_ID = "ModesDropdown";
         public const string PREVIEW_PACKAGES_IN_USE_DROPDOWN_ID = "PreviewPackagesInUseDropdown";
         public const string UNDO_BUTTON_ID = "UndoButton";
+        public const string MULTIPLAYER_ROLE_DROPDOWN = "MultiplayerRoleDropdown";
 
         private static readonly Dictionary<string, string> IDS_BY_TYPE = new Dictionary<string, string>()
         {
@@ -64,6 +68,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             { ACCOUNT_DROPDOWN_TYPE_NAME, ACCOUNT_DROPDOWN_ID },
             { CLOUD_BUTTON_TYPE_NAME, CLOUD_BUTTON_ID },
             { VERSION_CONTROL_BUTTON_TYPE_NAME, VERSION_CONTROL_ID },
+            { STORE_BUTTON_TYPE_NAME, STORE_BUTTON_ID },
 
             // RIGHT
             { LAYOUT_DROPDOWN_TYPE_NAME, LAYOUT_DROPDOWN_ID },
@@ -72,6 +77,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             { MODES_DROPDOWN_TYPE_NAME, MODES_DROPDOWN_ID },
             { PREVIEW_PACKAGES_IN_USE_DROPDOWN_TYPE_NAME, PREVIEW_PACKAGES_IN_USE_DROPDOWN_ID },
             { UNDO_BUTTON_TYPE_NAME, UNDO_BUTTON_ID },
+            { MULTIPLAYER_ROLE_DROPDOWN_TYPE_NAME, MULTIPLAYER_ROLE_DROPDOWN }
         };
 
         private static readonly Dictionary<string, string> IDS_BY_NAME = new Dictionary<string, string>()
