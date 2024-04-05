@@ -1,6 +1,6 @@
 ﻿namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public interface IGroupDefinitionRepository
+    internal interface IGroupDefinitionRepository
     {
         public GroupDefinition[] GetAll();
     }

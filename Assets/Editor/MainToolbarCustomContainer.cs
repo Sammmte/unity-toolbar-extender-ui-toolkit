@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public class MainToolbarCustomContainer : VisualElement
+    internal class MainToolbarCustomContainer : VisualElement
     {
         private const float SCROLL_VIEW_SCROLLER_HEIGHT = 1;
         private const float SCROLLER_HEIGHT = 5;

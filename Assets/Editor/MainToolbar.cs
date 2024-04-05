@@ -38,12 +38,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             EditorApplication.update += OnUpdate;
         }
 
-        private static void Build()
+        private static void WrapNativeToolbar()
         {
             FindUnityToolbar();
             if (_innerToolbarObject == null)
                 return;
-            AddToolbarSpacesToNativeToolbar();
+            CacheNativeToolbarContainers();
 
             if(!_initialized)
             {
@@ -60,7 +60,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _innerToolbarObject = toolbars.Length > 0 ? (ScriptableObject)toolbars[0] : null;
         }
 
-        private static void AddToolbarSpacesToNativeToolbar()
+        private static void CacheNativeToolbarContainers()
         {
             var unityToolbarRootFieldInfo = _innerToolbarObject.GetType()
                 .GetField(TOOLBAR_ROOT_ELEMENT_FIELD_NAME, BindingFlags.NonPublic | BindingFlags.Instance);
@@ -74,13 +74,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void OnUpdate()
         {
-            if (NeedsRebuild())
+            if (NeedsWrap())
             {
-                Build();
+                WrapNativeToolbar();
             }
         }
 
-        private static bool NeedsRebuild()
+        private static bool NeedsWrap()
         {
             return _innerToolbarObject == null;
         }

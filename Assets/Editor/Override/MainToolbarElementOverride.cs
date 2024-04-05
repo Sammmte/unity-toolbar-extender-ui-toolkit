@@ -1,6 +1,6 @@
 ﻿namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public readonly struct MainToolbarElementOverride
+    internal readonly struct MainToolbarElementOverride
     {
         public string ElementId { get; }
         public bool Visible { get; }

@@ -1,6 +1,6 @@
 ﻿namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public static class ServicesAndRepositories
+    internal static class ServicesAndRepositories
     {
         public static IMainToolbarElementOverrideRepository MainToolbarElementOverridesRepository =
             new JsonEditorPrefsMainToolbarElementOverrideRepository();

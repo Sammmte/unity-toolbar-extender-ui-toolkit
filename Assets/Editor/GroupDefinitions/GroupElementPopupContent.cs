@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public class GroupElementPopupContent : PopupWindowContent
+    internal class GroupElementPopupContent : PopupWindowContent
     {
         private VisualElement[] _groupElements;
         private ScrollView _scrollView;

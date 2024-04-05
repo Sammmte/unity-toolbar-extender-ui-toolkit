@@ -1,6 +1,6 @@
 ﻿namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public readonly struct GroupDefinition
+    internal readonly struct GroupDefinition
     {
         public string GroupName { get; }
         public ToolbarAlign Alignment { get; }

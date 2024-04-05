@@ -2,7 +2,7 @@
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public static class MainToolbarElementOverrideIdProvider
+    internal static class MainToolbarElementOverrideIdProvider
     {
         public static string IdOf(VisualElement visualElement)
         {
@@ -16,7 +16,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static bool HasFixedId(VisualElement visualElement, out string id)
         {
-            id = UnityNativeElementsIds.IdOf(visualElement);
+            id = UnityNativeElementsOverrideIds.IdOf(visualElement);
 
             return id != null;
         }

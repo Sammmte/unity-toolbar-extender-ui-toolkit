@@ -5,7 +5,7 @@ using UnityEditor;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public class JsonEditorPrefsMainToolbarElementOverrideRepository : IMainToolbarElementOverrideRepository
+    internal class JsonEditorPrefsMainToolbarElementOverrideRepository : IMainToolbarElementOverrideRepository
     {
         private struct SerializableOverride
         {

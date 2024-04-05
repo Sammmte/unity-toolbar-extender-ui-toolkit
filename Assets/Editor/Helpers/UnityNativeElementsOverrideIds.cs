@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public static class UnityNativeElementsIds
+    internal static class UnityNativeElementsOverrideIds
     {
         // ------------------- ELEMENTS TYPES ---------------------
 

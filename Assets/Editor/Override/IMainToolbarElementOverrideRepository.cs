@@ -1,6 +1,6 @@
 ﻿namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public interface IMainToolbarElementOverrideRepository
+    internal interface IMainToolbarElementOverrideRepository
     {
         public MainToolbarElementOverride? Get(string elementId);
         public MainToolbarElementOverride[] GetAll();

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public class ScriptableObjectGroupDefinitionRepository : IGroupDefinitionRepository
+    internal class ScriptableObjectGroupDefinitionRepository : IGroupDefinitionRepository
     {
         public GroupDefinition[] GetAll()
         {

@@ -34,8 +34,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static readonly string[] EXCEPTIONAL_ELEMENTS_FOR_VISIBILITY =
         {
-            UnityNativeElementsIds.ACCOUNT_DROPDOWN_ID,
-            UnityNativeElementsIds.CLOUD_BUTTON_ID
+            UnityNativeElementsOverrideIds.ACCOUNT_DROPDOWN_ID,
+            UnityNativeElementsOverrideIds.CLOUD_BUTTON_ID
         };
 
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
@@ -49,12 +49,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         internal static Type[] MainToolbarElementTypesInProject { get; private set; } = new Type[0];
 
-        public static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
-        public static MainToolbarCustomContainer RightCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
+        internal static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
+        internal static MainToolbarCustomContainer RightCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
-        public static VisualElement[] CustomMainToolbarElements => _mainToolbarElements.Select(m => m.VisualElement).ToArray();
-        public static VisualElement[] GroupElements => _groupElements.ToArray();
-        public static VisualElement[] NativeElements => _nativeElements.ToArray();
+        internal static VisualElement[] CustomMainToolbarElements => _mainToolbarElements.Select(m => m.VisualElement).ToArray();
+        internal static VisualElement[] GroupElements => _groupElements.ToArray();
+        internal static VisualElement[] NativeElements => _nativeElements.ToArray();
 
         public static event Action OnRefresh;
         public static event Action OnAddedCustomContainersToToolbar;
@@ -89,7 +89,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
-        public static void Refresh()
+        internal static void Refresh()
         {
             if (!MainToolbar.IsAvailable)
                 return;
@@ -189,7 +189,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             return MainToolbar.LeftContainer.Children()
                 .Concat(MainToolbar.RightContainer.Children())
                 .Concat(MainToolbar.PlayModeButtonsContainer.Children())
-                .Where(visualElement => UnityNativeElementsIds.IdOf(visualElement) != null)
+                .Where(visualElement => UnityNativeElementsOverrideIds.IdOf(visualElement) != null)
                 .ToArray();
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    public static class ToolInfo
+    internal static class ToolInfo
     {
         public const string COMPANY_NAME = "Paps";
         public const string FRIENDLY_TOOL_NAME = "Unity Toolbar Extender UI Toolkit";
