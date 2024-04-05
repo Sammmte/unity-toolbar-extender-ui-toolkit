@@ -24,6 +24,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private OrganizationalFoldableContainer _groupElementsContainer;
         private MainToolbarElementController[] _controllers;
 
+        private VisualElement _noElementsMessageElement;
+        private VisualElement _windowContainer;
+
         public static void OpenWindow()
         {
             var window = GetWindow<MainToolbarControlPanelWindow>();
@@ -37,6 +40,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             MainToolbarAutomaticExtender.OnRefresh += Refresh;
 
             BuildFixedGUI();
+            SetDefaultView();
 
             if (MainToolbar.IsAvailable)
                 Refresh();
@@ -51,11 +55,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private void Refresh()
         {
             BuildDynamicGUI();
+            SetCorrespondingView();
         }
 
         private void BuildFixedGUI()
         {
-            var windowContainer = GetContainer();
+            _windowContainer = GetContainer();
 
             _singleElementsContainer = new OrganizationalFoldableContainer(
                     SINGLE_ELEMENTS_CONTAINER_NAME, SINGLE_ELEMENTS_FOLDOUT_TEXT);
@@ -64,11 +69,42 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _nativeElementsContainer = new OrganizationalFoldableContainer(
                     NATIVE_ELEMENTS_CONTAINER_NAME, NATIVE_ELEMENTS_FOLDOUT_TEXT);
 
-            windowContainer.Add(_singleElementsContainer);
-            windowContainer.Add(_groupElementsContainer);
-            windowContainer.Add(_nativeElementsContainer);
+            _noElementsMessageElement = CreateNoElementsMessageElement();
 
-            rootVisualElement.Add(windowContainer);
+            rootVisualElement.Add(_windowContainer);
+        }
+
+        private void SetDefaultView()
+        {
+            _windowContainer.Add(_noElementsMessageElement);
+        }
+
+        private void SetCorrespondingView()
+        {
+            if(_controllers.Length > 0)
+            {
+                if(_windowContainer.Contains(_noElementsMessageElement))
+                    _windowContainer.Remove(_noElementsMessageElement);
+
+                if (!_windowContainer.Contains(_singleElementsContainer))
+                {
+                    _windowContainer.Add(_singleElementsContainer);
+                    _windowContainer.Add(_groupElementsContainer);
+                    _windowContainer.Add(_nativeElementsContainer);
+                }
+            }
+            else
+            {
+                if (_windowContainer.Contains(_singleElementsContainer))
+                {
+                    _windowContainer.Remove(_singleElementsContainer);
+                    _windowContainer.Remove(_groupElementsContainer);
+                    _windowContainer.Remove(_nativeElementsContainer);
+                }
+                
+                if (!_windowContainer.Contains(_noElementsMessageElement))
+                    _windowContainer.Add(_noElementsMessageElement);
+            }
         }
 
         private void BuildDynamicGUI()
@@ -157,10 +193,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .ToArray();
         }
 
-        private VisualElement CreateOrganizationalFoldableContainer(
-            string containerName, string foldoutText)
+        private VisualElement CreateNoElementsMessageElement()
         {
-            return new OrganizationalFoldableContainer(containerName, foldoutText);
+            return new HelpBox("No main toolbar elements were found. To use the automatic toolbar extender define a main toolbar element. See the docs.", HelpBoxMessageType.Warning);
         }
     }
 }
