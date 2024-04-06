@@ -1,4 +1,5 @@
-﻿using UnityEditor.Toolbars;
+﻿using System.Reflection;
+using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -48,12 +49,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         }
 
         private VisualElement _textElement;
-        private VisualElement _iconContainer;
+        private VisualElement _iconElement;
 
         public MainToolbarButtonToggle(string text, Texture2D iconOn, Texture2D iconOff) : base(text, iconOn, iconOff)
         {
             _textElement = this[0];
-            _iconContainer = this[1];
+
+            var iconElementField = typeof(EditorToolbarToggle).GetField("m_IconElement", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            _iconElement = iconElementField.GetValue(this) as VisualElement;
 
             _textElement.style.paddingLeft =
                 _textElement.style.paddingRight = TEXT_HORIZONTAL_PADDING;
@@ -88,10 +92,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void UpdateIconState()
         {
+            if (_iconElement.parent == null)
+                return;
+
             if (icon == null)
-                _iconContainer.style.display = DisplayStyle.None;
+                _iconElement.parent.style.display = DisplayStyle.None;
             else
-                _iconContainer.style.display = DisplayStyle.Flex;
+                _iconElement.parent.style.display = DisplayStyle.Flex;
         }
     }
 }
