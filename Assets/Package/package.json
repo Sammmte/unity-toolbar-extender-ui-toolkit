@@ -32,5 +32,12 @@
 	"Editor",
 	"Editor.meta",
 	"Documentation~"
+  ],
+  "samples": [
+	{
+		"displayName": "Basic elements",
+		"description": "Contains the most basic elements you can add to the toolbar",
+		"path": "Samples~/BasicElements"
+	}
   ]
 }
