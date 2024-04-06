@@ -19,9 +19,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void Initialize()
         {
-            var labelElement = this[0];
-            var dropdownElement = this[1];
+            schedule.Execute(() =>
+            {
+                if (childCount <= 1)
+                    return;
 
+                InitializeStyle(this[1]);
+            }).Until(() => childCount > 1);
+        }
+
+        private void InitializeStyle(VisualElement dropdownElement)
+        {
             labelElement.style.minWidth = 20;
             labelElement.style.paddingTop = 1;
             dropdownElement.AddToClassList("unity-toolbar-button");
