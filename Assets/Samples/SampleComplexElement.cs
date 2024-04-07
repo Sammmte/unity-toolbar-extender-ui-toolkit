@@ -10,13 +10,14 @@ public class SampleComplexElement : VisualElement
         style.flexDirection = FlexDirection.Column;
         style.flexGrow = 1;
 
-        var someLabel = new Label("Some Label");
+        var someLabel = new Label("This is a complex element");
         Add(someLabel);
 
         for(int i = 0; i < 20; i++)
         {
-            var button = new Button(() => Debug.Log("I am button " + (i + 1)));
-            button.text = "Button " + (i + 1);
+            int buttonNumber = i + 1;
+            var button = new Button(() => Debug.Log("I am button " + buttonNumber));
+            button.text = "Button " + buttonNumber;
             Add(button);
         }
     }
