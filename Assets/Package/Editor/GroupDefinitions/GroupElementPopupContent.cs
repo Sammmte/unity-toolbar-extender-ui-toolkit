@@ -52,14 +52,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     flexDirection = FlexDirection.Row,
                     flexGrow = 1,
                     minWidth = _windowSize.x,
-                    minHeight = 30,
+                    height = Length.Auto(),
                     justifyContent = Justify.Center,
                     borderTopColor = Color.black,
                     borderTopWidth = 1,
                     paddingTop = 3f,
                     paddingBottom = 3f,
-                    paddingLeft = 5,
-                    paddingRight = 5,
+                    paddingLeft = 8,
+                    paddingRight = 8,
                 }
             };
         }
