@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
+// Configured in Sample Group
 [MainToolbarElement(alignWhenSingle: ToolbarAlign.Left, order: 1)]
 public class SampleDropdownField : DropdownField
 {

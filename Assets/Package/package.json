@@ -31,7 +31,8 @@
 	"LICENSE.md.meta",
 	"Editor",
 	"Editor.meta",
-	"Documentation~"
+	"Documentation~",
+	"Samples~"
   ],
   "samples": [
 	{

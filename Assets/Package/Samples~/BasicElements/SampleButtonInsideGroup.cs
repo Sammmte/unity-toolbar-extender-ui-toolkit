@@ -2,6 +2,7 @@
 using UnityEditor.Toolbars;
 using UnityEngine;
 
+// Configured in Sample Group
 [MainToolbarElement] // No need to specify values in attribute
 public class SampleButtonInsideGroup : EditorToolbarButton
 {

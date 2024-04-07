@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
+// Configured in Sample Group
 [MainToolbarElement]
 public class SampleComplexElement : VisualElement
 {

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
+// Configured in Sample Group
 [MainToolbarElement(alignWhenSingle: ToolbarAlign.Left, order: 3)]
 public class SampleTextField : TextField
 {
