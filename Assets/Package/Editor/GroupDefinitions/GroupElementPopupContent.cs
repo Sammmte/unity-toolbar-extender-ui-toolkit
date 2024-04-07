@@ -8,7 +8,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         private VisualElement[] _groupElements;
         private ScrollView _scrollView;
-        private Vector2 _windowSize = new Vector2(50, 400);
+        private Vector2 _windowSize = new Vector2(200, 400);
 
         public GroupElementPopupContent(float width, VisualElement[] groupElements)
         {
@@ -54,16 +54,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     minWidth = _windowSize.x,
                     minHeight = 30,
                     justifyContent = Justify.Center,
-                    borderBottomColor = Color.black,
-                    borderLeftColor = Color.black,
-                    borderRightColor = Color.black,
                     borderTopColor = Color.black,
-                    borderBottomWidth = 1,
-                    borderLeftWidth = 1,
-                    borderRightWidth = 1,
                     borderTopWidth = 1,
                     paddingTop = 3f,
-                    paddingBottom = 3f
+                    paddingBottom = 3f,
+                    paddingLeft = 5,
+                    paddingRight = 5,
                 }
             };
         }
