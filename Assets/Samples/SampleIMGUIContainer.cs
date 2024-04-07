@@ -1,8 +1,9 @@
 ﻿using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [MainToolbarElement(alignWhenSingle: ToolbarAlign.Right, order: 1)]
-public class SampleIMGUIContainer : MainToolbarIMGUIContainer
+public class SampleIMGUIContainer : IMGUIContainer
 {
     public SampleIMGUIContainer() // you can also construct your object with base()
     {
@@ -11,7 +12,11 @@ public class SampleIMGUIContainer : MainToolbarIMGUIContainer
 
     private void MyGUIMethod()
     {
+        GUILayout.BeginHorizontal();
+
         if (GUILayout.Button("GUI Button"))
             Debug.Log("GUI Button clicked");
+
+        GUILayout.EndHorizontal();
     }
 }

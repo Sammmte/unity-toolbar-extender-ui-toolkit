@@ -1,8 +1,9 @@
 ﻿using Paps.UnityToolbarExtenderUIToolkit;
 using System.Collections.Generic;
+using UnityEngine.UIElements;
 
 [MainToolbarElement(alignWhenSingle: ToolbarAlign.Left, order: 1)]
-public class SampleDropdownField : MainToolbarDropdownField
+public class SampleDropdownField : DropdownField
 {
     public SampleDropdownField() // you can also construct your object with base()
     {

@@ -1,9 +1,8 @@
 using Paps.UnityToolbarExtenderUIToolkit;
-using UnityEditor;
-using UnityEngine;
+using UnityEditor.Toolbars;
 
 [MainToolbarElement(order: -4)]
-public class MyButtonToggle : MainToolbarButtonToggle
+public class MyButtonToggle : EditorToolbarToggle
 {
     public MyButtonToggle() : base("HOLO")
     {

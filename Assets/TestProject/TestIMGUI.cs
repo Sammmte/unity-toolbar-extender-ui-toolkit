@@ -1,8 +1,9 @@
 using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [MainToolbarElement(order: -3)]
-public class TestIMGUI : MainToolbarIMGUIContainer
+public class TestIMGUI : IMGUIContainer
 {
     public TestIMGUI()
     {
@@ -11,6 +12,8 @@ public class TestIMGUI : MainToolbarIMGUIContainer
 
     private void OnGUI()
     {
+        GUILayout.BeginHorizontal();
+
         GUILayout.Label("A GUI LABEL");
 
         if (GUILayout.Button("A GUI BUTTON"))
@@ -19,5 +22,7 @@ public class TestIMGUI : MainToolbarIMGUIContainer
         }
 
         GUILayout.Toggle(true, new GUIContent("A GUI TOGGLE"));
+
+        GUILayout.EndHorizontal();
     }
 }

@@ -20,3 +20,4 @@ MonoBehaviour:
   - SampleComplexElement
   - SampleTextField
   - SampleIntegerField
+  - SampleDropdownField
