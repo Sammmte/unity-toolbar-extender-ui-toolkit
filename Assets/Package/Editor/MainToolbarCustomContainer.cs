@@ -14,13 +14,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const float SCROLL_VIEW_HORIZONTAL_PADDING = 5;
         private const float SCROLL_VIEW_SCROLLER_BORDER_TOP_WIDTH = 0;
 
+        private string _id;
         private ScrollView _scrollView;
         private Scroller _scroller;
         private VisualElement _container;
 
-        public MainToolbarCustomContainer(string name, FlexDirection flexDirection)
+        public MainToolbarCustomContainer(string id, FlexDirection flexDirection)
         {
-            this.name = name;
+            _id = id;
+            name = id;
 
             style.flexDirection = flexDirection;
             style.flexGrow = 1;
@@ -74,7 +76,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             EditorPrefs.SetFloat(GetFullKey(), newPosition);
         }
 
-        private string GetFullKey() => LAST_SCROLLER_POSITION_SAVE_KEY_BASE + name;
+        private string GetFullKey() => LAST_SCROLLER_POSITION_SAVE_KEY_BASE + _id;
 
         public void AddToContainer(VisualElement child)
         {
