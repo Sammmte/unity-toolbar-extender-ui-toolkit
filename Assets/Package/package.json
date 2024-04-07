@@ -40,5 +40,6 @@
 		"description": "Contains the most basic elements you can add to the toolbar",
 		"path": "Samples~/BasicElements"
 	}
-  ]
+  ],
+  "documentationUrl": "https://github.com/Sammmte/unity-toolbar-extender-ui-toolkit"
 }
