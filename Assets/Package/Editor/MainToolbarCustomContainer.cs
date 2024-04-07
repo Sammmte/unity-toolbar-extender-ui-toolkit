@@ -1,16 +1,22 @@
 ﻿using System.Linq;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MainToolbarCustomContainer : VisualElement
     {
+        private const string LAST_SCROLLER_POSITION_SAVE_KEY_BASE = ToolInfo.EDITOR_PREFS_BASE_SAVE_KEY + "main-toolbar-custom-container:last-scroller-position:";
+
         private const float SCROLL_VIEW_SCROLLER_HEIGHT = 1;
         private const float SCROLLER_HEIGHT = 5;
         private const float SCROLL_VIEW_HORIZONTAL_PADDING = 5;
         private const float SCROLL_VIEW_SCROLLER_BORDER_TOP_WIDTH = 0;
 
         private ScrollView _scrollView;
+        private Scroller _scroller;
+        private VisualElement _container;
 
         public MainToolbarCustomContainer(string name, FlexDirection flexDirection)
         {
@@ -20,47 +26,69 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             style.flexGrow = 1;
             style.width = 0;
 
-            _scrollView = CreateScrollView();
-            Add(_scrollView);
+            _container = CreateAndAddContainer();
         }
 
-        private ScrollView CreateScrollView()
+        private VisualElement CreateAndAddContainer()
         {
-            var scrollView = new ScrollView(ScrollViewMode.Horizontal);
+            _scrollView = new ScrollView(ScrollViewMode.Horizontal);
 
-            scrollView.style.paddingLeft = SCROLL_VIEW_HORIZONTAL_PADDING;
-            scrollView.style.paddingRight = SCROLL_VIEW_HORIZONTAL_PADDING;
+            _scrollView.style.paddingLeft = SCROLL_VIEW_HORIZONTAL_PADDING;
+            _scrollView.style.paddingRight = SCROLL_VIEW_HORIZONTAL_PADDING;
 
-            scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
+            _scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
 
-            var scroller = scrollView.horizontalScroller;
+            _scroller = _scrollView.horizontalScroller;
 
-            var leftButton = scroller.lowButton;
-            var rightButton = scroller.highButton;
-            var slider = scroller.slider;
+            var leftButton = _scroller.lowButton;
+            var rightButton = _scroller.highButton;
+            var slider = _scroller.slider;
 
-            scroller.style.height = SCROLL_VIEW_SCROLLER_HEIGHT;
-            scroller.style.borderTopWidth = SCROLL_VIEW_SCROLLER_BORDER_TOP_WIDTH;
+            _scroller.style.height = SCROLL_VIEW_SCROLLER_HEIGHT;
+            _scroller.style.borderTopWidth = SCROLL_VIEW_SCROLLER_BORDER_TOP_WIDTH;
             leftButton.style.height = SCROLLER_HEIGHT;
             rightButton.style.height = SCROLLER_HEIGHT;
             slider.style.height = SCROLLER_HEIGHT;
 
-            return scrollView;
+            Add(_scrollView);
+            _scrollView.RegisterCallback<GeometryChangedEvent>(LoadLastScrollerPosition);
+
+            return _scrollView;
         }
+
+        private void LoadLastScrollerPosition(GeometryChangedEvent eventArgs)
+        {
+            _scroller.value = LastScrollerPosition();
+            _scroller.valueChanged += SaveScrollerPosition;
+
+            _scrollView.UnregisterCallback<GeometryChangedEvent>(LoadLastScrollerPosition);
+        }
+
+        private float LastScrollerPosition()
+        {
+            return EditorPrefs.GetFloat(GetFullKey(), 0f);
+        }
+
+        private void SaveScrollerPosition(float newPosition)
+        {
+            EditorPrefs.SetFloat(GetFullKey(), newPosition);
+        }
+
+        private string GetFullKey() => LAST_SCROLLER_POSITION_SAVE_KEY_BASE + name;
 
         public void AddToContainer(VisualElement child)
         {
-            _scrollView.Add(child);
+            _container.Add(child);
         }
 
         public void ClearContainer()
         {
-            _scrollView.Clear();
+            _container.Clear();
         }
 
         public VisualElement[] GetContainerChilds()
         {
-            return _scrollView.Children().ToArray();
+            return _container.Children().ToArray();
         }
     }
 }
