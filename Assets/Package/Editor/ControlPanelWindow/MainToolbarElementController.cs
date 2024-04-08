@@ -2,11 +2,14 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using UnityEditor;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MainToolbarElementController : VisualElement
     {
+        private const string FOLDOUT_STATE_SAVE_KEY_BASE = ToolInfo.EDITOR_PREFS_BASE_SAVE_KEY + "main-toolbar-element-controller:foldout-state:";
         private const float LEFT_PADDING_SINGLE = 19;
         private const float RIGHT_PADDING = 10;
 
@@ -48,6 +51,18 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             BuildAsGroupOrSingle(subElements);
         }
 
+        private string GetFullFoldoutStateSaveKey() => FOLDOUT_STATE_SAVE_KEY_BASE + Id;
+
+        private void SaveFoldoutState(ChangeEvent<bool> eventArgs)
+        {
+            EditorPrefs.SetBool(GetFullFoldoutStateSaveKey(), eventArgs.newValue);
+        }
+
+        private bool GetSavedFoldoutState()
+        {
+            return EditorPrefs.GetBool(GetFullFoldoutStateSaveKey(), false);
+        }
+
         public bool ContainsSubController(string id)
         {
             return _subControllers.Any(controller => controller.Id == id);
@@ -80,9 +95,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 _subControllers.Add(subController);
 
                 _foldout.Add(subController);
-
-                _foldout.value = false;
             }
+
+            _foldout.value = GetSavedFoldoutState();
+            _foldout.RegisterCallback<ChangeEvent<bool>>(SaveFoldoutState);
 
             Add(_foldout);
             Add(_button);
