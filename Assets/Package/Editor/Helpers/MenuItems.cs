@@ -5,19 +5,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal static class MenuItems
     {
-        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Main Toolbar Control Panel")]
-        public static void OpenControlPanel()
-        {
-            MainToolbarControlPanelWindow.OpenWindow();
-        }
-
-        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Refresh")]
+        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Refresh Toolbar Extender", priority = 1)]
         public static void Refresh()
         {
             MainToolbarAutomaticExtender.Refresh();
         }
 
-        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Reset Overrides")]
+        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Windows/Main Toolbar Control Panel", priority = 12)]
+        public static void OpenControlPanel()
+        {
+            MainToolbarControlPanelWindow.OpenWindow();
+        }
+
+        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Delete Actions/Reset Overrides", priority = 23)]
         public static void ResetOverrides()
         {
             ShowDialog(
@@ -33,7 +33,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 );
         }
 
-        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Delete Package Related EditorPrefs")]
+        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Delete Actions/Delete Package Related EditorPrefs", priority = 23)]
         public static void DeletePackageRelatedEditorPrefs()
         {
             ShowDialog(
