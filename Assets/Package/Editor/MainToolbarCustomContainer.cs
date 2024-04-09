@@ -7,7 +7,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MainToolbarCustomContainer : VisualElement
     {
-        private const string LAST_SCROLLER_POSITION_SAVE_KEY_BASE = ToolInfo.EDITOR_PREFS_BASE_SAVE_KEY + "main-toolbar-custom-container:last-scroller-position:";
+        private const string LAST_SCROLLER_POSITION_SAVE_KEY_BASE = "main-toolbar-custom-container:last-scroller-position:";
 
         private const float SCROLL_VIEW_SCROLLER_HEIGHT = 1;
         private const float SCROLLER_HEIGHT = 5;
@@ -60,20 +60,20 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void LoadLastScrollerPosition(GeometryChangedEvent eventArgs)
         {
-            _scroller.value = LastScrollerPosition();
+            _scroller.value = (float)LastScrollerPosition();
             _scroller.valueChanged += SaveScrollerPosition;
 
             _scrollView.UnregisterCallback<GeometryChangedEvent>(LoadLastScrollerPosition);
         }
 
-        private float LastScrollerPosition()
+        private double LastScrollerPosition()
         {
-            return EditorPrefs.GetFloat(GetFullKey(), 0f);
+            return JsonEditorPrefs.GetDouble(GetFullKey(), 0d);
         }
 
         private void SaveScrollerPosition(float newPosition)
         {
-            EditorPrefs.SetFloat(GetFullKey(), newPosition);
+            JsonEditorPrefs.SetDouble(GetFullKey(), newPosition);
         }
 
         private string GetFullKey() => LAST_SCROLLER_POSITION_SAVE_KEY_BASE + _id;

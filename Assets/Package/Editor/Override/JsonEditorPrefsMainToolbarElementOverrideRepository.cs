@@ -13,7 +13,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             public bool Visible;
         }
 
-        private const string SAVE_KEY = ToolInfo.EDITOR_PREFS_BASE_SAVE_KEY + "main-toolbar-element-overrides";
+        private const string SAVE_KEY = "main-toolbar-element-overrides";
 
         private Dictionary<string, MainToolbarElementOverride> _overrides = new Dictionary<string, MainToolbarElementOverride>();
 
@@ -62,12 +62,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void DeleteSave()
         {
-            EditorPrefs.DeleteKey(SAVE_KEY);
+            JsonEditorPrefs.DeleteKey(SAVE_KEY);
         }
 
         private Dictionary<string, MainToolbarElementOverride> LoadOverrides()
         {
-            var json = EditorPrefs.GetString(SAVE_KEY, "{}");
+            var json = JsonEditorPrefs.GetString(SAVE_KEY, "{}");
 
             var serializedDictionary = JsonConvert.DeserializeObject<Dictionary<string, SerializableOverride>>(json);
 
@@ -85,7 +85,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var json = JsonConvert.SerializeObject(serializableDictionary);
 
-            EditorPrefs.SetString(SAVE_KEY, json);
+            JsonEditorPrefs.SetString(SAVE_KEY, json);
         }
     }
 }

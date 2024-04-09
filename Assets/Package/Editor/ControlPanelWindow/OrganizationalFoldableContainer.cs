@@ -8,7 +8,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     internal class OrganizationalFoldableContainer : Box
     {
         private static readonly Color ORGANIZATIONAL_FOLDABLE_CONTAINER_BORDER_COLOR = new Color(153f / 255f, 153f / 255f, 153f / 255f);
-        private const string FOLDOUT_STATE_SAVE_KEY_BASE = ToolInfo.EDITOR_PREFS_BASE_SAVE_KEY + "organizational-foldable-container:foldout-state:";
+        private const string FOLDOUT_STATE_SAVE_KEY_BASE = "organizational-foldable-container:foldout-state:";
 
         private Foldout _foldout;
         private string _id;
@@ -31,12 +31,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void SaveFoldoutState(ChangeEvent<bool> eventArgs)
         {
-            EditorPrefs.SetBool(GetFullFoldoutStateSaveKey(), eventArgs.newValue);
+            JsonEditorPrefs.SetBool(GetFullFoldoutStateSaveKey(), eventArgs.newValue);
         }
 
         private bool GetSavedFoldoutState()
         {
-            return EditorPrefs.GetBool(GetFullFoldoutStateSaveKey(), false);
+            return JsonEditorPrefs.GetBool(GetFullFoldoutStateSaveKey(), false);
         }
 
         public void SetControllers(IEnumerable<MainToolbarElementController> controllers)

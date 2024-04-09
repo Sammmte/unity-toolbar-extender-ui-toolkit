@@ -9,7 +9,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MainToolbarElementController : VisualElement
     {
-        private const string FOLDOUT_STATE_SAVE_KEY_BASE = ToolInfo.EDITOR_PREFS_BASE_SAVE_KEY + "main-toolbar-element-controller:foldout-state:";
+        private const string FOLDOUT_STATE_SAVE_KEY_BASE = "main-toolbar-element-controller:foldout-state:";
         private const float LEFT_PADDING_SINGLE = 19;
         private const float RIGHT_PADDING = 10;
 
@@ -55,12 +55,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void SaveFoldoutState(ChangeEvent<bool> eventArgs)
         {
-            EditorPrefs.SetBool(GetFullFoldoutStateSaveKey(), eventArgs.newValue);
+            JsonEditorPrefs.SetBool(GetFullFoldoutStateSaveKey(), eventArgs.newValue);
         }
 
         private bool GetSavedFoldoutState()
         {
-            return EditorPrefs.GetBool(GetFullFoldoutStateSaveKey(), false);
+            return JsonEditorPrefs.GetBool(GetFullFoldoutStateSaveKey(), false);
         }
 
         public bool ContainsSubController(string id)

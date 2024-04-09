@@ -22,5 +22,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             ServicesAndRepositories.MainToolbarElementOverridesRepository.Clear();
             MainToolbarAutomaticExtender.Refresh();
         }
+
+        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Delete Package Related EditorPrefs")]
+        public static void DeletePackageRelatedEditorPrefs()
+        {
+            JsonEditorPrefs.DeleteAll();
+        }
     }
 }
