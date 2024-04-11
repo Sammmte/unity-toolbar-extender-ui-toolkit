@@ -319,7 +319,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
                 groups.Add(new RootMainToolbarElement()
                 {
-                    VisualElement = new GroupElement(groupDefinition.GroupName, elementsOfThisGroup.Select(el => el.VisualElement).ToArray()),
+                    VisualElement = new GroupElement(
+                        groupDefinition.GroupName, 
+                        elementsOfThisGroup.OrderBy(el => el.Order)
+                            .Select(el => el.VisualElement)
+                            .ToArray()),
                     Alignment = groupDefinition.Alignment,
                     Order = groupDefinition.Order,
                 });
