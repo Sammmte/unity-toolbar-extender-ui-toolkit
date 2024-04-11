@@ -15,4 +15,6 @@ MonoBehaviour:
   _groupName: Right Test Group
   _alignment: 1
   _order: 0
-  _toolbarElementsTypes: []
+  _toolbarElementsTypes:
+  - ElementsInNamespace.ElementsNamespace2.AnotherSubNamespace.ButtonInNamespace
+  - ElementsInNamespace.ElementsNamespace3.AnotherSubNamespace.ButtonInNamespace
