@@ -1,8 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
 using System.Globalization;
+using UnityEditor;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {

@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
