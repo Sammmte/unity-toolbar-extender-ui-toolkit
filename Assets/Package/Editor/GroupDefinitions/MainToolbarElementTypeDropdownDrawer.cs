@@ -1,9 +1,8 @@
-using System.Collections;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine.UIElements;
-using System.Collections.Generic;
-using System;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
