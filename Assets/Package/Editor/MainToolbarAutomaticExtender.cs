@@ -17,13 +17,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             public int Order;
         }
 
-        private class MainToolbarElement
-        {
-            public VisualElement VisualElement;
-            public Type DecoratedType;
-            public MainToolbarElementAttribute Attribute;
-        }
-
         private class HiddenRemovedElement
         {
             public VisualElement RemovedVisualElement;
@@ -108,7 +101,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void BuildCustomToolbarContainers()
         {
-            _mainToolbarElements = GetMainToolbarElements();
+            _mainToolbarElements = ServicesAndRepositories.MainToolbarElementRepository.GetAll();
 
             if (_mainToolbarElements.Count() == 0)
                 return;
@@ -346,8 +339,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .Where(mainToolbarElement => !elementsInGroups.Contains(mainToolbarElement))
                 .Select(mainToolbarElement => new RootMainToolbarElement()
                 {
-                    Alignment = mainToolbarElement.Attribute.AlignWhenSingle,
-                    Order = mainToolbarElement.Attribute.Order,
+                    Alignment = mainToolbarElement.AlignWhenSingle,
+                    Order = mainToolbarElement.Order,
                     VisualElement = mainToolbarElement.VisualElement
                 })
                 .ToArray();
@@ -367,7 +360,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 var containingGroupDefinition = _groupDefinitions
                     .Select(groupDefinition => (GroupDefinition?)groupDefinition)
                     .Where(groupDefinition => groupDefinition.Value.ToolbarElementsTypes.
-                        Contains(element.DecoratedType.FullName))
+                        Contains(element.VisualElement.GetType().FullName))
                     .FirstOrDefault();
 
                 if (containingGroupDefinition != null)
@@ -391,52 +384,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             MainToolbar.RightContainer.style.width = Length.Auto();
 
             MainToolbar.CenterContainer.style.flexGrow = 1;
-        }
-
-        private static MainToolbarElement[] GetMainToolbarElements()
-        {
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes())
-                .ToArray();
-
-            MainToolbarElementTypesInProject = GetMainToolbarElementTaggedTypes(types);
-
-            return GetMainToolbarElementsFromTypes();
-        }
-
-        private static Type[] GetMainToolbarElementTaggedTypes(IEnumerable<Type> allTypes)
-        {
-            return allTypes
-                .Where(type => IsValidVisualElementType(type))
-                .ToArray();
-        }
-
-        private static MainToolbarElement[] GetMainToolbarElementsFromTypes()
-        {
-            return MainToolbarElementTypesInProject
-                .Select(type => GetMainToolbarElementFromType(type))
-                .ToArray();
-        }
-
-        private static MainToolbarElement GetMainToolbarElementFromType(Type type)
-        {
-            var elementInstance = (VisualElement)Activator.CreateInstance(type);
-            var attribute = type.GetCustomAttribute<MainToolbarElementAttribute>();
-
-            if (string.IsNullOrEmpty(elementInstance.name))
-                elementInstance.name = elementInstance.GetType().Name;
-
-            return new MainToolbarElement() { VisualElement = elementInstance, Attribute = attribute, DecoratedType = type };
-        }
-
-        private static bool IsValidVisualElementType(Type type)
-        {
-            var visualElementType = typeof(VisualElement);
-
-            return visualElementType != type &&
-                visualElementType.IsAssignableFrom(type) &&
-                !type.IsAbstract &&
-                type.GetCustomAttribute<MainToolbarElementAttribute>() != null;
         }
 
         private static void OnProjectChange()

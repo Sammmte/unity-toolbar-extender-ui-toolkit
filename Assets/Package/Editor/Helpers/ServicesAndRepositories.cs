@@ -7,5 +7,8 @@
 
         public static IGroupDefinitionRepository GroupDefinitionRepository =
             new ScriptableObjectGroupDefinitionRepository();
+
+        public static IMainToolbarElementRepository MainToolbarElementRepository =
+            new ByAttributeMainToolbarElementRepository();
     }
 }
