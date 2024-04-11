@@ -9,7 +9,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            var typesList = MainToolbarAutomaticExtender.MainToolbarElementTypesInProject.Select(type => type.Name).ToList();
+            var typesList = ServicesAndRepositories.MainToolbarElementRepository
+                .GetAll()
+                .Select(mainToolbarElement => mainToolbarElement.VisualElement.GetType().Name)
+                .ToList();
 
             var popupField = new PopupField<string>(
                 choices: typesList,
