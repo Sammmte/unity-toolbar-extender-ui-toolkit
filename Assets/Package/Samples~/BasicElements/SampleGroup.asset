@@ -18,5 +18,4 @@ MonoBehaviour:
   _toolbarElementsTypes:
   - SampleComplexElement
   - SampleTextField
-  - SampleIntegerField
   - SampleDropdownField
