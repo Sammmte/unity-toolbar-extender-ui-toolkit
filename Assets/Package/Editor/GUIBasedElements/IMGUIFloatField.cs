@@ -56,7 +56,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if (!string.IsNullOrEmpty(Label))
                 GUILayout.Label(Label, GUILayout.ExpandWidth(false));
 
-            Value = EditorGUILayout.DelayedFloatField(Value, GUILayout.Width(FieldWidth));
+            if(FieldWidth > 0)
+                Value = EditorGUILayout.DelayedFloatField(Value, GUILayout.Width(FieldWidth));
+            else
+                Value = EditorGUILayout.DelayedFloatField(Value);
 
             GUILayout.EndHorizontal();
         }

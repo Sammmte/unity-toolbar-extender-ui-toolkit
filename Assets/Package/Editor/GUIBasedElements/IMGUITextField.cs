@@ -51,7 +51,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if (!string.IsNullOrEmpty(Label))
                 GUILayout.Label(Label, GUILayout.ExpandWidth(false));
 
-            Value = EditorGUILayout.DelayedTextField(Value, GUILayout.Width(FieldWidth));
+            if(FieldWidth > 0)
+                Value = EditorGUILayout.DelayedTextField(Value, GUILayout.Width(FieldWidth));
+            else
+                Value = EditorGUILayout.DelayedTextField(Value);
 
             GUILayout.EndHorizontal();
         }
