@@ -34,7 +34,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if (string.IsNullOrEmpty(elementInstance.name))
                 elementInstance.name = elementInstance.GetType().Name;
 
-            return new MainToolbarElement(elementInstance, attribute.AlignWhenSingle, attribute.Order);
+            return new MainToolbarElement(elementInstance, attribute.AlignWhenSingle, 
+                attribute.Order, attribute.UseRecommendedStyles);
         }
 
         private bool IsValidVisualElementType(Type type)

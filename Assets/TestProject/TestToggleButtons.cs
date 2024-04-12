@@ -6,6 +6,6 @@ public class MyButtonToggle : EditorToolbarToggle
 {
     public MyButtonToggle() : base("HOLO")
     {
-        
+
     }
 }

@@ -7,12 +7,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public ToolbarAlign AlignWhenSingle { get; }
         public int Order { get; }
+        public bool UseRecommendedStyles { get; }
 
         public MainToolbarElementAttribute(ToolbarAlign alignWhenSingle = ToolbarAlign.Left, 
-            int order = 0)
+            int order = 0,
+            bool useRecommendedStyles = true)
         {
             AlignWhenSingle = alignWhenSingle;
             Order = order;
+            UseRecommendedStyles = useRecommendedStyles;
         }
     }
 }

@@ -9,13 +9,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [InitializeOnLoad]
     public static class MainToolbarAutomaticExtender
     {
-        private class RootMainToolbarElement
-        {
-            public VisualElement VisualElement;
-            public ToolbarAlign Alignment;
-            public int Order;
-        }
-
         private class HiddenRemovedElement
         {
             public VisualElement RemovedVisualElement;
@@ -32,7 +25,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
         private static GroupElement[] _groupElements = new GroupElement[0];
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
-        private static RootMainToolbarElement[] _rootElements = new RootMainToolbarElement[0];
+        private static MainToolbarElement[] _rootElements = new MainToolbarElement[0];
         private static VisualElement[] _nativeElements = new VisualElement[0];
         private static Dictionary<string, HiddenRemovedElement> _hiddenElementsByRemotion = new Dictionary<string, HiddenRemovedElement>();
 
@@ -108,8 +101,20 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _groupElements = GetGroupElements();
 
             ApplyOverridesOnCustomElements();
+            ApplyRecommendedStylesOnRootSingles();
 
             AddRootElementsToContainers();
+        }
+
+        private static void ApplyRecommendedStylesOnRootSingles()
+        {
+            var eligibleRootSingles = GetRootElements()
+                .Where(element => element.UseRecommendedStyles);
+
+            foreach(var rootSingle in eligibleRootSingles)
+            {
+                RecommendedStyles.Apply(rootSingle.VisualElement);
+            }
         }
 
         private static GroupElement[] GetGroupElements()
@@ -120,7 +125,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .ToArray();
         }
 
-        private static RootMainToolbarElement[] GetRootElements()
+        private static MainToolbarElement[] GetRootElements()
         {
             return GetGroups()
                 .Concat(GetSingles())
@@ -304,9 +309,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 RightCustomContainer.AddToContainer(orderedAlignedElement.VisualElement);
         }
 
-        private static RootMainToolbarElement[] GetGroups()
+        private static MainToolbarElement[] GetGroups()
         {
-            var groups = new List<RootMainToolbarElement>();
+            var groups = new List<MainToolbarElement>();
             var elementsByGroup = GetElementsByGroup();
 
             foreach (var groupDefinition in _groupDefinitions)
@@ -316,34 +321,30 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 if (elementsOfThisGroup.Count == 0)
                     continue;
 
-                groups.Add(new RootMainToolbarElement()
-                {
-                    VisualElement = new GroupElement(
-                        groupDefinition.GroupName, 
+                var groupToolbarElement = new MainToolbarElement(
+                    new GroupElement(
+                        groupDefinition.GroupName,
                         elementsOfThisGroup.OrderBy(el => el.Order)
                             .Select(el => el.VisualElement)
                             .ToArray()),
-                    Alignment = groupDefinition.Alignment,
-                    Order = groupDefinition.Order,
-                });
+                    groupDefinition.Alignment,
+                    groupDefinition.Order,
+                    false
+                    );
+
+                groups.Add(groupToolbarElement);
             }
 
             return groups.ToArray();
         }
 
-        private static RootMainToolbarElement[] GetSingles()
+        private static MainToolbarElement[] GetSingles()
         {
             var elementsByGroup = GetElementsByGroup();
             var elementsInGroups = elementsByGroup.Values.SelectMany(list => list);
 
             return _mainToolbarElements
                 .Where(mainToolbarElement => !elementsInGroups.Contains(mainToolbarElement))
-                .Select(mainToolbarElement => new RootMainToolbarElement()
-                {
-                    Alignment = mainToolbarElement.AlignWhenSingle,
-                    Order = mainToolbarElement.Order,
-                    VisualElement = mainToolbarElement.VisualElement
-                })
                 .ToArray();
         }
 

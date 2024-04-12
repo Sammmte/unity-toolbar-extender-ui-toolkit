@@ -5,14 +5,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     internal class MainToolbarElement
     {
         public VisualElement VisualElement;
-        public ToolbarAlign AlignWhenSingle;
+        public ToolbarAlign Alignment;
         public int Order;
+        public bool UseRecommendedStyles;
 
-        public MainToolbarElement(VisualElement visualElement, ToolbarAlign alignWhenSingle, int order)
+        public MainToolbarElement(VisualElement visualElement, 
+            ToolbarAlign alignment, int order, bool useRecommendedStyles)
         {
             VisualElement = visualElement;
-            AlignWhenSingle = alignWhenSingle;
+            Alignment = alignment;
             Order = order;
+            UseRecommendedStyles = useRecommendedStyles;
         }
     }
 }
