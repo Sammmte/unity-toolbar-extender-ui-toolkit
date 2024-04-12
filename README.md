@@ -22,7 +22,7 @@ public class MyAwesomeButton : Button
 }
 ```
 
-![](Readme-Resources~/common-button-example.png)
+![](Assets/Package/Readme-Resources~/common-button-example.png)
 
 ## Place them left or right to play buttons
 
@@ -49,7 +49,7 @@ public class MyRightButton : Button
 }
 ```
 
-![](Readme-Resources~/control-alignment-example.png)
+![](Assets/Package/Readme-Resources~/control-alignment-example.png)
 
 ## Arrange them
 
@@ -96,7 +96,7 @@ public class SecondRightButton : Button
 }
 ```
 
-![](Readme-Resources~/common-arrangement-example.png)
+![](Assets/Package/Readme-Resources~/common-arrangement-example.png)
 
 ## Create more things than only buttons
 
@@ -139,7 +139,7 @@ public class MyAwesomeSlider : Slider
 }
 ```
 
-![](Readme-Resources~/other-common-controls.png)
+![](Assets/Package/Readme-Resources~/other-common-controls.png)
 
 ## Create whatever visual element you want
 
@@ -186,4 +186,4 @@ public class MyAwesomeWhatever : VisualElement
 }
 ```
 
-![](Readme-Resources~/custom-element-example.gif)
+![](Assets/Package/Readme-Resources~/custom-element-example.gif)
