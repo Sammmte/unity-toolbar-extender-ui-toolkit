@@ -13,6 +13,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             return paths
                 .Select(path => AssetDatabase.LoadAssetAtPath<ScriptableGroupDefinition>(path))
                 .Where(scriptableGroupDefinition => !string.IsNullOrEmpty(scriptableGroupDefinition.GroupName))
+                .Where(scriptableGroupDefinition => scriptableGroupDefinition.ToolbarElementsTypes.Length > 0)
                 .GroupBy(scriptableGroupDefinition => scriptableGroupDefinition.GroupName)
                 .Select(scriptableGroupDefinition => scriptableGroupDefinition.First())
                 .Select(scriptableGroupDefinition => new GroupDefinition(

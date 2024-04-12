@@ -325,7 +325,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 var groupToolbarElement = new MainToolbarElement(
                     new GroupElement(
                         groupDefinition.GroupName,
-                        elementsOfThisGroup.OrderBy(el => el.Order)
+                        elementsOfThisGroup
                             .Select(el => el.VisualElement)
                             .ToArray()),
                     groupDefinition.Alignment,
@@ -355,19 +355,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             foreach (var groupDefinition in _groupDefinitions)
             {
-                elementsByGroup.Add(groupDefinition.GroupName, new List<MainToolbarElement>());
-            }
-
-            foreach (var element in _mainToolbarElements)
-            {
-                var containingGroupDefinition = _groupDefinitions
-                    .Select(groupDefinition => (GroupDefinition?)groupDefinition)
-                    .Where(groupDefinition => groupDefinition.Value.ToolbarElementsTypes.
-                        Contains(element.VisualElement.GetType().FullName))
-                    .FirstOrDefault();
-
-                if (containingGroupDefinition != null)
-                    elementsByGroup[containingGroupDefinition.Value.GroupName].Add(element);
+                var elementsOfThisGroup = groupDefinition.ToolbarElementsTypes
+                    .Select(type => _mainToolbarElements
+                        .FirstOrDefault(element => element.VisualElement.GetType().FullName == type)
+                        )
+                    .Where(mainToolbarElement => mainToolbarElement != null)
+                    .ToList();
+                elementsByGroup.Add(groupDefinition.GroupName, elementsOfThisGroup);
             }
 
             return elementsByGroup;
@@ -391,7 +385,35 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void OnProjectChange()
         {
-            Refresh();
+            if(ShouldRefresh())
+                Refresh();
+        }
+
+        private static bool ShouldRefresh()
+        {
+            return GroupsChanged();
+        }
+
+        private static bool GroupsChanged()
+        {
+            var groups = ServicesAndRepositories.GroupDefinitionRepository.GetAll();
+
+            if (_groupDefinitions.Length != groups.Length)
+                return true;
+
+            if (_groupDefinitions.Length == 0 && groups.Length == 0)
+                return false;
+
+            for(int i = 0; i < _groupDefinitions.Length; i++)
+            {
+                var savedGroupDefinition = _groupDefinitions[i];
+                var retrievedGroupDefinition = groups[i];
+
+                if (!savedGroupDefinition.AreEquals(retrievedGroupDefinition))
+                    return true;
+            }
+
+            return false;
         }
     }
 }
