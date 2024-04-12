@@ -12,12 +12,18 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             if (visualElement is not EditorToolbarToggle && visualElement is Toggle toggle)
                 ApplyFor(toggle, ToggleCallback);
-            if (visualElement is not EditorToolbarButton && visualElement is Button button)
+            else if (visualElement is not EditorToolbarButton && visualElement is Button button)
                 ApplyFor(button, ButtonCallback);
             else if (visualElement is Slider slider)
                 ApplyFor(slider, SliderCallback);
-            else if(visualElement is DropdownField dropdownField)
+            else if (visualElement is DropdownField dropdownField)
                 ApplyFor(dropdownField, DropdownFieldCallback);
+            else if (visualElement is IMGUIFloatField floatField)
+                ApplyFor(floatField, IMGUIFloatFieldCallback);
+            else if (visualElement is IMGUIIntField intField)
+                ApplyFor(intField, IMGUIIntFieldCallback);
+            else if (visualElement is IMGUITextField textField)
+                ApplyFor(textField, IMGUITextFieldCallback);
         }
 
         private static void ApplyFor(VisualElement visualElement, EventCallback<GeometryChangedEvent> callback)
@@ -62,6 +68,36 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             button.RemoveFromClassList(DEFAULT_BUTTON_CLASS);
             button.AddToClassList(BUTTON_CLASS_FOR_TOOLBAR);
+        }
+
+        private static void IMGUIFloatFieldCallback(GeometryChangedEvent eventArgs)
+        {
+            UnregisterCallback(eventArgs, IMGUIFloatFieldCallback);
+
+            var floatField = eventArgs.target as IMGUIFloatField;
+
+            floatField.style.maxWidth = 120;
+            floatField.style.marginRight = 3;
+        }
+
+        private static void IMGUIIntFieldCallback(GeometryChangedEvent eventArgs)
+        {
+            UnregisterCallback(eventArgs, IMGUIIntFieldCallback);
+
+            var intField = eventArgs.target as IMGUIIntField;
+
+            intField.style.maxWidth = 120;
+            intField.style.marginRight = 3;
+        }
+
+        private static void IMGUITextFieldCallback(GeometryChangedEvent eventArgs)
+        {
+            UnregisterCallback (eventArgs, IMGUITextFieldCallback);
+
+            var textField = eventArgs.target as IMGUITextField;
+
+            textField.style.maxWidth = 150;
+            textField.style.marginRight = 3;
         }
 
         private static void UnregisterCallback(GeometryChangedEvent eventArgs, EventCallback<GeometryChangedEvent> callback)
