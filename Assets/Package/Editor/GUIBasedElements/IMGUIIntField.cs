@@ -25,6 +25,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
+        public float FieldWidth { get; set; }
+
         public IMGUIIntField(string label, int initialValue)
         {
             Label = label;
@@ -52,9 +54,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             GUILayout.BeginHorizontal();
 
             if (!string.IsNullOrEmpty(Label))
-                GUILayout.Label(Label);
+                GUILayout.Label(Label, GUILayout.ExpandWidth(false));
 
-            Value = EditorGUILayout.DelayedIntField(Value);
+            Value = EditorGUILayout.DelayedIntField(Value, GUILayout.Width(FieldWidth));
 
             GUILayout.EndHorizontal();
         }

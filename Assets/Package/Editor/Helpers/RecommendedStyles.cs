@@ -7,6 +7,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         private const string DEFAULT_BUTTON_CLASS = "unity-button";
         private const string BUTTON_CLASS_FOR_TOOLBAR = "unity-toolbar-button";
+        private const float IMGUI_INT_AND_FLOAT_FIELD_WIDTH = 50;
+        private const float IMGUI_TEXT_FIELD_WIDTH = 100;
 
         public static void Apply(VisualElement visualElement)
         {
@@ -76,7 +78,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var floatField = eventArgs.target as IMGUIFloatField;
 
-            floatField.style.maxWidth = 120;
+            floatField.FieldWidth = IMGUI_INT_AND_FLOAT_FIELD_WIDTH;
             floatField.style.marginRight = 3;
         }
 
@@ -86,7 +88,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var intField = eventArgs.target as IMGUIIntField;
 
-            intField.style.maxWidth = 120;
+            intField.FieldWidth = IMGUI_INT_AND_FLOAT_FIELD_WIDTH;
             intField.style.marginRight = 3;
         }
 
@@ -96,7 +98,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var textField = eventArgs.target as IMGUITextField;
 
-            textField.style.maxWidth = 150;
+            textField.FieldWidth = IMGUI_TEXT_FIELD_WIDTH;
             textField.style.marginRight = 3;
         }
 
