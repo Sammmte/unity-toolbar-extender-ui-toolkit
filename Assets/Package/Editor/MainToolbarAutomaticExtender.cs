@@ -34,7 +34,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         internal static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         internal static MainToolbarCustomContainer RightCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
-        internal static VisualElement[] CustomMainToolbarElements => _mainToolbarElements.Select(m => m.VisualElement).ToArray();
+        internal static MainToolbarElement[] CustomMainToolbarElements => _mainToolbarElements.ToArray();
         internal static VisualElement[] GroupElements => _groupElements.ToArray();
         internal static VisualElement[] NativeElements => _nativeElements.ToArray();
 
@@ -134,7 +134,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void ApplyOverridesOnCustomElements()
         {
-            var allElements = CustomMainToolbarElements.Concat(GroupElements);
+            var allElements = CustomMainToolbarElements.Select(e => e.VisualElement)
+                .Concat(GroupElements);
 
             foreach(var element in allElements)
             {

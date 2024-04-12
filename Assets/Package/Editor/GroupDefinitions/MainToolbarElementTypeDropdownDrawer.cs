@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -23,8 +22,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if (_mainToolbarElementTypesInProject != null)
                 return;
 
-            _mainToolbarElementTypesInProject = ServicesAndRepositories.MainToolbarElementRepository
-                .GetAll()
+            MainToolbarAutomaticExtender.CustomMainToolbarElements
                 .Select(mainToolbarElement => mainToolbarElement.VisualElement.GetType())
                 .ToArray();
         }

@@ -181,6 +181,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 );
 
             var customElements = MainToolbarAutomaticExtender.CustomMainToolbarElements
+                .Select(e => e.VisualElement)
                 .Concat(MainToolbarAutomaticExtender.GroupElements)
                 .Select(visualElement => new OverridableElement(
                     MainToolbarElementOverrideIdProvider.IdOf(visualElement),
