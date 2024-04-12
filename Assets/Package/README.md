@@ -2,7 +2,9 @@
 
 Inspired by marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/unity-toolbar-extender), Unity Toolbar Extender UI Toolkit allows you to extend Unity's main toolbar (where play buttons are) using Unity's UI Toolkit.
 
-# Create common controls
+# Create your own controls
+
+## Create common controls
 
 Inherit from any Unity's built-in visual element and tag it with MainToolbarElement attribute. You can place the script anywhere in your project.
 
@@ -187,3 +189,6 @@ public class MyAwesomeWhatever : VisualElement
 ```
 
 ![](Readme-Resources~/custom-element-example.gif)
+
+## Don't worry about horizontal space. It's scrollable!
+
