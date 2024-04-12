@@ -26,10 +26,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             style.flexGrow = 1;
             style.width = 0;
 
-            _container = CreateAndAddContainer();
+            _container = CreateAndAddContainer(flexDirection);
         }
 
-        private VisualElement CreateAndAddContainer()
+        private VisualElement CreateAndAddContainer(FlexDirection flexDirection)
         {
             _scrollView = new ScrollView(ScrollViewMode.Horizontal);
 
@@ -37,6 +37,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _scrollView.style.paddingRight = SCROLL_VIEW_HORIZONTAL_PADDING;
 
             _scrollView.verticalScrollerVisibility = ScrollerVisibility.Hidden;
+            _scrollView.contentContainer.style.flexDirection = flexDirection;
 
             _scroller = _scrollView.horizontalScroller;
 
