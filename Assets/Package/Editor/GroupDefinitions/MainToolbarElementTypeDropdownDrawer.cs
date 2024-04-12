@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -15,13 +16,24 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             public string ShortName;
         }
 
+        private static Type[] _mainToolbarElementTypesInProject;
+
+        private static void CacheMainToolbarElementTypesGlobally()
+        {
+            if (_mainToolbarElementTypesInProject != null)
+                return;
+
+            _mainToolbarElementTypesInProject = ServicesAndRepositories.MainToolbarElementRepository
+                .GetAll()
+                .Select(mainToolbarElement => mainToolbarElement.VisualElement.GetType())
+                .ToArray();
+        }
+
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            var types = ServicesAndRepositories.MainToolbarElementRepository
-                .GetAll()
-                .Select(mainToolbarElement => mainToolbarElement.VisualElement.GetType());
+            CacheMainToolbarElementTypesGlobally();
 
-            var shortenedTypes = GetShortsForTypes(types);
+            var shortenedTypes = GetShortsForTypes(_mainToolbarElementTypesInProject);
 
             var typesByShortName = shortenedTypes.ToDictionary(shortenedType => shortenedType.ShortName, shortenedType => shortenedType.Type);
 

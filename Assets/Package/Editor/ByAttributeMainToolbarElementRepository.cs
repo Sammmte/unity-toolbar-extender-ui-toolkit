@@ -8,17 +8,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class ByAttributeMainToolbarElementRepository : IMainToolbarElementRepository
     {
-        private MainToolbarElement[] _elementsInProject;
-
         public MainToolbarElement[] GetAll()
-        {
-            if (_elementsInProject == null)
-                _elementsInProject = LoadMainToolbarElements();
-
-            return _elementsInProject.ToArray();
-        }
-
-        private MainToolbarElement[] LoadMainToolbarElements()
         {
             return TypeCache.GetTypesWithAttribute<MainToolbarElementAttribute>()
                 .Where(type => IsValidVisualElementType(type))
