@@ -108,7 +108,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void ApplyRecommendedStylesOnRootSingles()
         {
-            var eligibleRootSingles = GetRootElements()
+            var eligibleRootSingles = _rootElements
                 .Where(element => element.UseRecommendedStyles);
 
             foreach(var rootSingle in eligibleRootSingles)
