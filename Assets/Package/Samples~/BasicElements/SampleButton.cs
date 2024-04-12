@@ -3,7 +3,7 @@ using UnityEditor.Toolbars;
 using UnityEngine;
 
 [MainToolbarElement(alignWhenSingle: ToolbarAlign.Left, order: 0)]
-public class SampleButton : EditorToolbarButton
+public class SampleButton : Button
 {
     public SampleButton() // you can also construct your object with base()
     {

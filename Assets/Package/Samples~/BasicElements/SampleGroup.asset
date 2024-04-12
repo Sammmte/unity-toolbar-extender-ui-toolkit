@@ -16,7 +16,6 @@ MonoBehaviour:
   _alignment: 0
   _order: 0
   _toolbarElementsTypes:
-  - SampleButtonInsideGroup
   - SampleComplexElement
   - SampleTextField
   - SampleIntegerField
