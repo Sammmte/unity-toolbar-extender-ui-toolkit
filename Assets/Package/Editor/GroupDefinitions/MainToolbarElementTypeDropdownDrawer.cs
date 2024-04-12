@@ -37,7 +37,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var typesByShortName = shortenedTypes.ToDictionary(shortenedType => shortenedType.ShortName, shortenedType => shortenedType.Type);
 
-            var typeNamesList = shortenedTypes.Select(typeWithShortName => typeWithShortName.ShortName).ToList();
+            var typeNamesList = shortenedTypes
+                .Select(typeWithShortName => typeWithShortName.ShortName)
+                .OrderBy(shortName => shortName)
+                .ToList();
 
             var popupField = new PopupField<string>(
                 choices: typeNamesList,
