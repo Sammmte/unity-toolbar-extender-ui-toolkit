@@ -1,10 +1,12 @@
 # Unity Toolbar Extender UI Toolkit
 
-Inspired by marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/unity-toolbar-extender), Unity Toolbar Extender UI Toolkit allows you to extend Unity's main toolbar (where play buttons are) using Unity's UI Toolkit.
+Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/unity-toolbar-extender), Unity Toolbar Extender UI Toolkit allows you to extend Unity's main toolbar (where play buttons are) using Unity's UI Toolkit.
 
-# Create common controls
+# Getting Started
 
-Inherit from any Unity's built-in visual element and tag it with MainToolbarElement attribute. You can place the script anywhere in your project.
+## Create common controls
+
+Inherit from any Unity's built-in visual element and tag it with `MainToolbarElementAttribute`. You can place the script anywhere in your project.
 
 ```csharp
 using Paps.UnityToolbarExtenderUIToolkit;
@@ -143,7 +145,7 @@ public class MyAwesomeSlider : Slider
 
 ## Create whatever visual element you want
 
-As long as your class inherits from VisualElement, you can create whatever you want.
+As long as your class inherits from `VisualElement` class, you can create whatever you want.
 
 ```csharp
 using Paps.UnityToolbarExtenderUIToolkit;
@@ -187,3 +189,38 @@ public class MyAwesomeWhatever : VisualElement
 ```
 
 ![](Assets/Package/Readme-Resources~/custom-element-example.gif)
+
+# Don't worry about horizontal space. It's scrollable!
+
+![](Assets/Package/Readme-Resources~/container-scrollable-demonstration.gif)
+
+# Group your elements to save space
+
+Create a **Group Definition** and group any visual element in it. They will be hidden and shown by a dropdown.
+
+![](Assets/Package/Readme-Resources~/group-demonstration.gif)
+
+## Configure a Group Definition
+
+To create a Group Definition, in Project Window, `Right Click -> Create -> Paps -> Unity Toolbar Extender UI Toolkit -> Group Definition.`
+
+### Properties:
+
+- `Name`: Name of the group. Acts as an id.
+- `Alignment`: Left or right to play buttons
+- `Order`: Order in toolbar. Left side goes from right to left. Right side goes from left to right.
+- `ToolbarElementsTypes`: The types of the visual elements you want to add to this group. The order determines the order in which the inner elements will be displayed.
+
+### Important Notes on Groups ![](Assets/Package/Readme-Resources~/warning.png)
+
+- Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
+- Groups display their inner elements in column.
+- The order the inner elements are displayed is determined by the `ToolbarElementsTypes` array elements order.
+
+# Save even more space. Hide Unity's native toolbar visual elements!
+
+Open the Main Toolbar Control Panel Window. Go to `Paps -> Unity Toolbar Extender UI Toolkit -> Windows -> Main Toolbar Control Panel`.
+
+Hide any toolbar visual element, either Unity's or yours.
+
+![](Assets/Package/Readme-Resources~/main-toolbar-control-panel-demonstration.gif)
