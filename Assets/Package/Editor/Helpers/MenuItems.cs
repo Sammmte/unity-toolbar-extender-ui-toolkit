@@ -20,39 +20,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Delete Actions/Reset Overrides", priority = 23)]
         public static void ResetOverrides()
         {
-            ShowDialog(
-                "Reset Overrides",
-                "You are about to reset all toolbar elements overrides.\nAre you sure you want to continue?",
-                "Reset",
-                "Cancel",
-                () =>
-                {
-                    ServicesAndRepositories.MainToolbarElementOverridesRepository.Clear();
-                    MainToolbarAutomaticExtender.Refresh();
-                }
-                );
+            GlobalActions.ResetOverridesIfUserAccepts();
         }
 
         [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Delete Actions/Delete Package Related EditorPrefs", priority = 23)]
         public static void DeletePackageRelatedEditorPrefs()
         {
-            ShowDialog(
+            GlobalActions.ShowDialog(
                 "Delete Package Related Editor Prefs",
                 $"You are about to delete all Editor Prefs related to {ToolInfo.FRIENDLY_TOOL_NAME}.\nAre you sure you want to continue?",
                 "Delete",
                 "Cancel",
-                () => JsonEditorPrefs.DeleteAll()
+                JsonEditorPrefs.DeleteAll
                 );
         }
-
-        private static void ShowDialog(string title, string message, string okMessage, 
-            string cancelMessage, Action onOk = null, Action onCancel = null)
-        {
-            if(EditorUtility.DisplayDialog(title, message, okMessage, cancelMessage))
-                onOk?.Invoke();
-            else
-                onCancel?.Invoke();
-        }
-
     }
 }

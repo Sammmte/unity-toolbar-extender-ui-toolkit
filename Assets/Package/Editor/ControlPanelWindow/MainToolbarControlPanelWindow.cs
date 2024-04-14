@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private OrganizationalFoldableContainer _singleElementsContainer;
         private OrganizationalFoldableContainer _groupElementsContainer;
         private MainToolbarElementController[] _controllers;
+
+        private Button _resetOverridesButton;
 
         private VisualElement _noElementsMessageElement;
         private VisualElement _windowContainer;
@@ -62,6 +65,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             _windowContainer = GetContainer();
 
+            _resetOverridesButton = new Button(GlobalActions.ResetOverridesIfUserAccepts);
+            _resetOverridesButton.text = "Reset Overrides";
+
             _singleElementsContainer = new OrganizationalFoldableContainer(
                     SINGLE_ELEMENTS_CONTAINER_NAME, SINGLE_ELEMENTS_FOLDOUT_TEXT);
             _groupElementsContainer = new OrganizationalFoldableContainer(
@@ -71,6 +77,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             _noElementsMessageElement = CreateNoElementsMessageElement();
 
+            rootVisualElement.Add(_resetOverridesButton);
             rootVisualElement.Add(_windowContainer);
         }
 
