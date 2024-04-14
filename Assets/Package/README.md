@@ -190,7 +190,7 @@ public class MyAwesomeWhatever : VisualElement
 
 ![](Readme-Resources~/custom-element-example.gif)
 
-# Don't worry about horizontal space. It's scrollable!
+## Don't worry about horizontal space. It's scrollable!
 
 ![](Readme-Resources~/container-scrollable-demonstration.gif)
 
@@ -211,16 +211,88 @@ To create a Group Definition, in Project Window, `Right Click -> Create -> Paps 
 - `Order`: Order in toolbar. Left side goes from right to left. Right side goes from left to right.
 - `ToolbarElementsTypes`: The types of the visual elements you want to add to this group. The order determines the order in which the inner elements will be displayed.
 
-### Important Notes on Groups ![](Readme-Resources~/warning.png)
-
-- Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
-- Groups display their inner elements in column.
-- The order the inner elements are displayed is determined by the `ToolbarElementsTypes` array elements order.
-
-# Save even more space. Hide Unity's native toolbar visual elements!
+# Hide Unity's native toolbar visual elements. Save even more space.
 
 Open the Main Toolbar Control Panel Window. Go to `Paps -> Unity Toolbar Extender UI Toolkit -> Windows -> Main Toolbar Control Panel`.
 
 Hide any toolbar visual element, either Unity's or yours.
 
 ![](Readme-Resources~/main-toolbar-control-panel-demonstration.gif)
+
+# MainToolbar Class
+
+Everything covered in this article until now is managed by `MainToolbarAutomaticExtender` static class. If, by any chance, you don't want to manage your visual elements the way I meant, you can access the `MainToolbar` static class and manipulate Unity's main toolbar and its elements.
+
+You can listen to `OnInitialized` event and apply your change once initialized. To subscribe to this event you need to subscribe to it before the first editor update. The easiest way is to do it in the static constructor of a class marked with `InitializeOnLoad` attribute. You can also check the `IsAvailable` property to check if it is initialized.
+
+```csharp
+using Paps.UnityToolbarExtenderUIToolkit;
+using UnityEditor;
+
+[InitializeOnLoad]
+public static class MyOwnMainToolbarManager
+{
+    static MyOwnMainToolbarManager()
+    {
+        MainToolbar.OnInitialized += DoSomeStuff;
+    }
+
+    private static void DoSomeStuff()
+    {
+        // I do my stuff here
+    }
+}
+```
+
+You can access Unity's toolbar visual elements, like the play buttons container or the left (where the cloud button is) or the right (where the layouts dropdown is).
+
+```csharp
+using Paps.UnityToolbarExtenderUIToolkit;
+using UnityEditor;
+using UnityEditor.Toolbars;
+
+[InitializeOnLoad]
+public static class MyOwnMainToolbarManager
+{
+    static MyOwnMainToolbarManager()
+    {
+        MainToolbar.OnInitialized += DoSomeStuff;
+    }
+
+    private static void DoSomeStuff()
+    {
+        var myOwnPlayButton = new EditorToolbarButton("My Play Button", 
+            () => EditorApplication.EnterPlaymode());
+
+        MainToolbar.PlayModeButtonsContainer.Add(myOwnPlayButton);
+    }
+}
+```
+
+Unity's toolbar gets destroyed when the editor layout changes (through layout dropdown normally), when this happens `MainToolbar` class will try to get the new object. Because of this, any change made to the toolbar goes away, so you'll need to re-apply your changes. To do this, listen to `OnRefresh` event and you can the same things you did when `OnInitialized` event happened.
+
+# ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) Important Miscelanous Information ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png)
+
+The following is a list of things I consider you might be interested in if you need to debug or understand how something works in this package:
+
+## About Main Toolbar Elements
+
+- Many Unity built-in visual elements, like `Button` or `DropdownField`, are rendered with a white broken texture when added to the toolbar. This package automatically applies some basic styles that kind of fix this issue. If you are looking to style your visual elements, you should read [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements) section.
+- Your visual elements will be created when your scripts are recompiled and when `MainToolbarAutomaticExtender` refreshes. Take this into account if you are doing something that is process-heavy at construction time.
+
+## About Groups:
+
+- Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
+- Groups display their inner elements in column.
+- The order the inner elements are displayed is determined by the `ToolbarElementsTypes` array elements order.
+
+## About MainToolbar Class:
+
+- Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature at the same time that manipulating the `MainToolbar` class.
+- Remember that Unity's `real` main toolbar object is destroyed when the layout changes. Every change made to that object goes away with it. Use `MainToolbar.OnRefresh` event to re-apply your changes.
+
+## About how this package saves its data
+
+- This package uses EditorPrefs and json tool from Newtonsoft. A single EditorPrefs key is used to save a json object and the other classes write to this json object. If you experience some weird behaviour and you suspect it could be this cache data, you can delete it to start over. To do this go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Delete package related EditorPrefs`.
+
+# Styling Your Main Toolbar Elements
