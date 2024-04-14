@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df7c06c2de586e41bb0c33bfd80766f, type: 3}
   m_Name: RightTestGroupDefinition
   m_EditorClassIdentifier: 
-  _groupName: Right Test Group
+  _groupId: RightTestGroup
   _alignment: 1
   _order: 0
   _toolbarElementsTypes:
-  - ElementsInNamespace.ElementsNamespace2.AnotherSubNamespace.ButtonInNamespace
-  - ElementsInNamespace.ElementsNamespace3.AnotherSubNamespace.ButtonInNamespace
+  - Button In Namespace 1
+  - Button In Namespace 2
+  - Button In Namespace 3

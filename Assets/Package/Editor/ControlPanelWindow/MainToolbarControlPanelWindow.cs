@@ -156,19 +156,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .Select(overridableElement => new MainToolbarElementController(
                     overridableElement,
                     ServicesAndRepositories.MainToolbarElementOverridesRepository,
-                    GetSubElementsIfAny(overridableElement.VisualElement))
+                    GetSubElementsIfAny(overridableElement))
                 )
                 .ToArray();
         }
 
-        private OverridableElement[] GetSubElementsIfAny(VisualElement visualElement)
+        private OverridableElement[] GetSubElementsIfAny(OverridableElement overridableElement)
         {
-            if(visualElement is GroupElement groupElement)
+            if(overridableElement.VisualElement is GroupElement)
             {
-                return groupElement.GroupedElements
+                return MainToolbarAutomaticExtender.GetElementsOfGroup(overridableElement.Id)
                     .Select(el => new OverridableElement(
-                        MainToolbarElementOverrideIdProvider.IdOf(el),
-                        el,
+                        el.Id,
+                        el.VisualElement,
                         false)
                     )
                     .ToArray();
@@ -180,19 +180,18 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private OverridableElement[] GetOverridableElements()
         {
             var nativeElements = MainToolbarAutomaticExtender.NativeElements
-                .Select(visualElement => new OverridableElement(
-                    MainToolbarElementOverrideIdProvider.IdOf(visualElement),
-                    visualElement,
+                .Select(nativeElement => new OverridableElement(
+                    nativeElement.Id,
+                    nativeElement.VisualElement,
                     true
                     )
                 );
 
             var customElements = MainToolbarAutomaticExtender.CustomMainToolbarElements
-                .Select(e => e.VisualElement)
                 .Concat(MainToolbarAutomaticExtender.GroupElements)
-                .Select(visualElement => new OverridableElement(
-                    MainToolbarElementOverrideIdProvider.IdOf(visualElement),
-                    visualElement,
+                .Select(mainToolbarElement => new OverridableElement(
+                    mainToolbarElement.Id,
+                    mainToolbarElement.VisualElement,
                     false
                     )
                 );

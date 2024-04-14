@@ -2,7 +2,7 @@ using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[MainToolbarElement(order: -3)]
+[MainToolbarElement(nameof(TestIMGUI), order: -3)]
 public class TestIMGUI : IMGUIContainer
 {
     public TestIMGUI()

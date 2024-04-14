@@ -2,7 +2,7 @@ using Paps.UnityToolbarExtenderUIToolkit;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
-[MainToolbarElement]
+[MainToolbarElement(nameof(TestDropdownField))]
 public class TestDropdownField : DropdownField
 {
     public TestDropdownField()

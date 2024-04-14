@@ -18,15 +18,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static readonly string[] EXCEPTIONAL_ELEMENTS_FOR_VISIBILITY =
         {
-            UnityNativeElementsOverrideIds.ACCOUNT_DROPDOWN_ID,
-            UnityNativeElementsOverrideIds.CLOUD_BUTTON_ID
+            UnityNativeElementsIds.ACCOUNT_DROPDOWN_ID,
+            UnityNativeElementsIds.CLOUD_BUTTON_ID
         };
 
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
-        private static GroupElement[] _groupElements = new GroupElement[0];
+        private static MainToolbarElement[] _groupElements = new MainToolbarElement[0];
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
         private static MainToolbarElement[] _rootElements = new MainToolbarElement[0];
-        private static VisualElement[] _nativeElements = new VisualElement[0];
+        private static NativeToolbarElement[] _nativeElements = new NativeToolbarElement[0];
         private static Dictionary<string, HiddenRemovedElement> _hiddenElementsByRemotion = new Dictionary<string, HiddenRemovedElement>();
 
         private static Dictionary<string, MainToolbarElementOverride> _nativeElementsInitialState = new Dictionary<string, MainToolbarElementOverride>();
@@ -35,8 +35,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         internal static MainToolbarCustomContainer RightCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
 
         internal static MainToolbarElement[] CustomMainToolbarElements => _mainToolbarElements.ToArray();
-        internal static VisualElement[] GroupElements => _groupElements.ToArray();
-        internal static VisualElement[] NativeElements => _nativeElements.ToArray();
+        internal static MainToolbarElement[] GroupElements => _groupElements.ToArray();
+        internal static NativeToolbarElement[] NativeElements => _nativeElements.ToArray();
 
         public static event Action OnRefresh;
         public static event Action OnAddedCustomContainersToToolbar;
@@ -83,6 +83,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             OnRefresh?.Invoke();
         }
 
+        internal static MainToolbarElement[] GetElementsOfGroup(string id)
+        {
+            var elementsByGroup = GetElementsByGroup();
+
+            return elementsByGroup[id].ToArray();
+        }
+
         private static void ResetCustomContainers()
         {
             LeftCustomContainer.ClearContainer();
@@ -97,8 +104,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return;
 
             _groupDefinitions = LoadGroupDefinitions();
+            _groupElements = GetGroups();
             _rootElements = GetRootElements();
-            _groupElements = GetGroupElements();
 
             ApplyOverridesOnCustomElements();
             ApplyRecommendedStylesOnRootSingles();
@@ -117,29 +124,21 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
-        private static GroupElement[] GetGroupElements()
-        {
-            return _rootElements
-                .Where(rootElement => rootElement.VisualElement is GroupElement)
-                .Select(rootElement => rootElement.VisualElement as GroupElement)
-                .ToArray();
-        }
-
         private static MainToolbarElement[] GetRootElements()
         {
-            return GetGroups()
+            return _groupElements
                 .Concat(GetSingles())
                 .ToArray();
         }
 
         private static void ApplyOverridesOnCustomElements()
         {
-            var allElements = CustomMainToolbarElements.Select(e => e.VisualElement)
+            var allElements = CustomMainToolbarElements
                 .Concat(GroupElements);
 
-            foreach(var element in allElements)
+            foreach(var mainToolbarElement in allElements)
             {
-                ApplyOverride(element);
+                ApplyOverride(mainToolbarElement.Id, mainToolbarElement.VisualElement);
             }
         }
 
@@ -148,26 +147,23 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if (_nativeElementsInitialState.Count > 0)
                 return;
 
-            foreach (var element in _nativeElements)
+            foreach (var nativeElement in _nativeElements)
             {
-                var overrideId = MainToolbarElementOverrideIdProvider.IdOf(element);
-
-                _nativeElementsInitialState[overrideId] =
+                _nativeElementsInitialState[nativeElement.Id] =
                     new MainToolbarElementOverride(
-                        overrideId,
-                        element.resolvedStyle.display == DisplayStyle.Flex
+                        nativeElement.Id,
+                        nativeElement.VisualElement.resolvedStyle.display == DisplayStyle.Flex
                         );
             }
         }
 
         private static void SetNativeElementsDefaultState()
         {
-            foreach (var element in _nativeElements)
+            foreach (var nativeElement in _nativeElements)
             {
-                var overrideId = MainToolbarElementOverrideIdProvider.IdOf(element);
-                var defaultStateOverride = _nativeElementsInitialState[overrideId];
+                var defaultStateOverride = _nativeElementsInitialState[nativeElement.Id];
 
-                ApplyOverride(element, defaultStateOverride);
+                ApplyOverride(nativeElement, defaultStateOverride);
             }    
         }
 
@@ -175,42 +171,34 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             foreach(var nativeElement in _nativeElements)
             {
-                ApplyOverride(nativeElement);
+                ApplyOverride(nativeElement.Id, nativeElement.VisualElement);
             }
         }
 
-        private static VisualElement[] GetNativeElements()
+        private static NativeToolbarElement[] GetNativeElements()
         {
             return MainToolbar.LeftContainer.Children()
                 .Concat(MainToolbar.RightContainer.Children())
                 .Concat(MainToolbar.PlayModeButtonsContainer.Children())
-                .Where(visualElement => UnityNativeElementsOverrideIds.IdOf(visualElement) != null)
+                .Where(visualElement => UnityNativeElementsIds.IdOf(visualElement) != null)
+                .Select(visualElement => new NativeToolbarElement(UnityNativeElementsIds.IdOf(visualElement), visualElement))
                 .ToArray();
         }
 
-        private static void ApplyOverride(VisualElement visualElement)
+        private static void ApplyOverride(string id, VisualElement visualElement)
         {
-            var elementOverrideId = MainToolbarElementOverrideIdProvider.IdOf(visualElement);
-
-            if (elementOverrideId == null)
-                return;
-
-            var userOverride = ServicesAndRepositories.MainToolbarElementOverridesRepository.Get(elementOverrideId);
+            var userOverride = ServicesAndRepositories.MainToolbarElementOverridesRepository
+                .Get(id);
 
             if (userOverride == null)
                 return;
 
-            ApplyVisibilityOverride(elementOverrideId, visualElement, userOverride.Value.Visible);
+            ApplyVisibilityOverride(id, visualElement, userOverride.Value.Visible);
         }
 
-        private static void ApplyOverride(VisualElement visualElement, MainToolbarElementOverride overrideData)
+        private static void ApplyOverride(NativeToolbarElement nativeElement, MainToolbarElementOverride overrideData)
         {
-            var elementOverrideId = MainToolbarElementOverrideIdProvider.IdOf(visualElement);
-
-            if (elementOverrideId == null)
-                return;
-
-            ApplyVisibilityOverride(elementOverrideId, visualElement, overrideData.Visible);
+            ApplyVisibilityOverride(nativeElement.Id, nativeElement.VisualElement, overrideData.Visible);
         }
 
         private static void ApplyVisibilityOverride(string elementId, VisualElement visualElement, bool visible)
@@ -317,14 +305,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             foreach (var groupDefinition in _groupDefinitions)
             {
-                var elementsOfThisGroup = elementsByGroup[groupDefinition.GroupName];
+                var elementsOfThisGroup = elementsByGroup[groupDefinition.GroupId];
 
                 if (elementsOfThisGroup.Count == 0)
                     continue;
 
                 var groupToolbarElement = new MainToolbarElement(
+                    groupDefinition.GroupId,
                     new GroupElement(
-                        groupDefinition.GroupName,
+                        groupDefinition.GroupId,
                         elementsOfThisGroup
                             .Select(el => el.VisualElement)
                             .ToArray()),
@@ -355,13 +344,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             foreach (var groupDefinition in _groupDefinitions)
             {
-                var elementsOfThisGroup = groupDefinition.ToolbarElementsTypes
-                    .Select(type => _mainToolbarElements
-                        .FirstOrDefault(element => element.VisualElement.GetType().FullName == type)
+                var elementsOfThisGroup = groupDefinition.ToolbarElementsIds
+                    .Select(id => _mainToolbarElements
+                        .FirstOrDefault(element => element.Id == id)
                         )
                     .Where(mainToolbarElement => mainToolbarElement != null)
                     .ToList();
-                elementsByGroup.Add(groupDefinition.GroupName, elementsOfThisGroup);
+                elementsByGroup.Add(groupDefinition.GroupId, elementsOfThisGroup);
             }
 
             return elementsByGroup;

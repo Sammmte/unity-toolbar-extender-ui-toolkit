@@ -4,14 +4,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MainToolbarElement
     {
-        public VisualElement VisualElement;
-        public ToolbarAlign Alignment;
-        public int Order;
-        public bool UseRecommendedStyles;
+        public string Id { get; }
+        public VisualElement VisualElement { get; }
+        public ToolbarAlign Alignment { get; }
+        public int Order { get; }
+        public bool UseRecommendedStyles { get; }
 
-        public MainToolbarElement(VisualElement visualElement, 
+        public MainToolbarElement(string id, VisualElement visualElement, 
             ToolbarAlign alignment, int order, bool useRecommendedStyles)
         {
+            Id = id;
             VisualElement = visualElement;
             Alignment = alignment;
             Order = order;

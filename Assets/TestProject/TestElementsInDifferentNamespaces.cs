@@ -3,7 +3,7 @@ using UnityEditor.Toolbars;
 
 namespace ElementsInNamespace.ElementsNamespace1
 {
-    [MainToolbarElement]
+    [MainToolbarElement("Button In Namespace 1")]
     public class ButtonInNamespace : EditorToolbarButton
     {
         public ButtonInNamespace()
@@ -15,7 +15,7 @@ namespace ElementsInNamespace.ElementsNamespace1
 
 namespace ElementsInNamespace.ElementsNamespace2.AnotherSubNamespace
 {
-    [MainToolbarElement]
+    [MainToolbarElement("Button In Namespace 2")]
     public class ButtonInNamespace : EditorToolbarButton
     {
         public ButtonInNamespace()
@@ -27,7 +27,7 @@ namespace ElementsInNamespace.ElementsNamespace2.AnotherSubNamespace
 
 namespace ElementsInNamespace.ElementsNamespace3.AnotherSubNamespace
 {
-    [MainToolbarElement]
+    [MainToolbarElement("Button In Namespace 3")]
     public class ButtonInNamespace : EditorToolbarButton
     {
         public ButtonInNamespace()

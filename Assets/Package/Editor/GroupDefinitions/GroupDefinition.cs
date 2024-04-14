@@ -4,25 +4,25 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal readonly struct GroupDefinition
     {
-        public string GroupName { get; }
+        public string GroupId { get; }
         public ToolbarAlign Alignment { get; }
         public int Order { get; }
-        public string[] ToolbarElementsTypes { get; }
+        public string[] ToolbarElementsIds { get; }
 
-        public GroupDefinition(string groupName, ToolbarAlign alignment, int order, string[] toolbarElementsTypes)
+        public GroupDefinition(string groupId, ToolbarAlign alignment, int order, string[] toolbarElementsIds)
         {
-            GroupName = groupName;
+            GroupId = groupId;
             Alignment = alignment;
             Order = order;
-            ToolbarElementsTypes = toolbarElementsTypes;
+            ToolbarElementsIds = toolbarElementsIds;
         }
 
         public bool AreEquals(GroupDefinition other)
         {
-            return other.GroupName == other.GroupName &&
+            return other.GroupId == other.GroupId &&
                 other.Alignment == other.Alignment &&
                 other.Order == other.Order &&
-                AreEquals(ToolbarElementsTypes, other.ToolbarElementsTypes);
+                AreEquals(ToolbarElementsIds, other.ToolbarElementsIds);
         }
 
         private bool AreEquals(string[] types, string[] types2)

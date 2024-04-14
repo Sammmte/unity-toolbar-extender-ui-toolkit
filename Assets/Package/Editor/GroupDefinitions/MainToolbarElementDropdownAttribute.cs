@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-    internal class MainToolbarElementTypeDropdownAttribute : PropertyAttribute
+    internal class MainToolbarElementDropdownAttribute : PropertyAttribute
     {
 
     }

@@ -1,7 +1,7 @@
 using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine;
 
-[MainToolbarElement(order: -30)]
+[MainToolbarElement(nameof(TestFloatField), order: -30)]
 public class TestFloatField : IMGUIFloatField
 {
     public TestFloatField() : base("Test Float")
@@ -10,7 +10,7 @@ public class TestFloatField : IMGUIFloatField
     }
 }
 
-[MainToolbarElement(order: -30)]
+[MainToolbarElement(nameof(TestIntField), order: -30)]
 public class TestIntField : IMGUIIntField
 {
     public TestIntField() : base("Test Int")
@@ -19,7 +19,7 @@ public class TestIntField : IMGUIIntField
     }
 }
 
-[MainToolbarElement(order: -30)]
+[MainToolbarElement(nameof(TestTextField), order: -30)]
 public class TestTextField : IMGUITextField
 {
     public TestTextField() : base("Test Text")
