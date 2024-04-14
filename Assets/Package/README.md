@@ -6,14 +6,14 @@ Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/
 
 ## Create common controls
 
-Inherit from any Unity's built-in visual element and tag it with `MainToolbarElementAttribute`. You can place the script anywhere in your project.
+Inherit from any Unity's built-in visual element, tag it with `MainToolbarElementAttribute` and define an id. You can place the script anywhere in your project.
 
 ```csharp
 using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[MainToolbarElement]
+[MainToolbarElement(id: "TheAwesomeButton")]
 public class MyAwesomeButton : Button
 {
     public MyAwesomeButton()
@@ -32,7 +32,7 @@ public class MyAwesomeButton : Button
 using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine.UIElements;
 
-[MainToolbarElement(ToolbarAlign.Left)]
+[MainToolbarElement(id: "LeftButton", ToolbarAlign.Left)]
 public class MyLeftButton : Button
 {
     public MyLeftButton()
@@ -41,7 +41,7 @@ public class MyLeftButton : Button
     }
 }
 
-[MainToolbarElement(ToolbarAlign.Right)]
+[MainToolbarElement(id: "RightButton", ToolbarAlign.Right)]
 public class MyRightButton : Button
 {
     public MyRightButton()
@@ -61,7 +61,7 @@ Left elements are ordered from right to left. Right elements from left to right.
 using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine.UIElements;
 
-[MainToolbarElement(ToolbarAlign.Left, order: 1)]
+[MainToolbarElement(id: "FirstLeftButton", ToolbarAlign.Left, order: 1)]
 public class FirstLeftButton : Button
 {
     public FirstLeftButton()
@@ -70,7 +70,7 @@ public class FirstLeftButton : Button
     }
 }
 
-[MainToolbarElement(ToolbarAlign.Left, order: 2)]
+[MainToolbarElement(id: "SecondLeftButton", ToolbarAlign.Left, order: 2)]
 public class SecondLeftButton : Button
 {
     public SecondLeftButton()
@@ -79,7 +79,7 @@ public class SecondLeftButton : Button
     }
 }
 
-[MainToolbarElement(ToolbarAlign.Right, order: 1)]
+[MainToolbarElement(id: "FirstRightButton", ToolbarAlign.Right, order: 1)]
 public class FirstRightButton : Button
 {
     public FirstRightButton()
@@ -88,7 +88,7 @@ public class FirstRightButton : Button
     }
 }
 
-[MainToolbarElement(ToolbarAlign.Right, order: 2)]
+[MainToolbarElement(id: "SecondRightButton", ToolbarAlign.Right, order: 2)]
 public class SecondRightButton : Button
 {
     public SecondRightButton()
@@ -107,7 +107,7 @@ using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 
-[MainToolbarElement(ToolbarAlign.Left)]
+[MainToolbarElement(id: "AwesomeToggle", ToolbarAlign.Left)]
 public class MyAwesomeToggle : Toggle
 {
     public MyAwesomeToggle() : base(label: "Awesome Toggle")
@@ -116,7 +116,7 @@ public class MyAwesomeToggle : Toggle
     }
 }
 
-[MainToolbarElement(ToolbarAlign.Right)]
+[MainToolbarElement(id: "AwesomeDropdownField", ToolbarAlign.Right)]
 public class MyAwesomeDropdownField : DropdownField
 {
     public MyAwesomeDropdownField() : base(
@@ -128,7 +128,7 @@ public class MyAwesomeDropdownField : DropdownField
     }
 }
 
-[MainToolbarElement(ToolbarAlign.Left)]
+[MainToolbarElement(id: "AwesomeSlider", ToolbarAlign.Left)]
 public class MyAwesomeSlider : Slider
 {
     public MyAwesomeSlider() : base(
@@ -151,7 +151,7 @@ As long as your class inherits from `VisualElement` class, you can create whatev
 using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine.UIElements;
 
-[MainToolbarElement]
+[MainToolbarElement(id: "AwesomeThing")]
 public class MyAwesomeWhatever : VisualElement
 {
     private Toggle _displaySliderToggle;
@@ -290,6 +290,11 @@ The following is a list of things I consider you might be interested in if you n
 
 - Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature at the same time that manipulating the `MainToolbar` class.
 - Remember that Unity's `real` main toolbar object is destroyed when the layout changes. Every change made to that object goes away with it. Use `MainToolbar.OnRefresh` event to re-apply your changes.
+
+## About MainToolbarAutomaticExtender Class:
+
+- This is the main manager. All the magic happens inside.
+- This class **WON'T** do anything, unless you mark at least one type derived from `VisualElement` with `MainToolbarElementAttribute`.
 
 ## About how this package saves its data
 
