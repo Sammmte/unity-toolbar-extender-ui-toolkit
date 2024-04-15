@@ -1,7 +1,7 @@
 ﻿using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine;
 
-[MainToolbarElement]
+[MainToolbarElement(id: "SampleFloatField")]
 public class SampleFloatField : IMGUIFloatField
 {
     public SampleFloatField() : base("Sample Float Field")

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df7c06c2de586e41bb0c33bfd80766f, type: 3}
   m_Name: SampleGroup
   m_EditorClassIdentifier: 
-  _groupName: SampleGroup
+  _groupId: SampleGroup
   _alignment: 0
   _order: 0
   _toolbarElementsTypes:

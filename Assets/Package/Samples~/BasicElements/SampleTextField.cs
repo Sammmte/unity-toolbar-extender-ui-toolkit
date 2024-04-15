@@ -1,7 +1,7 @@
 ﻿using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine;
 
-[MainToolbarElement]
+[MainToolbarElement(id: "SampleTextField")]
 public class SampleTextField : IMGUITextField
 {
     public SampleTextField() : base("Sample Text Field")

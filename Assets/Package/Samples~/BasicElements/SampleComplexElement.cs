@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 // Configured in Sample Group
-[MainToolbarElement]
+[MainToolbarElement(id: "SampleComplexElement")]
 public class SampleComplexElement : VisualElement
 {
     public SampleComplexElement()
