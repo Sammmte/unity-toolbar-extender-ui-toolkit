@@ -1,6 +1,6 @@
 # Unity Toolbar Extender UI Toolkit
 
-Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/unity-toolbar-extender), Unity Toolbar Extender UI Toolkit allows you to extend Unity's main toolbar (where play buttons are) using Unity's UI Toolkit.
+Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/unity-toolbar-extender), Unity Toolbar Extender UI Toolkit allows you to extend Unity's main toolbar using Unity's UI Toolkit.
 
 # Getting Started
 
@@ -209,7 +209,7 @@ To create a Group Definition, in Project Window, `Right Click -> Create -> Paps 
 - `Name`: Name of the group. Acts as an id.
 - `Alignment`: Left or right to play buttons
 - `Order`: Order in toolbar. Left side goes from right to left. Right side goes from left to right.
-- `ToolbarElementsTypes`: The types of the visual elements you want to add to this group. The order determines the order in which the inner elements will be displayed.
+- `ToolbarElementsIds`: The ids of the visual elements you want to add to this group. The order determines the order in which the inner elements will be displayed.
 
 # Hide Unity's native toolbar visual elements. Save even more space.
 
@@ -223,7 +223,7 @@ Hide any toolbar visual element, either Unity's or yours.
 
 Everything covered in this article until now is managed by `MainToolbarAutomaticExtender` static class. If, by any chance, you don't want to manage your visual elements the way I meant, you can access the `MainToolbar` static class and manipulate Unity's main toolbar and its elements.
 
-You can listen to `OnInitialized` event and apply your change once initialized. To subscribe to this event you need to subscribe to it before the first editor update. The easiest way is to do it in the static constructor of a class marked with `InitializeOnLoad` attribute. You can also check the `IsAvailable` property to check if it is initialized.
+You can listen to `OnInitialized` event and apply your changes once initialized. To subscribe to this event you need to subscribe to it before the first editor update. The easiest way is to do it in the static constructor of a class marked with `InitializeOnLoad` attribute. You can also check the `IsAvailable` property to check if it is initialized.
 
 ```csharp
 using Paps.UnityToolbarExtenderUIToolkit;
@@ -269,7 +269,7 @@ public static class MyOwnMainToolbarManager
 }
 ```
 
-Unity's toolbar gets destroyed when the editor layout changes (through layout dropdown normally), when this happens `MainToolbar` class will try to get the new object. Because of this, any change made to the toolbar goes away, so you'll need to re-apply your changes. To do this, listen to `OnRefresh` event and you can the same things you did when `OnInitialized` event happened.
+Unity's toolbar gets destroyed when the editor layout changes (through layout dropdown normally). When this happens `MainToolbar` class will try to get the new object. Because of this, any change made to the toolbar goes away, so you'll need to re-apply your changes. To do this, listen to `OnRefresh` event and you can the same things you did when `OnInitialized` event happened.
 
 # ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) Important Miscelanous Information ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png)
 
@@ -284,17 +284,23 @@ The following is a list of things I consider you might be interested in if you n
 
 - Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
 - Groups display their inner elements in column.
-- The order the inner elements are displayed is determined by the `ToolbarElementsTypes` array elements order.
+- The order the inner elements are displayed is determined by the `ToolbarElementsIds` array elements order.
 
 ## About MainToolbar Class:
 
 - Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature at the same time that manipulating the `MainToolbar` class.
-- Remember that Unity's `real` main toolbar object is destroyed when the layout changes. Every change made to that object goes away with it. Use `MainToolbar.OnRefresh` event to re-apply your changes.
+- Remember that Unity's `real` main toolbar object is destroyed when editor layout changes. Every change made to that object goes away with it. Use `MainToolbar.OnRefresh` event to re-apply your changes.
 
 ## About MainToolbarAutomaticExtender Class:
 
 - This is the main manager. All the magic happens inside.
 - This class **WON'T** do anything, unless you mark at least one type derived from `VisualElement` with `MainToolbarElementAttribute`.
+- When this manager initializes it applies some changes to style of native containers of Unity's main toolbar. This means that those containers behave in a way when `MainToolbarAutomaticExtender` is initialized and other way when it is not.
+
+## About Hiding Visual Elements
+
+- `MainToolbarAutomaticExtender` hides visual elements by settings their style property `display` to `Display.None`.
+- There are 2 exceptions to the previous rule, Unity's `AccountDropdown` and `CloudButton` elements. These 2 elements can't be hidden by modifying `display` property, so the way this package hides them is by removing them from the hierarchy.
 
 ## About how this package saves its data
 
