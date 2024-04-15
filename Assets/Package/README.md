@@ -206,7 +206,7 @@ To create a Group Definition, in Project Window, `Right Click -> Create -> Paps 
 
 ### Properties:
 
-- `Name`: Name of the group. Acts as an id.
+- `GroupId`: Id of the group. Acts as name too.
 - `Alignment`: Left or right to play buttons
 - `Order`: Order in toolbar. Left side goes from right to left. Right side goes from left to right.
 - `ToolbarElementsIds`: The ids of the visual elements you want to add to this group. The order determines the order in which the inner elements will be displayed.
@@ -269,16 +269,15 @@ public static class MyOwnMainToolbarManager
 }
 ```
 
-Unity's toolbar gets destroyed when the editor layout changes (through layout dropdown normally). When this happens `MainToolbar` class will try to get the new object. Because of this, any change made to the toolbar goes away, so you'll need to re-apply your changes. To do this, listen to `OnRefresh` event and you can the same things you did when `OnInitialized` event happened.
+Unity's toolbar gets destroyed when the editor layout changes (through layout dropdown normally). When this happens `MainToolbar` class will try to get the new object. Because of this, any change made to the toolbar goes away, so you'll need to re-apply your changes. To do this, listen to `OnRefresh` event and you can do the same things you did when `OnInitialized` event happened.
 
-# ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) Important Miscelanous Information ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png)
+# ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) Important Technical Information ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png) ![](Readme-Resources~/warning.png)
 
 The following is a list of things I consider you might be interested in if you need to debug or understand how something works in this package:
 
 ## About Main Toolbar Elements
 
 - Many Unity built-in visual elements, like `Button` or `DropdownField`, are rendered with a white broken texture when added to the toolbar. This package automatically applies some basic styles that kind of fix this issue. If you are looking to style your visual elements, you should read [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements) section.
-- Your visual elements will be created when your scripts are recompiled and when `MainToolbarAutomaticExtender` refreshes. Take this into account if you are doing something that is process-heavy at construction time.
 
 ## About Groups:
 
@@ -288,12 +287,12 @@ The following is a list of things I consider you might be interested in if you n
 
 ## About MainToolbar Class:
 
-- Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature at the same time that manipulating the `MainToolbar` class.
+- Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature at the same time that manipulate the `MainToolbar` class.
 - Remember that Unity's `real` main toolbar object is destroyed when editor layout changes. Every change made to that object goes away with it. Use `MainToolbar.OnRefresh` event to re-apply your changes.
 
 ## About MainToolbarAutomaticExtender Class:
 
-- This is the main manager. All the magic happens inside.
+- This is the main manager. Most of the magic happens inside.
 - This class **WON'T** do anything, unless you mark at least one type derived from `VisualElement` with `MainToolbarElementAttribute`.
 - When this manager initializes it applies some changes to style of native containers of Unity's main toolbar. This means that those containers behave in a way when `MainToolbarAutomaticExtender` is initialized and other way when it is not.
 
