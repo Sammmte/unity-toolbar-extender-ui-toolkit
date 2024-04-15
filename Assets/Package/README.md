@@ -23,6 +23,7 @@ Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/
     - [About How This Package Saves Its Data](#about-how-this-package-saves-its-data)
 - [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements)
 - [IntegerField, FloatField and TextField Are Exceptions](#integerfield-floatfield-and-textfield-are-exceptions)
+- [Eligible Classes for Recommended Style Application](#eligible-classes-for-recommended-style-application)
 - [Install](#install)
     - [Via NPM](#via-npm)
     - [Via OpenUPM](#via-openupm)
@@ -310,6 +311,7 @@ The following is a list of things I consider you might be interested in if you n
 
 - Many Unity built-in visual elements, like `Button` or `DropdownField`, are rendered with a white broken texture when added to the toolbar. This package automatically applies some basic styles that kind of fix this issue. If you are looking to style your visual elements, you should read [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements) section.
 - You can inherit from any Unity's built-in visual element, but `IntegerField`, `FloatField` and `TextField` need special considerations. Please read [this section](#integerfield-floatfield-and-textfield-are-exceptions) if you want to use them.
+- You can define a main toolbar element that inherits from `IMGUIContainer` to render stuff with `IMGUI`. Remember to use `GUILayout.BeginHorizontal` and `GUILayout.EndHorizontal` to render your things in row.
 
 ## About Groups:
 
@@ -354,7 +356,7 @@ I don't know why `toolbar elements require specific styling`, but this might be 
 
 When you click a group element dropdown, the dropdown container displayed is an editor window with a show mode of a popup. This means that your custom elements can be displayed in two different contexts: **Unity's native toolbar and editor window contexts**.
 
-To workaround this issue, `MainToolbarAutomaticExtender` applies some changes to style of your custom visual elements when they are in Unity's native toolbar context. Visual elements in a group are left with the default style, the one we all see in any editor window.
+To workaround this issue, `MainToolbarAutomaticExtender` applies some changes to style of most of your custom visual elements when they are in Unity's native toolbar context. Visual elements in a group are left with the default style, the one we all see in any editor window. You can check if your class can be styled by recommended styles in [this list](#eligible-classes-for-recommended-style-application).
 
 Because of this, if you want to style your custom visual elements yourself you should set `MainToolbarElementAttribute` parameter `useRecommendedStyles` to `false`. Otherwise, your overrides might collide with extender's overrides.
 
@@ -383,6 +385,20 @@ These visual elements are pretty simple and lack most of the advanced features t
 If I find a way to fix `IntegerField`, `FloatField` and `TextField` displays in Unity's native toolbar context, these `IMGUI` fields will become unnecessary.
 
 Of course, if you want to inherit from `IntegerField`, `FloatField` or `TextField` and style them yourself, you absolutely can!
+
+# Eligible Classes for Recommended Style Application
+
+If your custom main toolbar element meets at least one of the following criteria, it will be eligible to be styled with recommended styles:
+
+- Inherits from `Button` and does not inherits from `EditorToolbarButton`
+- Inherits from `Toggle` and does not inherits from `EditorToolbarToggle`
+- Inherits from `Slider`
+- Inherits from `DropdownField`
+- Inherits from `IMGUIIntField`
+- Inherits from `IMGUIFloatField`
+- Inherits from `IMGUITextField`
+
+Remember that you can disable this feature by setting `useRecommendedStyles` to `false` in `MainToolbarElementAttribute` constructor.
 
 # Install
 
