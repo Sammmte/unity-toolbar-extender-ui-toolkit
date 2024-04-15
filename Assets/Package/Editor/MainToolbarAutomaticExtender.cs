@@ -28,7 +28,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
         private static MainToolbarElement[] _rootElements = new MainToolbarElement[0];
         private static NativeToolbarElement[] _nativeElements = new NativeToolbarElement[0];
+        private static MainToolbarElement[] _singleElements = new MainToolbarElement[0];
         private static Dictionary<string, HiddenRemovedElement> _hiddenElementsByRemotion = new Dictionary<string, HiddenRemovedElement>();
+
 
         private static Dictionary<string, MainToolbarElementOverride> _nativeElementsInitialState = new Dictionary<string, MainToolbarElementOverride>();
 
@@ -45,14 +47,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         static MainToolbarAutomaticExtender()
         {
             MainToolbar.OnInitialized += Initialize;
+
         }
 
         private static void Initialize()
         {
-            BuildCustomToolbarContainers();
+            _mainToolbarElements = ServicesAndRepositories.MainToolbarElementRepository.GetAll();
 
             if (_mainToolbarElements.Length == 0)
                 return;
+
+            BuildCustomToolbarContainers();
 
             EditorApplication.projectChanged += OnProjectChange;
             MainToolbar.OnRefresh += ApplyFixedChangesToToolbar;
@@ -99,36 +104,40 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void BuildCustomToolbarContainers()
         {
-            _mainToolbarElements = ServicesAndRepositories.MainToolbarElementRepository.GetAll();
-
             if (_mainToolbarElements.Count() == 0)
                 return;
 
             _groupDefinitions = LoadGroupDefinitions();
             _groupElements = GetGroups();
+            _singleElements = GetSingles();
             _rootElements = GetRootElements();
 
             ApplyOverridesOnCustomElements();
-            ApplyRecommendedStylesOnRootSingles();
+            ApplyRecommendedStyles();
 
             AddRootElementsToContainers();
         }
 
-        private static void ApplyRecommendedStylesOnRootSingles()
+        private static void ApplyRecommendedStyles()
         {
-            var eligibleRootSingles = _rootElements
+            var eligibleElements = _mainToolbarElements
                 .Where(element => element.UseRecommendedStyles);
 
-            foreach(var rootSingle in eligibleRootSingles)
+            foreach(var mainToolbarElement in eligibleElements)
             {
-                RecommendedStyles.Apply(rootSingle.VisualElement);
+                RecommendedStyles.Apply(mainToolbarElement.VisualElement, IsInGroup(mainToolbarElement));
             }
+        }
+
+        private static bool IsInGroup(MainToolbarElement mainToolbarElement)
+        {
+            return !_singleElements.Contains(mainToolbarElement);
         }
 
         private static MainToolbarElement[] GetRootElements()
         {
             return _groupElements
-                .Concat(GetSingles())
+                .Concat(_singleElements)
                 .ToArray();
         }
 

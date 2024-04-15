@@ -19,3 +19,5 @@ MonoBehaviour:
   - Button In Namespace 1
   - Button In Namespace 2
   - Button In Namespace 3
+  - TestSingleToggle2
+  - TestSlider
