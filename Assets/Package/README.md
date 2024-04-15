@@ -2,9 +2,38 @@
 
 Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/unity-toolbar-extender), Unity Toolbar Extender UI Toolkit allows you to extend Unity's main toolbar using Unity's UI Toolkit.
 
+- [Getting Started](#getting-started)
+    - [Create Common Controls](#create-common-controls)
+    - [Place Them Left or Right to Play Buttons](#place-them-left-or-right-to-play-buttons)
+    - [Arrange Them](#arrange-them)
+    - [Create More Things Than Only Buttons](#create-more-things-than-only-buttons)
+    - [Create Whatever Visual Element You Want](#create-whatever-visual-element-you-want)
+    - [Don't Worry About Horizontal Space. It's Scrollable!](#dont-worry-about-horizontal-space-its-scrollable)
+- [Group Your Elements to Save Space](#group-your-elements-to-save-space)
+    - [Configure a Group Definition](#configure-a-group-definition)
+        - [Properties](#properties)
+- [Hide Unity's Native Toolbar Visual Elements. Save Even More Space](#hide-unitys-native-toolbar-visual-elements-save-even-more-space)
+- [MainToolbar Class](#maintoolbar-class)
+- [Important Technical Information](#important-technical-information)
+    - [About Main Toolbar Elements](#about-main-toolbar-elements)
+    - [About Groups](#about-groups)
+    - [About MainToolbar Class](#about-maintoolbar-class)
+    - [About MainToolbarAutomaticExtender Class](#about-maintoolbarautomaticextender-class)
+    - [About Hiding Visual Elements](#about-hiding-visual-elements)
+    - [About How This Package Saves Its Data](#about-how-this-package-saves-its-data)
+- [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements)
+- [IntegerField, FloatField and TextField Are Exceptions](#integerfield-floatfield-and-textfield-are-exceptions)
+- [Install](#install)
+    - [Via NPM](#via-npm)
+    - [Via OpenUPM](#via-openupm)
+    - [Via Git URL](#via-git-url)
+- [License](#license)
+
+
+
 # Getting Started
 
-## Create common controls
+## Create Common Controls
 
 Inherit from any Unity's built-in visual element, tag it with `MainToolbarElementAttribute` and define an id. You can place the script anywhere in your project.
 
@@ -26,7 +55,7 @@ public class MyAwesomeButton : Button
 
 ![](Readme-Resources~/common-button-example.png)
 
-## Place them left or right to play buttons
+## Place Them Left or Right to Play Buttons
 
 ```csharp
 using Paps.UnityToolbarExtenderUIToolkit;
@@ -53,7 +82,7 @@ public class MyRightButton : Button
 
 ![](Readme-Resources~/control-alignment-example.png)
 
-## Arrange them
+## Arrange Them
 
 Left elements are ordered from right to left. Right elements from left to right.
 
@@ -100,7 +129,7 @@ public class SecondRightButton : Button
 
 ![](Readme-Resources~/common-arrangement-example.png)
 
-## Create more things than only buttons
+## Create More Things Than Only Buttons
 
 ```csharp
 using Paps.UnityToolbarExtenderUIToolkit;
@@ -143,7 +172,7 @@ public class MyAwesomeSlider : Slider
 
 ![](Readme-Resources~/other-common-controls.png)
 
-## Create whatever visual element you want
+## Create Whatever Visual Element You Want
 
 As long as your class inherits from `VisualElement` class, you can create whatever you want.
 
@@ -192,11 +221,11 @@ public class MyAwesomeWhatever : VisualElement
 
 ![](Readme-Resources~/warning.png) Note that you can inherit from any built-in visual element, but there are some things you might need to know if you want to use `IntegerField`, `FloatField` or `TextField`. Please check [this section](#integerfield-floatfield-and-textfield-are-exceptions)
 
-## Don't worry about horizontal space. It's scrollable!
+## Don't Worry About Horizontal Space. It's Scrollable!
 
 ![](Readme-Resources~/container-scrollable-demonstration.gif)
 
-# Group your elements to save space
+# Group Your Elements to Save Space
 
 Create a **Group Definition** and group any visual element in it. They will be hidden and shown by a dropdown.
 
@@ -213,7 +242,7 @@ To create a Group Definition, in Project Window, `Right Click -> Create -> Paps 
 - `Order`: Order in toolbar. Left side goes from right to left. Right side goes from left to right.
 - `ToolbarElementsIds`: The ids of the visual elements you want to add to this group. The order determines the order in which the inner elements will be displayed.
 
-# Hide Unity's native toolbar visual elements. Save even more space.
+# Hide Unity's Native Toolbar Visual Elements. Save Even More Space
 
 Open the Main Toolbar Control Panel Window. Go to `Paps -> Unity Toolbar Extender UI Toolkit -> Windows -> Main Toolbar Control Panel`.
 
@@ -304,7 +333,7 @@ The following is a list of things I consider you might be interested in if you n
 - `MainToolbarAutomaticExtender` hides visual elements by settings their style property `display` to `Display.None`.
 - There are 2 exceptions to the previous rule, Unity's `AccountDropdown` and `CloudButton` elements. These 2 elements can't be hidden by modifying `display` property, so the way this package hides them is by removing them from the hierarchy.
 
-## About how this package saves its data
+## About How This Package Saves Its Data
 
 - This package uses EditorPrefs and json tool from Newtonsoft. A single EditorPrefs key is used to save a json object and the other classes write to this json object. If you experience some weird behaviour and you suspect it could be this cache data, you can delete it to start over. To do this go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Delete package related EditorPrefs`.
 
@@ -343,7 +372,7 @@ public class MyStyledButton : Button
 }
 ```
 
-# IntegerField, FloatField and TextField are exceptions
+# IntegerField, FloatField and TextField Are Exceptions
 
 Please before reading this section, read [this one](#styling-your-main-toolbar-elements) first.
 
@@ -352,3 +381,44 @@ Most of common Unity's built-in visual elements are modified with recommended st
 These visual elements are pretty simple and lack most of the advanced features their UI Toolkit counterparts have, but they fulfill their most important goal: Render an input field and give the value.
 
 If I find a way to fix `IntegerField`, `FloatField` and `TextField` displays in Unity's native toolbar context, these `IMGUI` fields will become unnecessary.
+
+Of course, if you want to inherit from `IntegerField`, `FloatField` or `TextField` and style them yourself, you absolutely can!
+
+# Install
+
+## via npm
+
+Open `Packages/manifest.json` with your favorite text editor. Add a [scoped registry](https://docs.unity3d.com/Manual/upm-scoped.html) and following line to dependencies block:
+```json
+{
+  "scopedRegistries": [
+    {
+      "name": "npmjs",
+      "url": "https://registry.npmjs.org/",
+      "scopes": [
+        "com.paps"
+      ]
+    }
+  ],
+  "dependencies": {
+    "com.paps.unity-toolbar-extender-ui-toolkit": "1.0.0"
+  }
+}
+```
+Package should now appear in package manager.
+
+## via OpenUPM
+
+The package is also available on the [openupm registry](https://openupm.com/packages/com.paps.unity-toolbar-extender-ui-toolkit). You can install it eg. via [openupm-cli](https://github.com/openupm/openupm-cli).
+
+```
+openupm add com.paps.unity-toolbar-extender-ui-toolkit
+```
+
+## via Git URL
+
+Open Package Manager window, Go to `Top left plus icon -> Add package from git URL`. There add the following: `https://github.com/Sammmte/unity-toolbar-extender-ui-toolkit.git?path=/Assets/Package`
+
+# License
+
+MIT LICENSE
