@@ -190,6 +190,8 @@ public class MyAwesomeWhatever : VisualElement
 
 ![](Readme-Resources~/custom-element-example.gif)
 
+![](Readme-Resources~/warning.png) Note that you can inherit from any built-in visual element, but there are some things you might need to know if you want to use `IntegerField`, `FloatField` or `TextField`. Please check [this section](#integerfield-floatfield-and-textfield-are-exceptions)
+
 ## Don't worry about horizontal space. It's scrollable!
 
 ![](Readme-Resources~/container-scrollable-demonstration.gif)
@@ -278,6 +280,7 @@ The following is a list of things I consider you might be interested in if you n
 ## About Main Toolbar Elements
 
 - Many Unity built-in visual elements, like `Button` or `DropdownField`, are rendered with a white broken texture when added to the toolbar. This package automatically applies some basic styles that kind of fix this issue. If you are looking to style your visual elements, you should read [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements) section.
+- You can inherit from any Unity's built-in visual element, but `IntegerField`, `FloatField` and `TextField` need special considerations. Please read [this section](#integerfield-floatfield-and-textfield-are-exceptions) if you want to use them.
 
 ## About Groups:
 
@@ -306,3 +309,46 @@ The following is a list of things I consider you might be interested in if you n
 - This package uses EditorPrefs and json tool from Newtonsoft. A single EditorPrefs key is used to save a json object and the other classes write to this json object. If you experience some weird behaviour and you suspect it could be this cache data, you can delete it to start over. To do this go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Delete package related EditorPrefs`.
 
 # Styling Your Main Toolbar Elements
+
+Some common built-in visual elements, like `Button` and `DropdownField` are rendered with a white broken-like texture when added to Unity's native toolbar.
+
+Check this example.
+
+![](Readme-Resources~/broken-element-example.jpg)
+
+I'm not a UI Toolkit expert, but it seems to happen because Unity's native toolbar is not an editor window.
+In [Unity's documentation page about editor window overlays](https://docs.unity.cn/Manual/overlays-custom.html) says:
+
+> You can inherit from any `VisualElement` type and create styling yourself, but toolbar elements require specific styling. It is preferable to inherit from one of these predefined `EditorToolbar` types
+
+I don't know why `toolbar elements require specific styling`, but this might be a hint.
+
+When you click a group element dropdown, the dropdown container displayed is an editor window with a show mode of a popup. This means that your custom elements can be displayed in two different contexts: **Unity's native toolbar and editor window contexts**.
+
+To workaround this issue, `MainToolbarAutomaticExtender` applies some changes to style of your custom visual elements when they are in Unity's native toolbar context. Visual elements in a group are left with the default style, the one we all see in any editor window.
+
+Because of this, if you want to style your custom visual elements yourself you should set `MainToolbarElementAttribute` parameter `useRecommendedStyles` to `false`. Otherwise, your overrides might collide with extender's overrides.
+
+```csharp
+using Paps.UnityToolbarExtenderUIToolkit;
+using UnityEngine.UIElements;
+
+[MainToolbarElement(id: "StyledButton", useRecommendedStyles: false)]
+public class MyStyledButton : Button
+{
+    public MyStyledButton()
+    {
+        // I change the style of my button here
+    }
+}
+```
+
+# IntegerField, FloatField and TextField are exceptions
+
+Please before reading this section, read [this one](#styling-your-main-toolbar-elements) first.
+
+Most of common Unity's built-in visual elements are modified with recommended styles (unless you set `useRecommendedStyles` to `false` in `MainToolbarElementAttribute`) when they are added to Unity's native toolbar hierarchy. But types derived from `IntegerField`, `FloatField` and `TextField` are not modified. Instead, the package provides custom visual elements to replace each one: `IMGUIIntField`, `IMGUIFloatField`, `IMGUITextField`. Their names start with `IMGUI` because they inherit from `IMGUIContainer` and use old `IMGUI` controls. 
+
+These visual elements are pretty simple and lack most of the advanced features their UI Toolkit counterparts have, but they fulfill their most important goal: Render an input field and give the value.
+
+If I find a way to fix `IntegerField`, `FloatField` and `TextField` displays in Unity's native toolbar context, these `IMGUI` fields will become unnecessary.
