@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEditor;
+using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -19,6 +20,24 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 "Reset",
                 "Cancel",
                 ResetOverrides
+                );
+        }
+
+        public static void DeleteEditorPrefs()
+        {
+            ServicesAndRepositories.MainToolbarElementOverridesRepository.Clear();
+            JsonEditorPrefs.DeleteAll();
+            MainToolbarAutomaticExtender.Refresh();
+        }
+
+        public static void DeleteEditorPrefsIfUserAccepts()
+        {
+            ShowDialog(
+                "Delete Package Related Editor Prefs",
+                $"You are about to delete all Editor Prefs related to {ToolInfo.FRIENDLY_TOOL_NAME}.\nAre you sure you want to continue?",
+                "Delete",
+                "Cancel",
+                DeleteEditorPrefs
                 );
         }
 
