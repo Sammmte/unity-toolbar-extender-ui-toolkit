@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -8,11 +9,20 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal static class GroupDropdownWindowPopupManager
     {
+        private static Type[] _subWindowTypes = new Type[0];
         private static List<GroupDropdownWindowPopup> _windows = new List<GroupDropdownWindowPopup>();
 
         static GroupDropdownWindowPopupManager()
         {
+            LoadSubWindowTypes();
             EditorApplication.update += Update;
+        }
+
+        private static void LoadSubWindowTypes()
+        {
+            _subWindowTypes = TypeCache.GetTypesWithAttribute<GroupPopupSubWindowAttribute>()
+                            .Where(type => typeof(EditorWindow).IsAssignableFrom(type))
+                            .ToArray();
         }
 
         private static void Update()
@@ -22,7 +32,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             if (EditorWindow.focusedWindow == null || !FocusedWindowIsValid())
                 CloseAll();
-            else
+            else if(_windows.Contains(EditorWindow.focusedWindow))
             {
                 var focusedWindow = EditorWindow.focusedWindow;
 
@@ -50,7 +60,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static bool FocusedWindowIsValid()
         {
-            return _windows.Contains(EditorWindow.focusedWindow);
+            return _windows.Contains(EditorWindow.focusedWindow) || 
+                _subWindowTypes.Contains(EditorWindow.focusedWindow.GetType());
         }
 
         public static void Show(Rect activatorRect, VisualElement[] elements)

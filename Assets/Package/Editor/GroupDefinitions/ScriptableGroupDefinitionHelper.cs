@@ -37,7 +37,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public static bool FirstGroupIsParentOfSecond(string firstGroupId, string secondGroupId)
         {
-            var firstGroupDefinition = _projectGroupDefinitions.First(g => g.GroupId == firstGroupId);
+            var firstGroupDefinition = _projectGroupDefinitions.FirstOrDefault(g => g.GroupId == firstGroupId);
+
+            if (firstGroupDefinition == null)
+                return false;
 
             return firstGroupDefinition.ToolbarElementsIds.Contains(secondGroupId);
         }
