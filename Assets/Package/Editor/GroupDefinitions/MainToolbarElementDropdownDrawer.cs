@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -7,18 +9,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [CustomPropertyDrawer(typeof(MainToolbarElementDropdownAttribute))]
     internal class MainToolbarElementDropdownDrawer : PropertyDrawer
     {
+        private string _groupId;
+        private IEnumerable<string> _allIds;
+
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            var groupId = property.serializedObject.FindProperty("_groupId").stringValue;
+            _groupId = property.serializedObject.FindProperty("_groupId").stringValue;
 
-            var idList = MainToolbarAutomaticExtender.CustomMainToolbarElements.Select(el => el.Id)
-                .Concat(MainToolbarAutomaticExtender.GroupElements.Select(g => g.Id))
-                .Where(id => id != groupId)
-                .OrderBy(shortName => shortName)
-                .ToList();
+            CacheAllIds();
+
+            var availableIds = GetAvailableIds();
 
             var popupField = new PopupField<string>(
-                choices: idList,
+                choices: availableIds,
                 0);
 
             if (string.IsNullOrEmpty(property.stringValue))
@@ -28,7 +31,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
             else
             {
-                if (idList.Contains(property.stringValue))
+                if (_allIds.Contains(property.stringValue))
                     popupField.SetValueWithoutNotify(property.stringValue);
                 else
                     popupField.SetValueWithoutNotify("");
@@ -38,9 +41,27 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             {
                 property.stringValue = ev.newValue;
                 property.serializedObject.ApplyModifiedProperties();
+                ScriptableGroupDefinitionHelper.Refresh();
+                CacheAllIds();
+                popupField.choices = GetAvailableIds();
             });
 
             return popupField;
+        }
+
+        private void CacheAllIds()
+        {
+            _allIds = MainToolbarAutomaticExtender.CustomMainToolbarElements.Select(el => el.Id)
+                .Concat(MainToolbarAutomaticExtender.GroupElements.Select(g => g.Id));
+        }
+
+        private List<string> GetAvailableIds()
+        {
+            return ScriptableGroupDefinitionHelper.GetUnusedIds(_allIds)
+                .Where(id => id != _groupId)
+                .Where(id => !ScriptableGroupDefinitionHelper.FirstGroupIsParentOfSecond(id, _groupId))
+                .OrderBy(id => id)
+                .ToList();
         }
     }
 }
