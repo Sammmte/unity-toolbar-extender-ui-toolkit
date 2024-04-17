@@ -31,7 +31,29 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 _scrollView.Add(container);
             }
 
-            rootVisualElement.Add(_scrollView);
+            var baseContainer = CreateBaseContainer();
+            baseContainer.Add(_scrollView);
+
+            rootVisualElement.Add(baseContainer);
+        }
+
+        private VisualElement CreateBaseContainer()
+        {
+            return new VisualElement()
+            {
+                style =
+                {
+                    flexGrow = 1,
+                    borderBottomColor = Color.black,
+                    borderTopColor = Color.black,
+                    borderLeftColor = Color.black,
+                    borderRightColor = Color.black,
+                    borderBottomWidth = 2,
+                    borderTopWidth = 2,
+                    borderLeftWidth = 2,
+                    borderRightWidth = 2,
+                }
+            };
         }
 
         private VisualElement CreateGroupElementContainer()
@@ -44,7 +66,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     alignItems = Align.Center,
                     flexDirection = FlexDirection.Row,
                     flexGrow = 1,
-                    width = Length.Auto(),
+                    width = Length.Percent(100),
                     height = Length.Auto(),
                     justifyContent = Justify.Center,
                     borderTopColor = Color.black,
