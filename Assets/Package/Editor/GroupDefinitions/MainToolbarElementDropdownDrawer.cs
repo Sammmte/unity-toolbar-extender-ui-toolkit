@@ -9,7 +9,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
+            var groupId = property.serializedObject.FindProperty("_groupId").stringValue;
+
             var idList = MainToolbarAutomaticExtender.CustomMainToolbarElements.Select(el => el.Id)
+                .Concat(MainToolbarAutomaticExtender.GroupElements.Select(g => g.Id))
+                .Where(id => id != groupId)
                 .OrderBy(shortName => shortName)
                 .ToList();
 

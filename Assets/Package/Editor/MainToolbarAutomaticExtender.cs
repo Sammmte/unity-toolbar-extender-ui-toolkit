@@ -29,6 +29,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static MainToolbarElement[] _rootElements = new MainToolbarElement[0];
         private static NativeToolbarElement[] _nativeElements = new NativeToolbarElement[0];
         private static MainToolbarElement[] _singleElements = new MainToolbarElement[0];
+        private static Dictionary<string, MainToolbarElement[]> _elementsByGroup = new Dictionary<string, MainToolbarElement[]>();
         private static Dictionary<string, HiddenRemovedElement> _hiddenElementsByRemotion = new Dictionary<string, HiddenRemovedElement>();
 
 
@@ -91,9 +92,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         internal static MainToolbarElement[] GetElementsOfGroup(string id)
         {
-            var elementsByGroup = GetElementsByGroup();
-
-            return elementsByGroup[id].ToArray();
+            return _elementsByGroup[id].ToArray();
         }
 
         private static void ResetCustomContainers()
@@ -109,6 +108,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             _groupDefinitions = LoadGroupDefinitions();
             _groupElements = GetGroups();
+            _elementsByGroup = GetElementsByGroup();
+            InitializeGroups();
             _singleElements = GetSingles();
             _rootElements = GetRootElements();
 
@@ -116,6 +117,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             ApplyRecommendedStyles();
 
             AddRootElementsToContainers();
+        }
+
+        private static void InitializeGroups()
+        {
+            foreach (var group in _groupElements)
+            {
+                var groupElement = group.VisualElement as GroupElement;
+                var elementsOfThisGroup = _elementsByGroup[group.Id]
+                    .Select(e => e.VisualElement)
+                    .ToArray();
+
+                groupElement.Initialize(group.Id, elementsOfThisGroup);
+            }
         }
 
         private static void ApplyRecommendedStyles()
@@ -136,9 +150,26 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static MainToolbarElement[] GetRootElements()
         {
-            return _groupElements
+            return GetRootGroups()
                 .Concat(_singleElements)
                 .ToArray();
+        }
+
+        private static MainToolbarElement[] GetRootGroups()
+        {
+            var rootGroups = new List<MainToolbarElement>();
+
+            var allGroupElements = _groupElements.Select(group => group.VisualElement as GroupElement);
+
+            foreach (var group in _groupElements)
+            {
+                var groupElement = group.VisualElement as GroupElement;
+
+                if (!allGroupElements.Any(g => g.GroupedElements.Contains(groupElement)))
+                    rootGroups.Add(group);
+            }
+
+            return rootGroups.ToArray();
         }
 
         private static void ApplyOverridesOnCustomElements()
@@ -311,22 +342,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static MainToolbarElement[] GetGroups()
         {
             var groups = new List<MainToolbarElement>();
-            var elementsByGroup = GetElementsByGroup();
 
             foreach (var groupDefinition in _groupDefinitions)
             {
-                var elementsOfThisGroup = elementsByGroup[groupDefinition.GroupId];
-
-                if (elementsOfThisGroup.Count == 0)
+                if (groupDefinition.ToolbarElementsIds.Length == 0)
                     continue;
 
                 var groupToolbarElement = new MainToolbarElement(
                     groupDefinition.GroupId,
-                    new GroupElement(
-                        groupDefinition.GroupId,
-                        elementsOfThisGroup
-                            .Select(el => el.VisualElement)
-                            .ToArray()),
+                    new GroupElement(),
                     groupDefinition.Alignment,
                     groupDefinition.Order,
                     false
@@ -340,27 +364,35 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static MainToolbarElement[] GetSingles()
         {
-            var elementsByGroup = GetElementsByGroup();
-            var elementsInGroups = elementsByGroup.Values.SelectMany(list => list);
+            var elementsInGroups = _elementsByGroup.Values.SelectMany(list => list);
 
             return _mainToolbarElements
                 .Where(mainToolbarElement => !elementsInGroups.Contains(mainToolbarElement))
                 .ToArray();
         }
 
-        private static Dictionary<string, List<MainToolbarElement>> GetElementsByGroup()
+        private static Dictionary<string, MainToolbarElement[]> GetElementsByGroup()
         {
-            var elementsByGroup = new Dictionary<string, List<MainToolbarElement>>();
+            var elementsByGroup = new Dictionary<string, MainToolbarElement[]>();
 
             foreach (var groupDefinition in _groupDefinitions)
             {
                 var elementsOfThisGroup = groupDefinition.ToolbarElementsIds
-                    .Select(id => _mainToolbarElements
-                        .FirstOrDefault(element => element.Id == id)
-                        )
+                    .Select(id =>
+                    {
+                        var element = _mainToolbarElements.FirstOrDefault(e => e.Id == id);
+
+                        if (element != null)
+                            return element;
+
+                        element = _groupElements.FirstOrDefault(e => e.Id == id);
+
+                        return element;
+                    })
                     .Where(mainToolbarElement => mainToolbarElement != null)
                     .ToList();
-                elementsByGroup.Add(groupDefinition.GroupId, elementsOfThisGroup);
+
+                elementsByGroup.Add(groupDefinition.GroupId, elementsOfThisGroup.ToArray());
             }
 
             return elementsByGroup;
