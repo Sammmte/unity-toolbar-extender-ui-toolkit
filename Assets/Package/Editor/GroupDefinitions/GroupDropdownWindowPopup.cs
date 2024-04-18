@@ -15,7 +15,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             hideFlags = HideFlags.DontSave;
         }
 
-        public void CreateGUI()
+        private void OnEnable()
+        {
+            AssemblyReloadEvents.beforeAssemblyReload += Close;
+        }
+
+        private void OnDisable()
+        {
+            AssemblyReloadEvents.beforeAssemblyReload -= Close;
+        }
+
+        private void CreateGUI()
         {
             _scrollView = new ScrollView(ScrollViewMode.Vertical);
             _scrollView.contentContainer.style.alignContent = Align.Center;
