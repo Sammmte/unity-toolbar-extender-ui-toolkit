@@ -32,7 +32,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static Dictionary<string, MainToolbarElement[]> _elementsByGroup = new Dictionary<string, MainToolbarElement[]>();
         private static Dictionary<string, HiddenRemovedElement> _hiddenElementsByRemotion = new Dictionary<string, HiddenRemovedElement>();
 
-
         private static Dictionary<string, MainToolbarElementOverride> _nativeElementsInitialState = new Dictionary<string, MainToolbarElementOverride>();
 
         internal static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
@@ -48,7 +47,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         static MainToolbarAutomaticExtender()
         {
             MainToolbar.OnInitialized += Initialize;
-
         }
 
         private static void Initialize()
@@ -128,7 +126,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     .Select(e => e.VisualElement)
                     .ToArray();
 
-                groupElement.Initialize(group.Id, elementsOfThisGroup);
+                groupElement.Initialize(elementsOfThisGroup);
             }
         }
 
@@ -350,7 +348,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
                 var groupToolbarElement = new MainToolbarElement(
                     groupDefinition.GroupId,
-                    new GroupElement(),
+                    new GroupElement(groupDefinition.GroupName),
                     groupDefinition.Alignment,
                     groupDefinition.Order,
                     false

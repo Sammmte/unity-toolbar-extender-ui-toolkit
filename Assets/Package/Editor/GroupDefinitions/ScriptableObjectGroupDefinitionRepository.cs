@@ -9,13 +9,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     internal class MiddleGroupDefinition
     {
         public string GroupId;
+        public string GroupName;
         public ToolbarAlign Alignment;
         public int Order;
         public List<string> ToolbarElementsIds;
 
-        public MiddleGroupDefinition(string groupId, ToolbarAlign alignment, int order, string[] toolbarElementsIds)
+        public MiddleGroupDefinition(string groupId, string groupName, ToolbarAlign alignment, int order, string[] toolbarElementsIds)
         {
             GroupId = groupId;
+            GroupName = groupName;
             Alignment = alignment;
             Order = order;
             ToolbarElementsIds = toolbarElementsIds.ToList();
@@ -36,7 +38,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .Select(scriptableGroupDefinition => scriptableGroupDefinition.First());
 
             var middleGroupDefinitions = scriptableGroupDefinitions.Select(s => new MiddleGroupDefinition(
-                s.GroupId, s.Alignment, s.Order, s.ToolbarElementsIds
+                s.GroupId, s.GroupName, s.Alignment, s.Order, s.ToolbarElementsIds
                 ))
                 // I needed to do this ToArray, otherwise obtaining an element with
                 // FirstOrDefault returned what looked like to be a new reference
@@ -57,6 +59,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             var groupDefinitions = middleGroupDefinitions
                 .Select(middleGroupDefinition => new GroupDefinition(
                     middleGroupDefinition.GroupId,
+                    middleGroupDefinition.GroupName,
                     middleGroupDefinition.Alignment,
                     middleGroupDefinition.Order,
                     FilterIds(middleGroupDefinition)

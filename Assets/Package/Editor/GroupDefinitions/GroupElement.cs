@@ -7,20 +7,21 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class GroupElement : VisualElement
     {
-        public string GroupName { get; private set; }
-
         private EditorToolbarDropdown _dropdown;
         private VisualElement[] _groupedElements;
         public VisualElement[] GroupedElements => _groupedElements.ToArray();
 
-        public void Initialize(string groupName, VisualElement[] groupedElements)
+        public GroupElement(string name)
         {
-            GroupName = groupName;
-            name = groupName;
-            _groupedElements = groupedElements;
-            _dropdown = new EditorToolbarDropdown(groupName, ShowOrHideDropdown);
+            this.name = name;
+            _dropdown = new EditorToolbarDropdown(name, ShowOrHideDropdown);
 
             Add(_dropdown);
+        }
+
+        public void Initialize(VisualElement[] groupedElements)
+        {
+            _groupedElements = groupedElements;
         }
 
         private void ShowOrHideDropdown()
