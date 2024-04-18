@@ -1,11 +1,11 @@
 ﻿using Paps.UnityToolbarExtenderUIToolkit;
-using UnityEngine;
+using UnityEngine.UIElements;
 
-[MainToolbarElement(id: "SampleTextField")]
-public class SampleTextField : IMGUITextField
+[MainToolbarElement("SampleTextField", ToolbarAlign.Right)]
+public class SampleTextField : TextField
 {
-    public SampleTextField() : base("Sample Text Field")
+    public SampleTextField() : base("Sample Text")
     {
-        OnValueChanged += newValue => Debug.Log("Text Field value is: " + newValue);
+
     }
 }

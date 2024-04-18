@@ -1,11 +1,11 @@
 ﻿using Paps.UnityToolbarExtenderUIToolkit;
-using UnityEngine;
+using UnityEngine.UIElements;
 
-[MainToolbarElement(id: "SampleFloatField")]
-public class SampleFloatField : IMGUIFloatField
+[MainToolbarElement("SampleFloatField", ToolbarAlign.Right)]
+public class SampleFloatField : FloatField
 {
-    public SampleFloatField() : base("Sample Float Field")
+    public SampleFloatField() : base("Sample Float")
     {
-        OnValueChanged += newValue => Debug.Log("Float Field value is: " + newValue);
+
     }
 }

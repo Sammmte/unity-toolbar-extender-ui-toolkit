@@ -58,14 +58,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return new SliderRecommendedStyle(slider);
             else if (visualElement is DropdownField dropdownField)
                 return new DropdownFieldRecommendedStyle(dropdownField);
-            else if (visualElement is IMGUIFloatField floatField)
-                return new IMGUIFloatFieldRecommendedStyle(floatField);
-            else if (visualElement is IMGUIIntField intField)
-                return new IMGUIIntFieldRecommendedStyle(intField);
-            else if (visualElement is IMGUITextField textField)
-                return new IMGUITextFieldRecommendedStyle(textField);
             else if (visualElement is EditorToolbarDropdown dropdown)
                 return new EditorToolbarDropdownRecommendedStyle(dropdown);
+            else if (visualElement is IntegerField integerField)
+                return new IntegerFieldRecommendedStyle(integerField);
+            else if (visualElement is FloatField floatField)
+                return new FloatFieldRecommendedStyle(floatField);
+            else if (visualElement is TextField textField)
+                return new TextFieldRecommendedStyle(textField);
 
             return null;
         }
