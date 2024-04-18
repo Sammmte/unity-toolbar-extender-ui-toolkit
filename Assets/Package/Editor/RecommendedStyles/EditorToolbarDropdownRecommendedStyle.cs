@@ -20,13 +20,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             _dropdown.style.flexDirection = FlexDirection.Row;
             _dropdown.style.flexWrap = Wrap.NoWrap;
+            _dropdown.style.overflow = Overflow.Visible;
+            _dropdown.RemoveFromClassList("unity-toolbar-button");
+            _dropdown.AddToClassList("unity-button");
             _arrow.AddToClassList("unity-base-popup-field__arrow");
         }
 
         protected override void ApplyRootElementStyle()
         {
             _dropdown.style.flexDirection = FlexDirection.Row;
-            _dropdown.style.flexWrap = Wrap.Wrap;
+            _dropdown.style.flexWrap = Wrap.NoWrap;
+            _dropdown.style.overflow = StyleKeyword.Null;
+            _dropdown.RemoveFromClassList("unity-button");
+            _dropdown.AddToClassList("unity-toolbar-button");
             _arrow.RemoveFromClassList("unity-base-popup-field__arrow");
         }
     }

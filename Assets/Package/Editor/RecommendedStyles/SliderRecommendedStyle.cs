@@ -4,6 +4,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class SliderRecommendedStyle : RecommendedStyle
     {
+        private const float MIN_WIDTH = 200;
+
         private readonly Slider _slider;
         private StyleLength _previousMinWidth;
         private StyleLength _previousLabelMinWidth;
@@ -25,7 +27,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _previousMinWidth = _slider.style.minWidth;
 
             _slider.labelElement.style.minWidth = 0;
-            _slider.style.minWidth = 200;
+            _slider.style.minWidth = MIN_WIDTH;
         }
     }
 }
