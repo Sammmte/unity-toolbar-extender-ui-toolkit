@@ -48,14 +48,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             return _projectGroupDefinitions.Select(g => g.GroupId);
         }
 
-        public static IEnumerable<string> GetUnusedGroupIds()
+        public static IEnumerable<string> GetEligibleParentsFor(string groupId)
         {
-            var allIds = _projectGroupDefinitions.Select(g => g.GroupId);
-
-            var currentParentIds = _projectGroupDefinitions.Select(g => g.ParentGroupId)
-                .Where(id => id != NO_PARENT_VALUE);
-
-            return allIds.Except(currentParentIds);
+            return _projectGroupDefinitions
+                .Where(g => g.GroupId != groupId)
+                .Where(g => g.ParentGroupId != groupId)
+                .Select(g => g.GroupId);
         }
 
         private static void OnProjectChange()

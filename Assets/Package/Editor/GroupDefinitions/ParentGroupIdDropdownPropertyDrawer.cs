@@ -44,10 +44,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private List<string> GetOptions()
         {
-            var availableIds = ScriptableGroupDefinitionHelper.GetUnusedGroupIds()
-                .Where(id => id != _groupId);
+            var availableIds = ScriptableGroupDefinitionHelper.GetEligibleParentsFor(_groupId);
 
             var options = availableIds
+                .OrderBy(id => id)
                 .ToList();
 
             options.Insert(0, ScriptableGroupDefinitionHelper.NO_PARENT_VALUE);
