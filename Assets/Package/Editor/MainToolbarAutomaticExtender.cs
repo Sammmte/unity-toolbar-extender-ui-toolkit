@@ -144,7 +144,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static bool IsInGroup(MainToolbarElement mainToolbarElement)
         {
-            return !_singleElements.Contains(mainToolbarElement);
+            return !_rootElements.Contains(mainToolbarElement);
         }
 
         private static MainToolbarElement[] GetRootElements()
