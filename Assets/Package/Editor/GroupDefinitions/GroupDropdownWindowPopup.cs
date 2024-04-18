@@ -36,7 +36,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             {
                 var container = CreateGroupElementContainer();
                 container.Add(groupElement);
-                groupElement.style.flexWrap = Wrap.Wrap;
                 container.style.display = groupElement.style.display;
                 _scrollView.Add(container);
             }
