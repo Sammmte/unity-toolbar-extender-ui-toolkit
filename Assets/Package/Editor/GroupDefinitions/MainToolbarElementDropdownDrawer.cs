@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -9,16 +8,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [CustomPropertyDrawer(typeof(MainToolbarElementDropdownAttribute))]
     internal class MainToolbarElementDropdownDrawer : PropertyDrawer
     {
-        private string _groupId;
         private IEnumerable<string> _allIds;
 
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            _groupId = property.serializedObject.FindProperty("_groupId").stringValue;
-
             CacheAllIds();
 
             var availableIds = GetAvailableIds();
+
 
             var popupField = new PopupField<string>(
                 choices: availableIds,
@@ -51,15 +48,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void CacheAllIds()
         {
-            _allIds = MainToolbarAutomaticExtender.CustomMainToolbarElements.Select(el => el.Id)
-                .Concat(MainToolbarAutomaticExtender.GroupElements.Select(g => g.Id));
+            _allIds = MainToolbarAutomaticExtender.CustomMainToolbarElements.Select(el => el.Id);
         }
 
         private List<string> GetAvailableIds()
         {
-            return ScriptableGroupDefinitionHelper.GetUnusedIds(_allIds)
-                .Where(id => id != _groupId)
-                .Where(id => !ScriptableGroupDefinitionHelper.FirstGroupIsParentOfSecond(id, _groupId))
+            return ScriptableGroupDefinitionHelper.GetUnusedMainToolbarElementIds(_allIds)
                 .OrderBy(id => id)
                 .ToList();
         }

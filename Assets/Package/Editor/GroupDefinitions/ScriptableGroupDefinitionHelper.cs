@@ -6,6 +6,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal static class ScriptableGroupDefinitionHelper
     {
+        public const string NO_PARENT_VALUE = "None";
+
         private static ScriptableGroupDefinition[] _projectGroupDefinitions;
 
         static ScriptableGroupDefinitionHelper()
@@ -30,25 +32,30 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .ToArray();
         }
 
-        public static IEnumerable<string> GetUnusedIds(IEnumerable<string> allIds)
+        public static IEnumerable<string> GetUnusedMainToolbarElementIds(IEnumerable<string> allIds)
         {
-            return allIds.Except(GetUsedIds());
+            return allIds.Except(GetUsedMainToolbarElementIds());
         }
 
-        public static bool FirstGroupIsParentOfSecond(string firstGroupId, string secondGroupId)
-        {
-            var firstGroupDefinition = _projectGroupDefinitions.FirstOrDefault(g => g.GroupId == firstGroupId);
-
-            if (firstGroupDefinition == null)
-                return false;
-
-            return firstGroupDefinition.ToolbarElementsIds.Contains(secondGroupId);
-        }
-
-        private static IEnumerable<string> GetUsedIds()
+        private static IEnumerable<string> GetUsedMainToolbarElementIds()
         {
             return _projectGroupDefinitions
                 .SelectMany(groupDefinition => groupDefinition.ToolbarElementsIds);
+        }
+
+        public static IEnumerable<string> GetGroupIds()
+        {
+            return _projectGroupDefinitions.Select(g => g.GroupId);
+        }
+
+        public static IEnumerable<string> GetUnusedGroupIds()
+        {
+            var allIds = _projectGroupDefinitions.Select(g => g.GroupId);
+
+            var currentParentIds = _projectGroupDefinitions.Select(g => g.ParentGroupId)
+                .Where(id => id != NO_PARENT_VALUE);
+
+            return allIds.Except(currentParentIds);
         }
 
         private static void OnProjectChange()
