@@ -1,0 +1,16 @@
+{
+    "name": "Paps.UnityToolbarExtenderUIToolkit.Samples",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8d62da4aabd2a19419c7378d23ea5849"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
