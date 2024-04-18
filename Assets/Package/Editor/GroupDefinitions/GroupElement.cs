@@ -1,22 +1,19 @@
 ﻿using System.Linq;
-using UnityEditor.Graphs;
 using UnityEditor.Toolbars;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    internal class GroupElement : VisualElement
+    internal class GroupElement : EditorToolbarDropdown
     {
-        private EditorToolbarDropdown _dropdown;
         private VisualElement[] _groupedElements;
         public VisualElement[] GroupedElements => _groupedElements.ToArray();
 
         public GroupElement(string name)
         {
             this.name = name;
-            _dropdown = new EditorToolbarDropdown(name, ShowOrHideDropdown);
-
-            Add(_dropdown);
+            text = name;
+            clicked += ShowOrHideDropdown;
         }
 
         public void Initialize(VisualElement[] groupedElements)
@@ -26,7 +23,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void ShowOrHideDropdown()
         {
-            GroupDropdownWindowPopupManager.Show(_dropdown.worldBound, _groupedElements);
+            GroupDropdownWindowPopupManager.Show(worldBound, _groupedElements);
         }
     }
 }

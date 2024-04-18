@@ -20,27 +20,30 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             if (_recommendedStyles.ContainsKey(visualElement))
             {
+                visualElement.UnregisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleAsRoot);
+                visualElement.UnregisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleOnGroup);
+
                 if (isInsideGroup)
-                    visualElement.RegisterCallback<GeometryChangedEvent>(ApplyRecommendedStyleOnGroup);
+                    visualElement.RegisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleOnGroup);
                 else
-                    visualElement.RegisterCallback<GeometryChangedEvent>(ApplyRecommendedStyleAsRoot);
+                    visualElement.RegisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleAsRoot);
             }
         }
 
-        private static void ApplyRecommendedStyleOnGroup(GeometryChangedEvent eventArgs)
+        private static void ApplyRecommendedStyleOnGroup(AttachToPanelEvent eventArgs)
         {
             var visualElement = eventArgs.target as VisualElement;
 
-            visualElement.UnregisterCallback<GeometryChangedEvent>(ApplyRecommendedStyleOnGroup);
+            visualElement.UnregisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleOnGroup);
 
             _recommendedStyles[visualElement].Apply(true);
         }
 
-        private static void ApplyRecommendedStyleAsRoot(GeometryChangedEvent eventArgs)
+        private static void ApplyRecommendedStyleAsRoot(AttachToPanelEvent eventArgs)
         {
             var visualElement = eventArgs.target as VisualElement;
 
-            visualElement.UnregisterCallback<GeometryChangedEvent>(ApplyRecommendedStyleAsRoot);
+            visualElement.UnregisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleAsRoot);
 
             _recommendedStyles[visualElement].Apply(false);
         }
@@ -61,6 +64,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return new IMGUIIntFieldRecommendedStyle(intField);
             else if (visualElement is IMGUITextField textField)
                 return new IMGUITextFieldRecommendedStyle(textField);
+            else if (visualElement is EditorToolbarDropdown dropdown)
+                return new EditorToolbarDropdownRecommendedStyle(dropdown);
 
             return null;
         }

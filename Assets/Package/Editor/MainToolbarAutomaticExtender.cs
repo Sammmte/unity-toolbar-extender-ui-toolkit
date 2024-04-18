@@ -133,6 +133,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static void ApplyRecommendedStyles()
         {
             var eligibleElements = _mainToolbarElements
+                .Concat(_groupElements)
                 .Where(element => element.UseRecommendedStyles);
 
             foreach(var mainToolbarElement in eligibleElements)
@@ -351,7 +352,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     new GroupElement(groupDefinition.GroupName),
                     groupDefinition.Alignment,
                     groupDefinition.Order,
-                    false
+                    true
                     );
 
                 groups.Add(groupToolbarElement);

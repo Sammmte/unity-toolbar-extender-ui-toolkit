@@ -90,7 +90,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return _windows.Contains(EditorWindow.focusedWindow) || 
                 _subWindowTypes.Contains(EditorWindow.focusedWindow.GetType()) ||
+                IsUIToolkitDebugger(EditorWindow.focusedWindow) ||
                 ContainsValidPopupWindowContent(EditorWindow.focusedWindow);
+        }
+
+        private static bool IsUIToolkitDebugger(EditorWindow window)
+        {
+            var uiToolkitDebuggerType = TypeCache.GetTypesDerivedFrom<EditorWindow>()
+                .FirstOrDefault(type => type.Name == "UIElementsDebugger");
+
+            if (uiToolkitDebuggerType == null)
+                return false;
+
+            return uiToolkitDebuggerType == window.GetType();
         }
 
         public static void Show(Rect activatorRect, VisualElement[] elements)

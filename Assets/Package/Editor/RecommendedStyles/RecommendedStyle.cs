@@ -3,10 +3,11 @@
     internal abstract class RecommendedStyle
     {
         private bool _appliedRootElementStyle;
+        protected bool ApplyGroupStyleAlways;
 
         public void Apply(bool isInsideGroup)
         {
-            if (isInsideGroup && _appliedRootElementStyle)
+            if ((isInsideGroup && _appliedRootElementStyle) || (isInsideGroup && ApplyGroupStyleAlways))
             {
                 _appliedRootElementStyle = false;
                 ApplyInsideGroupStyle();
