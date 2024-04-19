@@ -215,6 +215,15 @@ public class MyAwesomeSlider : Slider
 
     }
 }
+
+[MainToolbarElement("MyAwesomeIntField", ToolbarAlign.Right)]
+public class MyAwesomeIntegerField : IntegerField
+{
+    public MyAwesomeIntegerField() : base("My Awesome Int")
+    {
+
+    }
+}
 ```
 
 ![](Assets/Package/Readme-Resources~/other-common-controls.png)
