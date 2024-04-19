@@ -44,7 +44,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .FirstOrDefault(type => type.Name == "UIElementsDebugger");
 
             var contextMenuType = TypeCache.GetTypesDerivedFrom<EditorWindow>()
-                .FirstOrDefault(type => type.FullName == "UnityEditor.UIElements.EditorMenuExtensions.ContextMenu");
+                .FirstOrDefault(type => type.FullName == "UnityEditor.UIElements.EditorMenuExtensions+ContextMenu");
 
             typeList.Add(uiToolkitDebuggerType);
             typeList.Add(contextMenuType);
