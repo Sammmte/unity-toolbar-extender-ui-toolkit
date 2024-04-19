@@ -51,12 +51,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void Initialize()
         {
-            _mainToolbarElements = ServicesAndRepositories.MainToolbarElementRepository.GetAll();
+            BuildCustomToolbarContainers();
 
             if (_mainToolbarElements.Length == 0)
                 return;
-
-            BuildCustomToolbarContainers();
 
             EditorApplication.projectChanged += OnProjectChange;
             MainToolbar.OnRefresh += ApplyFixedChangesToToolbar;
@@ -101,6 +99,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void BuildCustomToolbarContainers()
         {
+            _mainToolbarElements = ServicesAndRepositories.MainToolbarElementRepository.GetAll();
+
             if (_mainToolbarElements.Count() == 0)
                 return;
 

@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -15,7 +16,21 @@ public class MenuItemsTools
     {
         var json = EditorPrefs.GetString("unity-toolbar-extender-ui-toolkit-editor-prefs");
 
+        json = JsonPrettify(json);
+
         Debug.Log(json);
+    }
+
+    public static string JsonPrettify(string json)
+    {
+        using (var stringReader = new StringReader(json))
+        using (var stringWriter = new StringWriter())
+        {
+            var jsonReader = new JsonTextReader(stringReader);
+            var jsonWriter = new JsonTextWriter(stringWriter) { Formatting = Formatting.Indented };
+            jsonWriter.WriteToken(jsonReader);
+            return stringWriter.ToString();
+        }
     }
 
     [MenuItem("Paps/Unity Toolbar Extender UI Toolkit/Update Samples And Readme", priority = 1)]
