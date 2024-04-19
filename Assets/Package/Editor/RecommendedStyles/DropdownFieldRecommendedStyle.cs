@@ -11,12 +11,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _dropdownField = dropdownField;
         }
 
-        protected override void ApplyInsideGroupStyle()
-        {
-            var inputElement = _dropdownField[1];
-            inputElement.style.overflow = StyleKeyword.Null;
-        }
-
         protected override void ApplyRootElementStyle()
         {
             var inputElement = _dropdownField[1];

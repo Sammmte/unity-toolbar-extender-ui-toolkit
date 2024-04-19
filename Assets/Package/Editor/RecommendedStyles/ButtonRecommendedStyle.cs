@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using UnityEditor.UIElements;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -12,11 +9,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public ButtonRecommendedStyle(Button button)
         {
             _button = button;
-        }
-
-        protected override void ApplyInsideGroupStyle()
-        {
-            _button.style.overflow = StyleKeyword.Null;
         }
 
         protected override void ApplyRootElementStyle()
