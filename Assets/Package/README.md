@@ -286,6 +286,7 @@ public class MyAwesomeWhatever : VisualElement
 
 - If you want to apply custom style to your elements, please read [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements) section.
 - You can define a main toolbar element that inherits from `IMGUIContainer` to render stuff with `IMGUI`. Remember to use `GUILayout.BeginHorizontal` and `GUILayout.EndHorizontal` to render your things in row.
+- Main toolbar elements may be instantiated more than once, whenever `MainToolbarAutomaticExtender` refreshes. Take it into account if you need to make some heavy process with your elements.
 
 <!-- TOC --><a name="group-your-elements-to-save-space"></a>
 # Group Your Elements to Save Space
