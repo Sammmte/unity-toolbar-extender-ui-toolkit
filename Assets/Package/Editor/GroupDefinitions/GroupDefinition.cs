@@ -21,9 +21,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public bool AreEquals(GroupDefinition other)
         {
-            return other.GroupId == other.GroupId &&
-                other.Alignment == other.Alignment &&
-                other.Order == other.Order &&
+            return GroupId == other.GroupId &&
+                GroupName == other.GroupName &&
+                Alignment == other.Alignment &&
+                Order == other.Order &&
                 AreEquals(ToolbarElementsIds, other.ToolbarElementsIds);
         }
 
