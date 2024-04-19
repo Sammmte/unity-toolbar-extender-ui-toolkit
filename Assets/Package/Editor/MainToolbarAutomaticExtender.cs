@@ -112,7 +112,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _rootElements = GetRootElements();
 
             ApplyOverridesOnCustomElements();
-            ApplyRecommendedStyles();
+            RegisterElementsForRecommendedStyles();
 
             AddRootElementsToContainers();
         }
@@ -130,16 +130,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
-        private static void ApplyRecommendedStyles()
+        private static void RegisterElementsForRecommendedStyles()
         {
             var eligibleElements = _mainToolbarElements
                 .Concat(_groupElements)
-                .Where(element => element.UseRecommendedStyles);
+                .Where(element => element.UseRecommendedStyles)
+                .Select(element => new RecommendedStyleVisualElement(element.VisualElement, IsInGroup(element)))
+                .ToArray();
 
-            foreach(var mainToolbarElement in eligibleElements)
-            {
-                RecommendedStyles.Apply(mainToolbarElement.VisualElement, IsInGroup(mainToolbarElement));
-            }
+            RecommendedStyles.SetElements(eligibleElements);
         }
 
         private static bool IsInGroup(MainToolbarElement mainToolbarElement)

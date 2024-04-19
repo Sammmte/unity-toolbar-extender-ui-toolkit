@@ -1,51 +1,38 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Toolbars;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal static class RecommendedStyles
     {
-        private static Dictionary<VisualElement, RecommendedStyle> _recommendedStyles = new Dictionary<VisualElement, RecommendedStyle>();
+        private static Dictionary<RecommendedStyleVisualElement, RecommendedStyle> _recommendedStyles = new Dictionary<RecommendedStyleVisualElement, RecommendedStyle>();
 
-        public static void Apply(VisualElement visualElement, bool isInsideGroup)
+        public static void SetElements(RecommendedStyleVisualElement[] elements)
         {
-            if(!_recommendedStyles.ContainsKey(visualElement))
+            _recommendedStyles.Clear();
+
+            foreach(var element in elements)
             {
-                var recommendedStyle = GetRecommendedStyleFor(visualElement);
+                var recommendedStyle = GetRecommendedStyleFor(element.VisualElement);
 
-                if (recommendedStyle != null)
-                    _recommendedStyles.Add(visualElement, recommendedStyle);
-            }
+                if (recommendedStyle == null)
+                    continue;
 
-            if (_recommendedStyles.ContainsKey(visualElement))
-            {
-                visualElement.UnregisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleAsRoot);
-                visualElement.UnregisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleOnGroup);
-
-                if (isInsideGroup)
-                    visualElement.RegisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleOnGroup);
-                else
-                    visualElement.RegisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleAsRoot);
+                element.VisualElement.RegisterCallback<AttachToPanelEvent>(ApplyRecommendedStyle);
+                _recommendedStyles.Add(element, recommendedStyle);
             }
         }
 
-        private static void ApplyRecommendedStyleOnGroup(AttachToPanelEvent eventArgs)
+        private static void ApplyRecommendedStyle(AttachToPanelEvent eventArgs)
         {
             var visualElement = eventArgs.target as VisualElement;
 
-            visualElement.UnregisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleOnGroup);
+            var key = _recommendedStyles.Keys.FirstOrDefault(key => key.VisualElement == visualElement);
 
-            _recommendedStyles[visualElement].Apply(true);
-        }
-
-        private static void ApplyRecommendedStyleAsRoot(AttachToPanelEvent eventArgs)
-        {
-            var visualElement = eventArgs.target as VisualElement;
-
-            visualElement.UnregisterCallback<AttachToPanelEvent>(ApplyRecommendedStyleAsRoot);
-
-            _recommendedStyles[visualElement].Apply(false);
+            _recommendedStyles[key].Apply(key.IsInsideGroup);
         }
 
         private static RecommendedStyle GetRecommendedStyleFor(VisualElement visualElement)
