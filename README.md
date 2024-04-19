@@ -295,7 +295,95 @@ When configuring `ToolbarElementsIds` property in your group definition asset, a
 <!-- TOC --><a name="allow-subwindows"></a>
 ## Allow Subwindows
 
-Group elements display a small window that works almost like a popup window. If your custom element display a window, by default the group element window will be closed. To tell group element window that your window is a subwindow mark your `EditorWindow` derived class with  `GroupPopupSubWindowAttribute`. This attribute can also be used with classes derived from `PopupWindowContent`.
+Group elements display a small window that works almost like a popup window. If your custom element displays a window, by default the group element window will be closed. To tell group element window that your window is a subwindow mark your `EditorWindow` derived class with  `GroupPopupSubWindowAttribute`. This attribute can also be used with classes derived from `PopupWindowContent`.
+
+Example with `EditorWindow`
+
+```csharp
+using Paps.UnityToolbarExtenderUIToolkit;
+using UnityEditor;
+using UnityEditor.Toolbars;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+[MainToolbarElement("MyDropdownWithWindow")]
+public class DropdownInGroupWithWindow : EditorToolbarDropdown
+{
+    public DropdownInGroupWithWindow()
+    {
+        text = nameof(DropdownInGroupWithWindow);
+        clicked += ShowDropdownWindow;
+    }
+
+    private void ShowDropdownWindow()
+    {
+        var newWindowDropdown = ScriptableObject.CreateInstance<DropdownWindow>();
+        newWindowDropdown.ShowAsDropdownForMainToolbar(worldBound, new Vector2(200, 200));
+    }
+}
+
+[GroupPopupSubWindow]
+public class DropdownWindow : EditorWindow
+{
+    private void CreateGUI()
+    {
+        var debugButton = new Button(() => Debug.Log("What a debug!"));
+        debugButton.text = "Debug";
+
+        var closeButton = new Button(() => Close());
+        closeButton.text = "Close";
+
+        rootVisualElement.Add(debugButton);
+        rootVisualElement.Add(closeButton);
+    }
+}
+```
+
+Example with `PopupWindowContent`
+
+```csharp
+using Paps.UnityToolbarExtenderUIToolkit;
+using UnityEditor;
+using UnityEditor.Toolbars;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+[MainToolbarElement("MyDropdownWithPopupWindowContent")]
+public class DropdownInGroupWithPopupWindow : EditorToolbarDropdown
+{
+    public DropdownInGroupWithPopupWindow()
+    {
+        text = nameof(DropdownInGroupWithPopupWindow);
+        clicked += ShowPopupWindow;
+    }
+
+    private void ShowPopupWindow()
+    {
+        UnityEditor.PopupWindow.Show(worldBound, new PopupWindowContentThatWorksInASubgroup());
+    }
+}
+
+[GroupPopupSubWindow]
+public class PopupWindowContentThatWorksInASubgroup : PopupWindowContent
+{
+    public override void OnOpen()
+    {
+        var debugButton = new Button(() => Debug.Log("What a debug!"));
+        debugButton.text = "Debug";
+
+        var closeButton = new Button(() => editorWindow.Close());
+        closeButton.text = "Close";
+
+        editorWindow.rootVisualElement.Add(debugButton);
+        editorWindow.rootVisualElement.Add(closeButton);
+    }
+
+    public override void OnGUI(Rect rect)
+    {
+        
+    }
+}
+```
 
 ![](Assets/Package/Readme-Resources~/subwindow-demonstration.gif)
 
