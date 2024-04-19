@@ -15,7 +15,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static FieldInfo _popupWindowContentField;
         private static Type[] _subWindowTypes = new Type[0];
-        private static Type[] _specialWindowTypes;
+        private static Type[] _specialWindowTypes = new Type[0];
         private static List<GroupDropdownWindowPopup> _windows = new List<GroupDropdownWindowPopup>();
 
         static GroupDropdownWindowPopupManager()

@@ -6,8 +6,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal static class ScriptableGroupDefinitionHelper
     {
-        public const string NO_PARENT_VALUE = "None";
-
         private static ScriptableGroupDefinition[] _projectGroupDefinitions;
 
         static ScriptableGroupDefinitionHelper()

@@ -13,7 +13,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             this.name = name;
             text = name;
-            clicked += ShowOrHideDropdown;
+            clicked += ShowDropdown;
         }
 
         public void Initialize(VisualElement[] groupedElements)
@@ -21,7 +21,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _groupedElements = groupedElements;
         }
 
-        private void ShowOrHideDropdown()
+        private void ShowDropdown()
         {
             GroupDropdownWindowPopupManager.Show(worldBound, _groupedElements);
         }
