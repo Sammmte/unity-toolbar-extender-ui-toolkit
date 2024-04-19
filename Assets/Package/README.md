@@ -77,6 +77,8 @@ Open Package Manager window, Go to `Top left plus icon -> Add package from git U
 <!-- TOC --><a name="getting-started"></a>
 # Getting Started
 
+It is recommended to import package samples in your project. To do this `Open Package Manager -> Filter by In Project packages -> Click Unity Toolbar Extender UI Toolkit package -> In package window select Samples -> Click Import`.
+
 <!-- TOC --><a name="create-common-controls"></a>
 ## Create Common Controls
 
