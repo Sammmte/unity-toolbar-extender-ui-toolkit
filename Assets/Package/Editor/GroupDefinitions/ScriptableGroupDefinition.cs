@@ -5,11 +5,20 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [CreateAssetMenu(menuName = ToolInfo.EDITOR_MENU_BASE + "/Group Definition")]
     public sealed class ScriptableGroupDefinition : ScriptableObject
     {
-        [SerializeField] private string _groupId;
-        [SerializeField] private string _groupName;
-        [SerializeField] private ToolbarAlign _alignment;
+        [SerializeField]
+        [Tooltip("Id of group. It must be unique")]
+        private string _groupId;
+        [SerializeField]
+        [Tooltip("Text to display in group element dropdown")]
+        private string _groupName;
+        [SerializeField]
+        [Tooltip("Alignment when used as root element. Ignored inside other groups")]
+        private ToolbarAlign _alignment;
+        [Tooltip("Order when used as root element. Ignored inside other groups. Order of elements inside a group is determined by ToolbarElementsIds array elements order.")]
         [SerializeField] private int _order;
-        [SerializeField] [MainToolbarElementDropdown] private string[] _toolbarElementsIds;
+        [SerializeField]
+        [Tooltip("Elements ids of this group. Order of elements in array determines the order in which the elements will be displayed")]
+        [MainToolbarElementDropdown] private string[] _toolbarElementsIds;
 
         public string GroupId => _groupId;
         public string GroupName => _groupName;
