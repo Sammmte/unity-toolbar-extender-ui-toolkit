@@ -2,41 +2,84 @@
 
 Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/unity-toolbar-extender), Unity Toolbar Extender UI Toolkit allows you to extend Unity's main toolbar using Unity's UI Toolkit.
 
-- [Getting Started](#getting-started)
-    - [Create Common Controls](#create-common-controls)
-    - [Place Them Left or Right to Play Buttons](#place-them-left-or-right-to-play-buttons)
-    - [Arrange Them](#arrange-them)
-    - [Create More Things Than Only Buttons](#create-more-things-than-only-buttons)
-    - [Create Whatever Visual Element You Want](#create-whatever-visual-element-you-want)
-    - [Don't Worry About Horizontal Space. It's Scrollable!](#dont-worry-about-horizontal-space-its-scrollable)
-- [Group Your Elements to Save Space](#group-your-elements-to-save-space)
-    - [Configure a Group Definition](#configure-a-group-definition)
-        - [Properties](#properties)
-- [Hide Unity's Native Toolbar Visual Elements. Save Even More Space](#hide-unitys-native-toolbar-visual-elements-save-even-more-space)
-- [MainToolbar Class](#maintoolbar-class)
-- [Important Technical Information](#important-technical-information)
-    - [About Main Toolbar Elements](#about-main-toolbar-elements)
-    - [About Groups](#about-groups)
-    - [About MainToolbar Class](#about-maintoolbar-class)
-    - [About MainToolbarAutomaticExtender Class](#about-maintoolbarautomaticextender-class)
-    - [About Hiding Visual Elements](#about-hiding-visual-elements)
-    - [About How This Package Saves Its Data](#about-how-this-package-saves-its-data)
-- [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements)
-- [IntegerField, FloatField and TextField Are Exceptions](#integerfield-floatfield-and-textfield-are-exceptions)
-- [Eligible Classes for Recommended Style Application](#eligible-classes-for-recommended-style-application)
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [Unity Toolbar Extender UI Toolkit](#unity-toolbar-extender-ui-toolkit)
 - [Install](#install)
-    - [Via NPM](#via-npm)
-    - [Via OpenUPM](#via-openupm)
-    - [Via Git URL](#via-git-url)
+   * [via npm](#via-npm)
+   * [via OpenUPM](#via-openupm)
+   * [via Git URL](#via-git-url)
+- [Getting Started](#getting-started)
+   * [Create Common Controls](#create-common-controls)
+   * [Place Them Left or Right to Play Buttons](#place-them-left-or-right-to-play-buttons)
+   * [Arrange Them](#arrange-them)
+   * [Create More Things Than Only Buttons](#create-more-things-than-only-buttons)
+   * [Create Whatever Visual Element You Want](#create-whatever-visual-element-you-want)
+   * [Don't Worry About Horizontal Space. It's Scrollable!](#dont-worry-about-horizontal-space-its-scrollable)
+   * [Important Notes](#important-notes)
+- [Group Your Elements to Save Space](#group-your-elements-to-save-space)
+   * [Make Subgroups](#make-subgroups)
+   * [Allow Subwindows](#allow-subwindows)
+   * [Important Notes](#important-notes-1)
+- [Hide Unity's Native Toolbar Visual Elements. Save Even More Space](#hide-unitys-native-toolbar-visual-elements-save-even-more-space)
+   * [Important Notes](#important-notes-2)
+- [MainToolbar Class](#maintoolbar-class)
+   * [Important Notes](#important-notes-3)
+- [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements)
+- [Eligible Classes for Recommended Style Application](#eligible-classes-for-recommended-style-application)
+- [Miscelaneous Information](#miscelaneous-information)
+   * [About MainToolbarAutomaticExtender Class:](#about-maintoolbarautomaticextender-class)
+   * [About How This Package Saves Its Data](#about-how-this-package-saves-its-data)
 - [License](#license)
 
+<!-- TOC end -->
 
+<!-- TOC --><a name="install"></a>
+# Install
 
+<!-- TOC --><a name="via-npm"></a>
+## via npm
+
+Open `Packages/manifest.json` with your favorite text editor. Add a [scoped registry](https://docs.unity3d.com/Manual/upm-scoped.html) and following line to dependencies block:
+```json
+{
+  "scopedRegistries": [
+    {
+      "name": "npmjs",
+      "url": "https://registry.npmjs.org/",
+      "scopes": [
+        "com.paps"
+      ]
+    }
+  ],
+  "dependencies": {
+    "com.paps.unity-toolbar-extender-ui-toolkit": "1.0.0"
+  }
+}
+```
+Package should now appear in package manager.
+
+<!-- TOC --><a name="via-openupm"></a>
+## via OpenUPM
+
+The package is also available on the [openupm registry](https://openupm.com/packages/com.paps.unity-toolbar-extender-ui-toolkit). You can install it eg. via [openupm-cli](https://github.com/openupm/openupm-cli).
+
+```
+openupm add com.paps.unity-toolbar-extender-ui-toolkit
+```
+
+<!-- TOC --><a name="via-git-url"></a>
+## via Git URL
+
+Open Package Manager window, Go to `Top left plus icon -> Add package from git URL`. There add the following: `https://github.com/Sammmte/unity-toolbar-extender-ui-toolkit.git?path=/Assets/Package`
+
+<!-- TOC --><a name="getting-started"></a>
 # Getting Started
 
+<!-- TOC --><a name="create-common-controls"></a>
 ## Create Common Controls
 
-Inherit from any Unity's built-in visual element, tag it with `MainToolbarElementAttribute` and define an id. You can place the script anywhere in your project.
+Inherit from any Unity's built-in visual element, tag it with `MainToolbarElementAttribute` and define an id. You can place the script in any `Editor` folder or subfolder or in a folder with an editor assembly definition.
 
 ```csharp
 using Paps.UnityToolbarExtenderUIToolkit;
@@ -56,6 +99,7 @@ public class MyAwesomeButton : Button
 
 ![](Assets/Package/Readme-Resources~/common-button-example.png)
 
+<!-- TOC --><a name="place-them-left-or-right-to-play-buttons"></a>
 ## Place Them Left or Right to Play Buttons
 
 ```csharp
@@ -83,6 +127,7 @@ public class MyRightButton : Button
 
 ![](Assets/Package/Readme-Resources~/control-alignment-example.png)
 
+<!-- TOC --><a name="arrange-them"></a>
 ## Arrange Them
 
 Left elements are ordered from right to left. Right elements from left to right.
@@ -130,6 +175,7 @@ public class SecondRightButton : Button
 
 ![](Assets/Package/Readme-Resources~/common-arrangement-example.png)
 
+<!-- TOC --><a name="create-more-things-than-only-buttons"></a>
 ## Create More Things Than Only Buttons
 
 ```csharp
@@ -173,6 +219,7 @@ public class MyAwesomeSlider : Slider
 
 ![](Assets/Package/Readme-Resources~/other-common-controls.png)
 
+<!-- TOC --><a name="create-whatever-visual-element-you-want"></a>
 ## Create Whatever Visual Element You Want
 
 As long as your class inherits from `VisualElement` class, you can create whatever you want.
@@ -220,29 +267,46 @@ public class MyAwesomeWhatever : VisualElement
 
 ![](Assets/Package/Readme-Resources~/custom-element-example.gif)
 
-![](Assets/Package/Readme-Resources~/warning.png) Note that you can inherit from any built-in visual element, but there are some things you might need to know if you want to use `IntegerField`, `FloatField` or `TextField`. Please check [this section](#integerfield-floatfield-and-textfield-are-exceptions)
-
+<!-- TOC --><a name="dont-worry-about-horizontal-space-its-scrollable"></a>
 ## Don't Worry About Horizontal Space. It's Scrollable!
 
 ![](Assets/Package/Readme-Resources~/container-scrollable-demonstration.gif)
 
+<!-- TOC --><a name="important-notes"></a>
+## Important Notes
+
+- If you want to apply custom style to your elements, please read [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements) section.
+- You can define a main toolbar element that inherits from `IMGUIContainer` to render stuff with `IMGUI`. Remember to use `GUILayout.BeginHorizontal` and `GUILayout.EndHorizontal` to render your things in row.
+
+<!-- TOC --><a name="group-your-elements-to-save-space"></a>
 # Group Your Elements to Save Space
 
 Create a **Group Definition** and group any visual element in it. They will be hidden and shown by a dropdown.
 
 ![](Assets/Package/Readme-Resources~/group-demonstration.gif)
 
-## Configure a Group Definition
+<!-- TOC --><a name="make-subgroups"></a>
+## Make Subgroups
 
-To create a Group Definition, in Project Window, `Right Click -> Create -> Paps -> Unity Toolbar Extender UI Toolkit -> Group Definition.`
+When configuring `ToolbarElementsIds` property in your group definition asset, add a new element and select the id of other group asset.
 
-### Properties:
+![](Assets/Package/Readme-Resources~/subgroup-demonstration.gif)
 
-- `GroupId`: Id of the group. Acts as name too.
-- `Alignment`: Left or right to play buttons
-- `Order`: Order in toolbar. Left side goes from right to left. Right side goes from left to right.
-- `ToolbarElementsIds`: The ids of the visual elements you want to add to this group. The order determines the order in which the inner elements will be displayed.
+<!-- TOC --><a name="allow-subwindows"></a>
+## Allow Subwindows
 
+Group elements display a small window that works almost like a popup window. If your custom element display a window, by default the group element window will be closed. To tell group element window that your window is a subwindow mark your `EditorWindow` derived class with  `GroupPopupSubWindowAttribute`. This attribute can also be used with classes derived from `PopupWindowContent`.
+
+![](Assets/Package/Readme-Resources~/subwindow-demonstration.gif)
+
+<!-- TOC --><a name="important-notes-1"></a>
+## Important Notes
+
+- Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
+- Groups display their inner elements in column.
+- The order the inner elements are displayed is determined by the `ToolbarElementsIds` array elements order.
+
+<!-- TOC --><a name="hide-unitys-native-toolbar-visual-elements-save-even-more-space"></a>
 # Hide Unity's Native Toolbar Visual Elements. Save Even More Space
 
 Open the Main Toolbar Control Panel Window. Go to `Paps -> Unity Toolbar Extender UI Toolkit -> Windows -> Main Toolbar Control Panel`.
@@ -251,6 +315,14 @@ Hide any toolbar visual element, either Unity's or yours.
 
 ![](Assets/Package/Readme-Resources~/main-toolbar-control-panel-demonstration.gif)
 
+<!-- TOC --><a name="important-notes-2"></a>
+## Important Notes
+
+- `MainToolbarAutomaticExtender` hides visual elements by settings their style property `display` to `Display.None`.
+- There are 2 exceptions to the previous rule, Unity's `AccountDropdown` and `CloudButton` elements. These 2 elements can't be hidden by modifying `display` property, so the way this package hides them is by removing them from the hierarchy.
+- If you want to reset these overrides, go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Reset Overrides`.
+
+<!-- TOC --><a name="maintoolbar-class"></a>
 # MainToolbar Class
 
 Everything covered in this article until now is managed by `MainToolbarAutomaticExtender` static class. If, by any chance, you don't want to manage your visual elements the way I meant, you can access the `MainToolbar` static class and manipulate Unity's main toolbar and its elements.
@@ -303,62 +375,23 @@ public static class MyOwnMainToolbarManager
 
 Unity's toolbar gets destroyed when the editor layout changes (through layout dropdown normally). When this happens `MainToolbar` class will try to get the new object. Because of this, any change made to the toolbar goes away, so you'll need to re-apply your changes. To do this, listen to `OnRefresh` event and you can do the same things you did when `OnInitialized` event happened.
 
-# ![](Assets/Package/Readme-Resources~/warning.png) ![](Assets/Package/Readme-Resources~/warning.png) ![](Assets/Package/Readme-Resources~/warning.png) Important Technical Information ![](Assets/Package/Readme-Resources~/warning.png) ![](Assets/Package/Readme-Resources~/warning.png) ![](Assets/Package/Readme-Resources~/warning.png)
-
-The following is a list of things I consider you might be interested in if you need to debug or understand how something works in this package:
-
-## About Main Toolbar Elements
-
-- Many Unity built-in visual elements, like `Button` or `DropdownField`, are rendered with a white broken texture when added to the toolbar. This package automatically applies some basic styles that kind of fix this issue. If you are looking to style your visual elements, you should read [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements) section.
-- You can inherit from any Unity's built-in visual element, but `IntegerField`, `FloatField` and `TextField` need special considerations. Please read [this section](#integerfield-floatfield-and-textfield-are-exceptions) if you want to use them.
-- You can define a main toolbar element that inherits from `IMGUIContainer` to render stuff with `IMGUI`. Remember to use `GUILayout.BeginHorizontal` and `GUILayout.EndHorizontal` to render your things in row.
-
-## About Groups:
-
-- Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
-- Groups display their inner elements in column.
-- The order the inner elements are displayed is determined by the `ToolbarElementsIds` array elements order.
-
-## About MainToolbar Class:
+<!-- TOC --><a name="important-notes-3"></a>
+## Important Notes
 
 - Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature at the same time that manipulate the `MainToolbar` class.
-- Remember that Unity's `real` main toolbar object is destroyed when editor layout changes. Every change made to that object goes away with it. Use `MainToolbar.OnRefresh` event to re-apply your changes.
 
-## About MainToolbarAutomaticExtender Class:
-
-- This is the main manager. Most of the magic happens inside.
-- This class **WON'T** do anything, unless you mark at least one type derived from `VisualElement` with `MainToolbarElementAttribute`.
-- When this manager initializes it applies some changes to style of native containers of Unity's main toolbar. This means that those containers behave in a way when `MainToolbarAutomaticExtender` is initialized and other way when it is not.
-
-## About Hiding Visual Elements
-
-- `MainToolbarAutomaticExtender` hides visual elements by settings their style property `display` to `Display.None`.
-- There are 2 exceptions to the previous rule, Unity's `AccountDropdown` and `CloudButton` elements. These 2 elements can't be hidden by modifying `display` property, so the way this package hides them is by removing them from the hierarchy.
-
-## About How This Package Saves Its Data
-
-- This package uses EditorPrefs and json tool from Newtonsoft. A single EditorPrefs key is used to save a json object and the other classes write to this json object. If you experience some weird behaviour and you suspect it could be this cache data, you can delete it to start over. To do this go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Delete package related EditorPrefs`.
-
+<!-- TOC --><a name="styling-your-main-toolbar-elements"></a>
 # Styling Your Main Toolbar Elements
 
-Some common built-in visual elements, like `Button` and `DropdownField` are rendered with a white broken-like texture when added to Unity's native toolbar.
+Some common built-in visual elements have some issues when added to the toolbar containers (e.g `Button` and `DropdownField` that are rendered with a white broken-like texture), and some other when they are added to the group element window (e.g `EditorToolbarDropdown` that doesn't render its foldout arrow).
 
 Check this example.
 
 ![](Assets/Package/Readme-Resources~/broken-element-example.jpg)
 
-I'm not a UI Toolkit expert, but it seems to happen because Unity's native toolbar is not an editor window.
-In [Unity's documentation page about editor window overlays](https://docs.unity.cn/Manual/overlays-custom.html) says:
+To workaround this, `MainToolbarAutomaticExtender` applies some changes to style of most of your custom visual elements when they are added either to toolbar containers or to group element windows.
 
-> You can inherit from any `VisualElement` type and create styling yourself, but toolbar elements require specific styling. It is preferable to inherit from one of these predefined `EditorToolbar` types
-
-I don't know why `toolbar elements require specific styling`, but this might be a hint.
-
-When you click a group element dropdown, the dropdown container displayed is an editor window with a show mode of a popup. This means that your custom elements can be displayed in two different contexts: **Unity's native toolbar and editor window contexts**.
-
-To workaround this issue, `MainToolbarAutomaticExtender` applies some changes to style of most of your custom visual elements when they are in Unity's native toolbar context. Visual elements in a group are left with the default style, the one we all see in any editor window. You can check if your class can be styled by recommended styles in [this list](#eligible-classes-for-recommended-style-application).
-
-Because of this, if you want to style your custom visual elements yourself you should set `MainToolbarElementAttribute` parameter `useRecommendedStyles` to `false`. Otherwise, your overrides might collide with extender's overrides.
+Because of this, if you want to style your custom visual elements yourself you should set `MainToolbarElementAttribute` parameter `useRecommendedStyles` to `false`. Otherwise, your overrides might collide with extender's overrides. You can check if your class will be styled with recommended styles in [this list](#eligible-classes-for-recommended-style-application).
 
 ```csharp
 using Paps.UnityToolbarExtenderUIToolkit;
@@ -374,18 +407,7 @@ public class MyStyledButton : Button
 }
 ```
 
-# IntegerField, FloatField and TextField Are Exceptions
-
-Please before reading this section, read [this one](#styling-your-main-toolbar-elements) first.
-
-Most of common Unity's built-in visual elements are modified with recommended styles (unless you set `useRecommendedStyles` to `false` in `MainToolbarElementAttribute`) when they are added to Unity's native toolbar hierarchy. But types derived from `IntegerField`, `FloatField` and `TextField` are not modified. Instead, the package provides custom visual elements to replace each one: `IMGUIIntField`, `IMGUIFloatField`, `IMGUITextField`. Their names start with `IMGUI` because they inherit from `IMGUIContainer` and use old `IMGUI` controls. 
-
-These visual elements are pretty simple and lack most of the advanced features their UI Toolkit counterparts have, but they fulfill their most important goal: Render an input field and give the value.
-
-If I find a way to fix `IntegerField`, `FloatField` and `TextField` displays in Unity's native toolbar context, these `IMGUI` fields will become unnecessary.
-
-Of course, if you want to inherit from `IntegerField`, `FloatField` or `TextField` and style them yourself, you absolutely can!
-
+<!-- TOC --><a name="eligible-classes-for-recommended-style-application"></a>
 # Eligible Classes for Recommended Style Application
 
 If your custom main toolbar element meets at least one of the following criteria, it will be eligible to be styled with recommended styles:
@@ -394,47 +416,30 @@ If your custom main toolbar element meets at least one of the following criteria
 - Inherits from `Toggle` and does not inherits from `EditorToolbarToggle`
 - Inherits from `Slider`
 - Inherits from `DropdownField`
-- Inherits from `IMGUIIntField`
-- Inherits from `IMGUIFloatField`
-- Inherits from `IMGUITextField`
+- Inherits from `EditorToolbarDropdown`
+- Inherits from `IntegerField`
+- Inherits from `FloatField`
+- Inherits from `TextField`
 
 Remember that you can disable this feature by setting `useRecommendedStyles` to `false` in `MainToolbarElementAttribute` constructor.
 
-# Install
+<!-- TOC --><a name="miscelaneous-information"></a>
+# Miscelaneous Information
 
-## via npm
+<!-- TOC --><a name="about-maintoolbarautomaticextender-class"></a>
+## About MainToolbarAutomaticExtender Class:
 
-Open `Packages/manifest.json` with your favorite text editor. Add a [scoped registry](https://docs.unity3d.com/Manual/upm-scoped.html) and following line to dependencies block:
-```json
-{
-  "scopedRegistries": [
-    {
-      "name": "npmjs",
-      "url": "https://registry.npmjs.org/",
-      "scopes": [
-        "com.paps"
-      ]
-    }
-  ],
-  "dependencies": {
-    "com.paps.unity-toolbar-extender-ui-toolkit": "1.0.0"
-  }
-}
-```
-Package should now appear in package manager.
+- This is the main manager. Most of the magic happens inside.
+- This class **WON'T** do anything, unless you mark at least one type derived from `VisualElement` with `MainToolbarElementAttribute`.
+- When this manager initializes it applies some changes to style of native containers of Unity's main toolbar. This means that those containers behave in a way when `MainToolbarAutomaticExtender` is initialized and other way when it is not.
 
-## via OpenUPM
+<!-- TOC --><a name="about-how-this-package-saves-its-data"></a>
+## About How This Package Saves Its Data
 
-The package is also available on the [openupm registry](https://openupm.com/packages/com.paps.unity-toolbar-extender-ui-toolkit). You can install it eg. via [openupm-cli](https://github.com/openupm/openupm-cli).
+- This package uses EditorPrefs and json tool from Newtonsoft. A single EditorPrefs key is used to save a json object and the other classes write to this json object. If you experience some weird behaviour and you suspect it could be this cache data, you can delete it to start over. To do this go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Delete package related EditorPrefs`.
 
-```
-openupm add com.paps.unity-toolbar-extender-ui-toolkit
-```
-
-## via Git URL
-
-Open Package Manager window, Go to `Top left plus icon -> Add package from git URL`. There add the following: `https://github.com/Sammmte/unity-toolbar-extender-ui-toolkit.git?path=/Assets/Package`
-
+<!-- TOC --><a name="license"></a>
 # License
 
 MIT LICENSE
+        
