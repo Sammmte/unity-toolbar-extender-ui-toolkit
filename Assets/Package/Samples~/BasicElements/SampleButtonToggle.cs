@@ -3,7 +3,7 @@ using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[MainToolbarElement(id: "SampleButtonToggle", alignWhenSingle: ToolbarAlign.Right, order: 0)]
+[MainToolbarElement(id: "SampleButtonToggle", alignment: ToolbarAlign.Right, order: 0)]
 public class SampleButtonToggle : EditorToolbarToggle
 {
     public SampleButtonToggle() // you can also construct your object with base()
