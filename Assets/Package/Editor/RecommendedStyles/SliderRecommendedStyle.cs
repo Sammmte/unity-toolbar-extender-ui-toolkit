@@ -13,12 +13,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public SliderRecommendedStyle(Slider slider)
         {
             _slider = slider;
+            ApplyGroupStyleAlways = true;
         }
 
         protected override void ApplyInsideGroupStyle()
         {
             _slider.labelElement.style.minWidth = _previousLabelMinWidth;
             _slider.style.minWidth = _previousMinWidth;
+
+            _slider.style.flexWrap = Wrap.NoWrap;
+            _slider.style.flexShrink = 1;
         }
 
         protected override void ApplyRootElementStyle()
@@ -28,6 +32,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             _slider.labelElement.style.minWidth = 0;
             _slider.style.minWidth = MIN_WIDTH;
+            _slider.style.flexShrink = 0;
         }
     }
 }
