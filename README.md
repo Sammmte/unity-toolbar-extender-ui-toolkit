@@ -393,6 +393,7 @@ public class PopupWindowContentThatWorksInASubgroup : PopupWindowContent
 - Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
 - Groups display their inner elements in column.
 - The order the inner elements are displayed is determined by the `ToolbarElementsIds` array elements order.
+- Group popup windows won't close if focused window is `UI Toolkit Debugger`, so you can analyze your elements inside these windows.
 
 <!-- TOC --><a name="hide-unitys-native-toolbar-visual-elements-save-even-more-space"></a>
 # Hide Unity's Native Toolbar Visual Elements. Save Even More Space
