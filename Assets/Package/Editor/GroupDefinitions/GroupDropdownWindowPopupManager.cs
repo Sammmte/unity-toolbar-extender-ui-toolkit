@@ -15,6 +15,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static FieldInfo _popupWindowContentField;
         private static Type[] _subWindowTypes = new Type[0];
+        private static Type[] _specialWindowTypes;
         private static List<GroupDropdownWindowPopup> _windows = new List<GroupDropdownWindowPopup>();
 
         static GroupDropdownWindowPopupManager()
@@ -22,6 +23,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _popupWindowContentField = typeof(PopupWindow)
                     .GetField(POPUP_WINDOW_CONTENT_FIELD_NAME,
                     BindingFlags.NonPublic | BindingFlags.Instance);
+
+            InitializeSpecialWindowTypes();
             LoadSubWindowTypes();
             EditorApplication.update += Update;
         }
@@ -31,6 +34,22 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _subWindowTypes = TypeCache.GetTypesWithAttribute<GroupPopupSubWindowAttribute>()
                             .Where(type => IsValidSubWindowType(type))
                             .ToArray();
+        }
+
+        private static void InitializeSpecialWindowTypes()
+        {
+            var typeList = new List<Type>();
+
+            var uiToolkitDebuggerType = TypeCache.GetTypesDerivedFrom<EditorWindow>()
+                .FirstOrDefault(type => type.Name == "UIElementsDebugger");
+
+            var contextMenuType = TypeCache.GetTypesDerivedFrom<EditorWindow>()
+                .FirstOrDefault(type => type.FullName == "UnityEditor.UIElements.EditorMenuExtensions.ContextMenu");
+
+            typeList.Add(uiToolkitDebuggerType);
+            typeList.Add(contextMenuType);
+
+            _specialWindowTypes = typeList.Where(t => t != null).ToArray();
         }
 
         private static bool IsValidSubWindowType(Type type)
@@ -90,19 +109,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return _windows.Contains(EditorWindow.focusedWindow) || 
                 _subWindowTypes.Contains(EditorWindow.focusedWindow.GetType()) ||
-                IsUIToolkitDebugger(EditorWindow.focusedWindow) ||
+                _specialWindowTypes.Contains(EditorWindow.focusedWindow.GetType()) ||
                 ContainsValidPopupWindowContent(EditorWindow.focusedWindow);
-        }
-
-        private static bool IsUIToolkitDebugger(EditorWindow window)
-        {
-            var uiToolkitDebuggerType = TypeCache.GetTypesDerivedFrom<EditorWindow>()
-                .FirstOrDefault(type => type.Name == "UIElementsDebugger");
-
-            if (uiToolkitDebuggerType == null)
-                return false;
-
-            return uiToolkitDebuggerType == window.GetType();
         }
 
         public static void Show(Rect activatorRect, VisualElement[] elements)
