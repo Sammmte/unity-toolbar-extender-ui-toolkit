@@ -30,6 +30,7 @@ Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/
 - [Miscelaneous Information](#miscelaneous-information)
    * [About MainToolbarAutomaticExtender Class:](#about-maintoolbarautomaticextender-class)
    * [About How This Package Saves Its Data](#about-how-this-package-saves-its-data)
+- [Tested Versions](#tested-versions)
 - [License](#license)
 
 <!-- TOC end -->
@@ -536,6 +537,17 @@ Remember that you can disable this feature by setting `useRecommendedStyles` to 
 ## About How This Package Saves Its Data
 
 - This package uses EditorPrefs and json tool from Newtonsoft. A single EditorPrefs key is used to save a json object and the other classes write to this json object. If you experience some weird behaviour and you suspect it could be this cache data, you can delete it to start over. To do this go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Delete package related EditorPrefs`.
+
+# Tested Versions
+
+This package was tested in:
+
+- Unity 2022.2
+    - Windows
+- Unity 2022.3
+    - Windows
+- Unity 2023.2
+    - Windows
 
 <!-- TOC --><a name="license"></a>
 # License
