@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
