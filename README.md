@@ -405,6 +405,7 @@ public class PopupWindowContentThatWorksInASubgroup : PopupWindowContent
 - Groups display their inner elements in column.
 - The order the inner elements are displayed is determined by the `ToolbarElementsIds` array elements order.
 - Group popup windows won't close if focused window is `UI Toolkit Debugger`, so you can analyze your elements inside these windows.
+- When showing a custom window as a dropdown, with `EditorWindow.ShowAsDropdown` method, it is recommended to use a extension method provided in this package, named `ShowAsDropdownForMainToolbar`. This method uses the original inside but applies some position adjustments that would, otherwise, render the window at a wrong position. For some reason this does not happen with `PopupWindow.Show` method.
 
 <!-- TOC --><a name="hide-unitys-native-toolbar-visual-elements-save-even-more-space"></a>
 # Hide Unity's Native Toolbar Visual Elements. Save Even More Space
