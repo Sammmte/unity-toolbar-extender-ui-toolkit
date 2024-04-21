@@ -97,6 +97,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             _foldout.value = GetSavedFoldoutState();
             _foldout.RegisterCallback<ChangeEvent<bool>>(SaveFoldoutState);
+            _foldout.style.flexGrow = 1;
 
             Add(_foldout);
             Add(_button);
