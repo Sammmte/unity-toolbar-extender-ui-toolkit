@@ -52,6 +52,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return new FloatFieldRecommendedStyle(floatField);
             else if (visualElement is TextField textField)
                 return new TextFieldRecommendedStyle(textField);
+            else if (visualElement is EditorToolbarToggle toolbarToggle)
+                return new EditorToolbarToggleRecommendedStyle(toolbarToggle);
 
             return null;
         }
