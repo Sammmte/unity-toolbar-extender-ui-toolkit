@@ -285,7 +285,7 @@ public class MyAwesomeWhatever : VisualElement
 ![](Assets/Package/Readme-Resources~/container-scrollable-demonstration.gif)
 
 <!-- TOC --><a name="important-notes"></a>
-## Important Notes
+## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
 - If you want to apply custom style to your elements, please read [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements) section.
 - You can define a main toolbar element that inherits from `IMGUIContainer` to render stuff with `IMGUI`. Remember to use `GUILayout.BeginHorizontal` and `GUILayout.EndHorizontal` to render your things in row.
@@ -294,7 +294,9 @@ public class MyAwesomeWhatever : VisualElement
 <!-- TOC --><a name="group-your-elements-to-save-space"></a>
 # Group Your Elements to Save Space
 
-Create a **Group Definition** and group any visual element in it. They will be hidden and shown by a dropdown.
+Create a **Group Definition** asset and group any visual element in it. They will be hidden and shown by a dropdown.
+
+To create a **Group Definition** asset go to `Project Window -> Right Click -> Create -> Paps -> Unity Toolbar Extender UI Toolkit -> Group Definition`
 
 ![](Assets/Package/Readme-Resources~/group-demonstration.gif)
 
@@ -331,6 +333,7 @@ public class DropdownInGroupWithWindow : EditorToolbarDropdown
     private void ShowDropdownWindow()
     {
         var newWindowDropdown = ScriptableObject.CreateInstance<DropdownWindow>();
+        // Check important notes to know more about ShowAsDropdownForMainToolbar method
         newWindowDropdown.ShowAsDropdownForMainToolbar(worldBound, new Vector2(200, 200));
     }
 }
@@ -401,7 +404,7 @@ public class PopupWindowContentThatWorksInASubgroup : PopupWindowContent
 ![](Assets/Package/Readme-Resources~/subwindow-demonstration.gif)
 
 <!-- TOC --><a name="important-notes-1"></a>
-## Important Notes
+## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
 - Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
 - Groups display their inner elements in column.
@@ -419,9 +422,9 @@ Hide any toolbar visual element, either Unity's or yours.
 ![](Assets/Package/Readme-Resources~/main-toolbar-control-panel-demonstration.gif)
 
 <!-- TOC --><a name="important-notes-2"></a>
-## Important Notes
+## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
-- `MainToolbarAutomaticExtender` hides visual elements by settings their style property `display` to `Display.None`.
+- `MainToolbarAutomaticExtender` hides visual elements by setting their style property `display` to `Display.None`.
 - There are 2 exceptions to the previous rule, Unity's `AccountDropdown` and `CloudButton` elements. These 2 elements can't be hidden by modifying `display` property, so the way this package hides them is by removing them from the hierarchy.
 - If you want to reset these overrides, go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Reset Overrides`.
 
@@ -451,7 +454,7 @@ public static class MyOwnMainToolbarManager
 }
 ```
 
-You can access Unity's toolbar visual elements, like the play buttons container or the left (where the cloud button is) or the right (where the layouts dropdown is).
+You can access Unity's toolbar visual elements, like the play buttons container, the left (where the cloud button is) or the right (where the layouts dropdown is).
 
 ```csharp
 using Paps.UnityToolbarExtenderUIToolkit;
@@ -479,9 +482,9 @@ public static class MyOwnMainToolbarManager
 Unity's toolbar gets destroyed when the editor layout changes (through layout dropdown normally). When this happens `MainToolbar` class will try to get the new object. Because of this, any change made to the toolbar goes away, so you'll need to re-apply your changes. To do this, listen to `OnRefresh` event and you can do the same things you did when `OnInitialized` event happened.
 
 <!-- TOC --><a name="important-notes-3"></a>
-## Important Notes
+## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
-- Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature at the same time that manipulate the `MainToolbar` class.
+- Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature while manipulating `MainToolbar` class directly.
 
 <!-- TOC --><a name="styling-your-main-toolbar-elements"></a>
 # Styling Your Main Toolbar Elements
