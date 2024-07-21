@@ -10,5 +10,8 @@
 
         public static IMainToolbarElementRepository MainToolbarElementRepository =
             new ByAttributeMainToolbarElementRepository();
+
+        public static IMainToolbarElementSerializedDataRepository MainToolbarElementSerializedDataRepository =
+            new InMemoryMainToolbarElementSerializedDataRepository();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine.UIElements;
 
@@ -9,6 +10,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [InitializeOnLoad]
     public static class MainToolbarAutomaticExtender
     {
+        private const string INITIALIZE_METHOD_NAME = "InitializeElement";
+
         private static MainToolbarElement[] _mainToolbarElements = new MainToolbarElement[0];
         private static MainToolbarElement[] _groupElements = new MainToolbarElement[0];
         private static GroupDefinition[] _groupDefinitions = new GroupDefinition[0];
@@ -16,6 +19,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static NativeToolbarElement[] _nativeElements = new NativeToolbarElement[0];
         private static MainToolbarElement[] _singleElements = new MainToolbarElement[0];
         private static MainToolbarElementOverrideApplier _overrideApplier = new MainToolbarElementOverrideApplier(ServicesAndRepositories.MainToolbarElementOverridesRepository);
+        private static MainToolbarElementDataSerializer _dataSerializer = new MainToolbarElementDataSerializer(ServicesAndRepositories.MainToolbarElementSerializedDataRepository);
         private static Dictionary<string, MainToolbarElement[]> _elementsByGroup = new Dictionary<string, MainToolbarElement[]>();
 
         internal static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
@@ -92,11 +96,28 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             InitializeGroups();
             _singleElements = GetSingles();
             _rootElements = GetRootElements();
+
+            _dataSerializer.Start(_mainToolbarElements);
             _overrideApplier.SetCustomElements(_mainToolbarElements.Concat(_groupElements).ToArray());
 
             RegisterElementsForRecommendedStyles();
 
             AddRootElementsToContainers();
+
+            CallInitializeCallbacks();
+        }
+
+        private static void CallInitializeCallbacks()
+        {
+            foreach(var element in _mainToolbarElements)
+            {
+                var elementInnerType = element.VisualElement.GetType();
+
+                var initializeMethod = elementInnerType.GetMethod(INITIALIZE_METHOD_NAME,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+                initializeMethod?.Invoke(element.VisualElement, null);
+            }
         }
 
         private static void InitializeGroups()
