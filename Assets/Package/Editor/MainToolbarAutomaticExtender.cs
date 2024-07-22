@@ -67,6 +67,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return;
 
             ResetCustomContainers();
+            _dataSerializer.Stop();
             BuildCustomToolbarContainers();
             _overrideApplier.ApplyOverrides();
             OnRefresh?.Invoke();

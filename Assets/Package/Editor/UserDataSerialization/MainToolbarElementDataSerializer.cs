@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -17,6 +19,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             LoadElementsWithSerializedVariables(mainToolbarElements);
             Reconstruct();
+            OverrideRepositoryState();
+            EditorApplication.update += Update;
+        }
+
+        public void Stop()
+        {
+            EditorApplication.update -= Update;
+            _elementsWithSerializedVariables = new MainToolbarElementWithSerializableVariables[0];
         }
 
         private void LoadElementsWithSerializedVariables(MainToolbarElement[] mainToolbarElements)
@@ -35,9 +45,42 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             foreach(var element in _elementsWithSerializedVariables)
             {
+                if (!elementsSerializedDataById.ContainsKey(element.MainToolbarElement.Id))
+                    continue;
+
                 var serializedData = elementsSerializedDataById[element.MainToolbarElement.Id];
 
                 element.LoadFromSerializedData(serializedData);
+            }
+        }
+
+        private void OverrideRepositoryState()
+        {
+            _repository.Clear();
+
+            _repository.Set(_elementsWithSerializedVariables
+                .Select(e => e.GetSerializedData())
+                .ToArray());
+        }
+        
+        private void Update()
+        {
+            List<MainToolbarElementSerializedData> changedElements = null;
+
+            foreach(var element in _elementsWithSerializedVariables)
+            {
+                if (element.CheckAndUpdateModifiedValues())
+                {
+                    if (changedElements == null)
+                        changedElements = new List<MainToolbarElementSerializedData>();
+
+                    changedElements.Add(element.GetSerializedData());
+                }
+            }
+
+            if(changedElements != null)
+            {
+                _repository.Set(changedElements.ToArray());
             }
         }
     }
