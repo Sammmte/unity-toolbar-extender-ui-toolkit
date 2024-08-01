@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -66,12 +67,24 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             foreach(var field in _serializableFields)
             {
                 var currentSnapshot = _valuesSnapshot[field.Name];
+                var currentValue = field.GetValue(MainToolbarElement.VisualElement);
 
-                if (!currentSnapshot.Equals(field.GetValue(MainToolbarElement.VisualElement)))
+                if (currentSnapshot == null)
                 {
-                    anyChange = true;
-                    _valuesSnapshot[field.Name] = field.GetValue(MainToolbarElement.VisualElement);
+                    if (currentValue != null)
+                        SetAsChangedAndUpdate(field);
                 }
+                else
+                {
+                    if (!currentSnapshot.Equals(currentValue))
+                        SetAsChangedAndUpdate(field);
+                }
+            }
+
+            void SetAsChangedAndUpdate(FieldInfo field)
+            {
+                anyChange = true;
+                _valuesSnapshot[field.Name] = field.GetValue(MainToolbarElement.VisualElement);
             }
 
             return anyChange;

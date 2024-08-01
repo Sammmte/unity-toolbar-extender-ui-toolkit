@@ -12,6 +12,6 @@
             new ByAttributeMainToolbarElementRepository();
 
         public static IMainToolbarElementSerializedDataRepository MainToolbarElementSerializedDataRepository =
-            new InMemoryMainToolbarElementSerializedDataRepository();
+            new JsonEditorPrefsMainToolbarElementSerializedDataRepository();
     }
 }
