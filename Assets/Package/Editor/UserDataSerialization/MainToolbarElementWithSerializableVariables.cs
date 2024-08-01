@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -18,6 +18,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             MainToolbarElement = mainToolbarElement;
 
             LoadSerializableVariables();
+            SaveValuesSnapshot();
         }
 
         private void LoadSerializableVariables()
@@ -27,9 +28,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _serializableFields = mainToolbarElementInnerType.GetFields(
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(field => field.GetCustomAttribute<SerializeAttribute>(false) != null)
+                .Where(field => SerializableTypes.SERIALIZABLE_TYPES.Contains(field.FieldType))
                 .ToArray();
-
-            SaveValuesSnapshot();
         }
 
         private void SaveValuesSnapshot()
@@ -49,7 +49,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 if (string.IsNullOrEmpty(keyValue.Key))
                     continue;
 
-                field.SetValue(MainToolbarElement.VisualElement, keyValue.Value);
+                field.SetValue(MainToolbarElement.VisualElement, Convert.ChangeType(keyValue.Value, field.FieldType));
             }
         }
 
