@@ -35,6 +35,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         static MainToolbarAutomaticExtender()
         {
             MainToolbar.OnInitialized += Initialize;
+            AssemblyReloadEvents.beforeAssemblyReload += CleanUp;
         }
 
         private static void Initialize()
@@ -319,6 +320,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
 
             return false;
+        }
+
+        private static void CleanUp()
+        {
+            _dataSerializer.Stop();
         }
     }
 }
