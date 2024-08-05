@@ -28,7 +28,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _serializableFields = mainToolbarElementInnerType.GetFields(
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(field => field.GetCustomAttribute<SerializeAttribute>(false) != null)
-                .Where(field => SerializableTypes.SERIALIZABLE_TYPES.Contains(field.FieldType))
+                .Where(field => SerializableTypesHelper.IsValidType(field.FieldType))
                 .ToArray();
         }
 
@@ -49,7 +49,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 if (string.IsNullOrEmpty(keyValue.Key))
                     continue;
 
-                field.SetValue(MainToolbarElement.VisualElement, Convert.ChangeType(keyValue.Value, field.FieldType));
+                object retrievedValue = null;
+
+                if(SerializableTypesHelper.TryChangeType(keyValue.Value, field.FieldType, out retrievedValue))
+                    field.SetValue(MainToolbarElement.VisualElement, retrievedValue);
             }
         }
 
