@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -12,11 +11,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private FieldInfo[] _serializableFields = new FieldInfo[0];
         private Dictionary<string, object> _valuesSnapshot = new Dictionary<string, object>();
+        private readonly IMainToolbarElementDataSerializer _serializer;
 
-        public MainToolbarElementWithSerializableVariables(MainToolbarElement mainToolbarElement)
+        public MainToolbarElementWithSerializableVariables(MainToolbarElement mainToolbarElement,
+            IMainToolbarElementDataSerializer serializer)
         {
             MainToolbarElement = mainToolbarElement;
-
+            _serializer = serializer;
             LoadSerializableVariables();
             SaveValuesSnapshot();
         }
@@ -49,17 +50,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 if (string.IsNullOrEmpty(keyValue.Key))
                     continue;
 
-                object retrievedValue = null;
+                var retrievedValue = _serializer.Deserialize(keyValue.SerializedValue, field.FieldType);
 
-                if(SerializableTypesHelper.TryChangeType(keyValue.Value, field.FieldType, out retrievedValue))
-                    field.SetValue(MainToolbarElement.VisualElement, retrievedValue);
+                field.SetValue(MainToolbarElement.VisualElement, retrievedValue);   
             }
         }
 
         public MainToolbarElementSerializedData GetSerializedData()
         {
             return new MainToolbarElementSerializedData(MainToolbarElement.Id,
-                _valuesSnapshot.Select(keyValue => new MainToolbarElementSerializedKeyValue(keyValue.Key, keyValue.Value)
+                _valuesSnapshot.Select(keyValue => new MainToolbarElementSerializedKeyValue(keyValue.Key, _serializer.Serialize(keyValue.Value))
                 ).ToArray());
         }
 
@@ -79,7 +79,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 }
                 else
                 {
-                    if (!currentSnapshot.Equals(currentValue))
+                    if (!SerializableTypesHelper.AreEqual(currentSnapshot, currentValue))
                         SetAsChangedAndUpdate(field);
                 }
             }

@@ -13,5 +13,8 @@
 
         public static IMainToolbarElementSerializedDataRepository MainToolbarElementSerializedDataRepository =
             new JsonEditorPrefsMainToolbarElementSerializedDataRepository();
+
+        public static IMainToolbarElementDataSerializer MainToolbarElementDataSerializer =
+            new JsonMainToolbarElementDataSerializer();
     }
 }

@@ -5,9 +5,10 @@ using UnityEditor;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    internal class MainToolbarElementDataSerializer
+    internal class MainToolbarElementSerializationSyncService
     {
         private readonly IMainToolbarElementSerializedDataRepository _repository;
+        private readonly IMainToolbarElementDataSerializer _serializer;
         private MainToolbarElementWithSerializableVariables[] _elementsWithSerializedVariables = 
             new MainToolbarElementWithSerializableVariables[0];
 
@@ -15,9 +16,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private Timer _updateTimer;
 
-        public MainToolbarElementDataSerializer(IMainToolbarElementSerializedDataRepository repository)
+        public MainToolbarElementSerializationSyncService(IMainToolbarElementSerializedDataRepository repository,
+            IMainToolbarElementDataSerializer serializer)
         {
             _repository = repository;
+            _serializer = serializer;
         }
 
         private Timer CreateUpdateTimer()
@@ -65,7 +68,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private void LoadElementsWithSerializedVariables(MainToolbarElement[] mainToolbarElements)
         {
             _elementsWithSerializedVariables = mainToolbarElements
-                .Select(m => new MainToolbarElementWithSerializableVariables(m))
+                .Select(m => new MainToolbarElementWithSerializableVariables(m, _serializer))
                 .Where(m => m.VariableCount > 0)
                 .ToArray();
         }

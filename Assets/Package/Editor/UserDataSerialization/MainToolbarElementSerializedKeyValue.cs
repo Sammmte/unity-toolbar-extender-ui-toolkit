@@ -3,12 +3,12 @@
     internal readonly struct MainToolbarElementSerializedKeyValue
     {
         public string Key { get; }
-        public object Value { get; }
+        public string SerializedValue { get; }
 
-        public MainToolbarElementSerializedKeyValue(string key, object value)
+        public MainToolbarElementSerializedKeyValue(string key, string serializedValue)
         {
             Key = key;
-            Value = value;
+            SerializedValue = serializedValue;
         }
     }
 }

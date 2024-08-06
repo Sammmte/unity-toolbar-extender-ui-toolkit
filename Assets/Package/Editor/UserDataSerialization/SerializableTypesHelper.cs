@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -29,57 +30,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 IsValidArrayType(type) ||
                 IsValidListType(type) ||
                 IsValidDictionaryType(type);
-        }
-
-        public static bool TryChangeType(object obj, Type newType, out object result)
-        {
-            result = null;
-
-            if (obj == null) 
-                return false;
-
-            var objType = obj.GetType();
-
-            if(IsPrimitive(objType) && IsPrimitive(newType))
-            {
-                try
-                {
-                    result = Convert.ChangeType(obj, newType);
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-
-            if((IsValidArrayType(objType) || IsValidListType(objType)) && 
-                (IsValidArrayType(newType) || IsValidListType(newType)))
-            {
-                var arrayToCast = (object[])obj;
-                var castedArray = new object[arrayToCast.Length];
-
-                var typeOfNewArrayType = newType.GetElementType();
-
-                for(int i = 0; i < arrayToCast.Length; i++)
-                {
-                    var element = arrayToCast[i];
-
-                    if (!TryChangeType(element, typeOfNewArrayType, out element))
-                        return false;
-
-                    castedArray[i] = element;
-                }
-
-                if (newType.IsArray)
-                    result = castedArray;
-                else
-                    result = castedArray.ToList();
-
-                return true;
-            }
-
-            return false;
         }
 
         private static bool IsPrimitive(Type type)
@@ -112,6 +62,39 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             return IsPrimitive(typeArg1) &&
                 IsPrimitive(typeArg2);
+        }
+
+        public static bool AreEqual(object obj1, object obj2)
+        {
+            var obj1Type = obj1.GetType();
+            var obj2Type = obj2.GetType();
+
+            if (obj1Type != obj2Type)
+                return false;
+
+            if (obj1Type.IsArray || obj1Type == typeof(List<>))
+            {
+                Type elementType = null;
+
+                if(obj2Type.IsArray)
+                    elementType = obj1Type.GetElementType();
+                else
+                    elementType = obj1Type.GetGenericArguments().First();
+
+                var comparisonMethod = typeof(SerializableTypesHelper).GetMethod(nameof(AreArrayOrListEqual),
+                    BindingFlags.Static | BindingFlags.NonPublic).MakeGenericMethod(elementType);
+
+                var areEqual = (bool)comparisonMethod.Invoke(null, new object[] { obj1, obj2 });
+
+                return areEqual;
+            }
+
+            return obj1.Equals(obj2);
+        }
+
+        private static bool AreArrayOrListEqual<T>(IEnumerable<T> enumerable1, IEnumerable<T> enumerable2)
+        {
+            return Enumerable.SequenceEqual<T>(enumerable1, enumerable2);
         }
     }
 }

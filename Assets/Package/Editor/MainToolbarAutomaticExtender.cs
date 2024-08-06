@@ -18,8 +18,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static MainToolbarElement[] _rootElements = new MainToolbarElement[0];
         private static NativeToolbarElement[] _nativeElements = new NativeToolbarElement[0];
         private static MainToolbarElement[] _singleElements = new MainToolbarElement[0];
-        private static MainToolbarElementOverrideApplier _overrideApplier = new MainToolbarElementOverrideApplier(ServicesAndRepositories.MainToolbarElementOverridesRepository);
-        private static MainToolbarElementDataSerializer _dataSerializer = new MainToolbarElementDataSerializer(ServicesAndRepositories.MainToolbarElementSerializedDataRepository);
+
+        private static MainToolbarElementOverrideApplier _overrideApplier = 
+            new MainToolbarElementOverrideApplier(
+                ServicesAndRepositories.MainToolbarElementOverridesRepository);
+
+        private static MainToolbarElementSerializationSyncService _dataSerializer = 
+            new MainToolbarElementSerializationSyncService(
+                ServicesAndRepositories.MainToolbarElementSerializedDataRepository,
+                ServicesAndRepositories.MainToolbarElementDataSerializer);
+
         private static Dictionary<string, MainToolbarElement[]> _elementsByGroup = new Dictionary<string, MainToolbarElement[]>();
 
         internal static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);

@@ -15,7 +15,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private struct SerializableMainToolbarElementSerializedKeyValue
         {
             public string Key;
-            public object Value;
+            public string SerializedValue;
         }
 
         private const string SAVE_KEY = "main-toolbar-element-user-serialized-data";
@@ -92,7 +92,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return serializedKeyValues
                 .Select(keyValue => new MainToolbarElementSerializedKeyValue(
-                    keyValue.Key, keyValue.Value))
+                    keyValue.Key, keyValue.SerializedValue))
                 .ToArray();
         }
 
@@ -102,7 +102,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .Select(keyValue => new SerializableMainToolbarElementSerializedKeyValue()
                 {
                     Key = keyValue.Key,
-                    Value = keyValue.Value
+                    SerializedValue = keyValue.SerializedValue
                 })
                 .ToArray();
         }
