@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -11,18 +10,18 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private readonly IMainToolbarElementSerializedDataRepository _repository;
         private readonly IMainToolbarElementDataSerializer _serializer;
+        private readonly IClonator _clonator;
         private MainToolbarElementWithSerializableVariables[] _elementsWithSerializedVariables = 
             new MainToolbarElementWithSerializableVariables[0];
-
-        private List<MainToolbarElementSerializedData> _changedElements = new List<MainToolbarElementSerializedData>();
 
         private double _nextUpdateTime;
 
         public MainToolbarElementSerializationSyncService(IMainToolbarElementSerializedDataRepository repository,
-            IMainToolbarElementDataSerializer serializer)
+            IMainToolbarElementDataSerializer serializer, IClonator clonator)
         {
             _repository = repository;
             _serializer = serializer;
+            _clonator = clonator;
         }
 
         public void Start(MainToolbarElement[] mainToolbarElements)
@@ -42,7 +41,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private void LoadElementsWithSerializedVariables(MainToolbarElement[] mainToolbarElements)
         {
             _elementsWithSerializedVariables = mainToolbarElements
-                .Select(m => new MainToolbarElementWithSerializableVariables(m, _serializer))
+                .Select(m => new MainToolbarElementWithSerializableVariables(m, _serializer, _clonator))
                 .Where(m => m.VariableCount > 0)
                 .ToArray();
         }
@@ -98,7 +97,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
 
             if (changedElements != null)
-                _repository.Set(_changedElements.ToArray());
+                _repository.Set(changedElements.ToArray());
         }
     }
 }

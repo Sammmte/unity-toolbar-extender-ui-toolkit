@@ -16,5 +16,7 @@
 
         public static IMainToolbarElementDataSerializer MainToolbarElementDataSerializer =
             new JsonMainToolbarElementDataSerializer();
+
+        public static IClonator Clonator = new JsonClonator();
     }
 }

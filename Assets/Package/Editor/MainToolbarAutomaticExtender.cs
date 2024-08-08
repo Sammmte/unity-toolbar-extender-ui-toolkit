@@ -26,7 +26,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static MainToolbarElementSerializationSyncService _dataSerializer = 
             new MainToolbarElementSerializationSyncService(
                 ServicesAndRepositories.MainToolbarElementSerializedDataRepository,
-                ServicesAndRepositories.MainToolbarElementDataSerializer);
+                ServicesAndRepositories.MainToolbarElementDataSerializer,
+                ServicesAndRepositories.Clonator);
 
         private static Dictionary<string, MainToolbarElement[]> _elementsByGroup = new Dictionary<string, MainToolbarElement[]>();
 

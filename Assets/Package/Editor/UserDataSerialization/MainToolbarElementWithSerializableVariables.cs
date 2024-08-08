@@ -12,12 +12,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private FieldInfo[] _serializableFields = new FieldInfo[0];
         private Dictionary<string, object> _valuesSnapshot = new Dictionary<string, object>();
         private readonly IMainToolbarElementDataSerializer _serializer;
+        private readonly IClonator _clonator;
 
         public MainToolbarElementWithSerializableVariables(MainToolbarElement mainToolbarElement,
-            IMainToolbarElementDataSerializer serializer)
+            IMainToolbarElementDataSerializer serializer, IClonator clonator)
         {
             MainToolbarElement = mainToolbarElement;
             _serializer = serializer;
+            _clonator = clonator;
             LoadSerializableVariables();
             SaveValuesSnapshot();
         }
@@ -87,7 +89,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             void SetAsChangedAndUpdate(FieldInfo field)
             {
                 anyChange = true;
-                _valuesSnapshot[field.Name] = field.GetValue(MainToolbarElement.VisualElement);
+                _valuesSnapshot[field.Name] = _clonator.Clone(field.GetValue(MainToolbarElement.VisualElement));
             }
 
             return anyChange;
