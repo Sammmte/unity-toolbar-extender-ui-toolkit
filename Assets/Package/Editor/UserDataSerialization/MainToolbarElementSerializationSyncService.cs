@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Timers;
 using UnityEditor;
+using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MainToolbarElementSerializationSyncService
     {
+        private const float UPDATE_TIME_IN_SECONDS = 0.5f;
+
         private readonly IMainToolbarElementSerializedDataRepository _repository;
         private readonly IMainToolbarElementDataSerializer _serializer;
         private MainToolbarElementWithSerializableVariables[] _elementsWithSerializedVariables = 
@@ -14,7 +16,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private List<MainToolbarElementSerializedData> _changedElements = new List<MainToolbarElementSerializedData>();
 
-        private Timer _updateTimer;
+        private double _nextUpdateTime;
 
         public MainToolbarElementSerializationSyncService(IMainToolbarElementSerializedDataRepository repository,
             IMainToolbarElementDataSerializer serializer)
@@ -23,45 +25,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _serializer = serializer;
         }
 
-        private Timer CreateUpdateTimer()
-        {
-            var timer = new Timer(500);
-
-            timer.AutoReset = true;
-            timer.Elapsed += OnTimerUpdate;
-
-            return timer;
-        }
-
-        private void OnTimerUpdate(object sender, ElapsedEventArgs e)
-        {
-            CacheChangedElementsIfAny();
-        }
-
-        private void SaveChangedElementsIfAny()
-        {
-            if(_changedElements.Count > 0)
-            {
-                _repository.Set(_changedElements.ToArray());
-                _changedElements.Clear();
-            }
-        }
-
         public void Start(MainToolbarElement[] mainToolbarElements)
         {
             LoadElementsWithSerializedVariables(mainToolbarElements);
             Reconstruct();
             OverrideRepositoryState();
-            EditorApplication.update += SaveChangedElementsIfAny;
-            _updateTimer = CreateUpdateTimer();
-            _updateTimer.Start();
+            EditorApplication.update += Update;
         }
 
         public void Stop()
         {
-            EditorApplication.update -= SaveChangedElementsIfAny;
-            _updateTimer?.Stop();
-            _updateTimer?.Dispose();
+            EditorApplication.update -= Update;
             _elementsWithSerializedVariables = new MainToolbarElementWithSerializableVariables[0];
         }
 
@@ -99,15 +73,32 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .ToArray());
         }
         
-        private void CacheChangedElementsIfAny()
+        private void Update()
         {
-            foreach(var element in _elementsWithSerializedVariables)
+            if(EditorApplication.timeSinceStartup > _nextUpdateTime)
+            {
+                CheckAndSaveChangedElements();
+                _nextUpdateTime = EditorApplication.timeSinceStartup + UPDATE_TIME_IN_SECONDS;
+            }
+        }
+
+        private void CheckAndSaveChangedElements()
+        {
+            List<MainToolbarElementSerializedData> changedElements = null;
+
+            foreach (var element in _elementsWithSerializedVariables)
             {
                 if (element.CheckAndUpdateModifiedValues())
                 {
-                    _changedElements.Add(element.GetSerializedData());
+                    if (changedElements == null)
+                        changedElements = new List<MainToolbarElementSerializedData>();
+
+                    changedElements.Add(element.GetSerializedData());
                 }
             }
+
+            if (changedElements != null)
+                _repository.Set(_changedElements.ToArray());
         }
     }
 }
