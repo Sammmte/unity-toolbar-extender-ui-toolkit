@@ -73,27 +73,47 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if (obj1Type != obj2Type)
                 return false;
 
-            if (obj1Type.IsArray || obj1Type == typeof(List<>))
+            if (IsPrimitive(obj1Type))
+                return obj1.Equals(obj2);
+            else
             {
-                Type elementType = null;
-
-                if(obj2Type.IsArray)
-                    elementType = obj1Type.GetElementType();
-                else
-                    elementType = obj1Type.GetGenericArguments().First();
-
-                var comparisonMethod = typeof(SerializableTypesHelper).GetMethod(nameof(AreArrayOrListEqual),
-                    BindingFlags.Static | BindingFlags.NonPublic).MakeGenericMethod(elementType);
-
-                var areEqual = (bool)comparisonMethod.Invoke(null, new object[] { obj1, obj2 });
-
-                return areEqual;
+                var elementType = GetElementTypeOf(obj1Type);
+                return AreColletionsEqual(obj1, obj2, elementType);
             }
-
-            return obj1.Equals(obj2);
         }
 
-        private static bool AreArrayOrListEqual<T>(IEnumerable<T> enumerable1, IEnumerable<T> enumerable2)
+        private static Type GetElementTypeOf(Type type)
+        {
+            if (type.IsArray)
+                type.GetElementType();
+            else if (type.IsGenericType)
+                if (type.GetGenericTypeDefinition() == typeof(List<>))
+                    return type.GetGenericArguments()[0];
+                else if (type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+                {
+                    var genericArguments = type.GetGenericArguments();
+                    return CreateTypeForKeyValuePair(genericArguments[0], genericArguments[1]);
+                }
+
+            return null;
+        }
+
+        private static Type CreateTypeForKeyValuePair(Type keyType, Type valueType)
+        {
+            return typeof(KeyValuePair<,>).MakeGenericType(keyType, valueType);
+        }
+
+        private static bool AreColletionsEqual(object obj1, object obj2, Type elementType)
+        {
+            var comparisonMethod = typeof(SerializableTypesHelper).GetMethod(nameof(SequenceEqual),
+                BindingFlags.Static | BindingFlags.NonPublic).MakeGenericMethod(elementType);
+
+            var areEqual = (bool)comparisonMethod.Invoke(null, new object[] { obj1, obj2 });
+
+            return areEqual;
+        }
+
+        private static bool SequenceEqual<T>(IEnumerable<T> enumerable1, IEnumerable<T> enumerable2)
         {
             return Enumerable.SequenceEqual<T>(enumerable1, enumerable2);
         }
