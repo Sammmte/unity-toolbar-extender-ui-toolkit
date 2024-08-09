@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -44,21 +45,21 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static bool IsValidListType(Type type)
         {
-            if (!(type == typeof(List<>)))
+            if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(List<>))
                 return false;
 
             var typeArg = type.GetGenericArguments()[0];
-
+            
             return IsPrimitive(typeArg);
         }
 
         private static bool IsValidDictionaryType(Type type)
         {
-            if (!(type == typeof(Dictionary<,>)))
+            if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(Dictionary<,>))
                 return false;
 
             var typeArg1 = type.GetGenericArguments()[0];
-            var typeArg2 = type.GetGenericArguments()[0];
+            var typeArg2 = type.GetGenericArguments()[1];
 
             return IsPrimitive(typeArg1) &&
                 IsPrimitive(typeArg2);
