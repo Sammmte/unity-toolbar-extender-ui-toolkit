@@ -21,7 +21,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _serializer = serializer;
             _clonator = clonator;
             LoadSerializableVariables();
-            SaveValuesSnapshot();
+            SetDefaultValuesAndSaveSnapshot();
         }
 
         private void LoadSerializableVariables()
@@ -35,11 +35,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .ToArray();
         }
 
-        private void SaveValuesSnapshot()
+        private void SetDefaultValuesAndSaveSnapshot()
         {
-            foreach(var field in _serializableFields)
+            foreach (var field in _serializableFields)
             {
-                _valuesSnapshot[field.Name] = field.GetValue(MainToolbarElement.VisualElement);
+                var defaultValue = SerializableTypesHelper.DefaultValueFor(field.FieldType);
+                field.SetValue(MainToolbarElement.VisualElement, defaultValue);
+                _valuesSnapshot[field.Name] = defaultValue;
             }
         }
 

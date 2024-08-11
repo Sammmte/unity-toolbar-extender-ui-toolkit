@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -85,21 +84,21 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static Type GetElementTypeOf(Type type)
         {
             if (type.IsArray)
-                type.GetElementType();
+                return type.GetElementType();
             else if (type.IsGenericType)
                 if (type.GetGenericTypeDefinition() == typeof(List<>))
                     return type.GetGenericArguments()[0];
                 else if (type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
-                {
-                    var genericArguments = type.GetGenericArguments();
-                    return CreateTypeForKeyValuePair(genericArguments[0], genericArguments[1]);
-                }
+                    return ElementTypeOfDictionaryType(type);
 
             return null;
         }
 
-        private static Type CreateTypeForKeyValuePair(Type keyType, Type valueType)
+        private static Type ElementTypeOfDictionaryType(Type dictionaryType)
         {
+            var genericArguments = dictionaryType.GetGenericArguments();
+            var keyType = genericArguments[0];
+            var valueType = genericArguments[1];
             return typeof(KeyValuePair<,>).MakeGenericType(keyType, valueType);
         }
 
@@ -116,6 +115,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static bool SequenceEqual<T>(IEnumerable<T> enumerable1, IEnumerable<T> enumerable2)
         {
             return Enumerable.SequenceEqual<T>(enumerable1, enumerable2);
+        }
+
+        public static object DefaultValueFor(Type type)
+        {
+            if (type.IsArray)
+                return Array.CreateInstance(type.GetElementType(), 0);
+            else if(type == typeof(string))
+                return string.Empty;
+
+            return Activator.CreateInstance(type);
         }
     }
 }
