@@ -14,7 +14,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         protected override void ApplyInsideGroupStyle()
         {
-            var arrow = _dropdown[2];
+            var arrowIndex = 2;
+
+            if (string.IsNullOrEmpty(_dropdown.text))
+                arrowIndex = 1;
+
+            var arrow = _dropdown[arrowIndex];
 
             _dropdown.style.flexDirection = FlexDirection.Row;
             _dropdown.style.flexWrap = Wrap.NoWrap;
@@ -26,7 +31,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         protected override void ApplyRootElementStyle()
         {
-            var arrow = _dropdown[2];
+            var arrowIndex = 2;
+
+            if (string.IsNullOrEmpty(_dropdown.text))
+                arrowIndex = 1;
+
+            var arrow = _dropdown[arrowIndex];
 
             _dropdown.style.flexDirection = FlexDirection.Row;
             _dropdown.style.flexWrap = Wrap.NoWrap;

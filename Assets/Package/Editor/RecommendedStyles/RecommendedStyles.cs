@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Toolbars;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
@@ -30,8 +32,21 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             var visualElement = eventArgs.target as VisualElement;
 
             var key = _recommendedStyles.Keys.FirstOrDefault(key => key.VisualElement == visualElement);
+            
+            ApplySafely(key);
+        }
 
-            _recommendedStyles[key].Apply(key.IsInsideGroup);
+        private static void ApplySafely(RecommendedStyleVisualElement key)
+        {
+            try
+            {
+                _recommendedStyles[key].Apply(key.IsInsideGroup);
+            }
+            catch(Exception e)
+            {
+                Debug.LogWarning("An exception ocurred when trying to apply recommended styles");
+                Debug.LogException(e);
+            }
         }
 
         private static RecommendedStyle GetRecommendedStyleFor(VisualElement visualElement)

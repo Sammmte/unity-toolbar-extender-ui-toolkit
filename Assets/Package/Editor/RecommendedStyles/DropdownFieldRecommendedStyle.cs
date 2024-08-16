@@ -13,7 +13,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         protected override void ApplyRootElementStyle()
         {
-            var inputElement = _dropdownField[1];
+            var inputFieldIndex = 1;
+
+            if (string.IsNullOrEmpty(_dropdownField.label))
+                inputFieldIndex = 0;
+
+            var inputElement = _dropdownField[inputFieldIndex];
             inputElement.style.overflow = Overflow.Visible;
         }
     }

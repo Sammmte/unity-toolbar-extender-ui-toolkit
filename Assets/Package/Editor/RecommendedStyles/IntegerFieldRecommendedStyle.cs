@@ -1,4 +1,5 @@
-﻿using UnityEngine.UIElements;
+﻿using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -15,7 +16,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         protected override void ApplyRootElementStyle()
         {
-            var inputElement = _integerField[1];
+            var inputFieldIndex = 1;
+
+            if(string.IsNullOrEmpty(_integerField.label))
+                inputFieldIndex = 0;
+
+            var inputElement = _integerField[inputFieldIndex];
 
             _integerField.labelElement.style.minWidth = Length.Auto();
             inputElement.style.minWidth = MIN_WIDTH;

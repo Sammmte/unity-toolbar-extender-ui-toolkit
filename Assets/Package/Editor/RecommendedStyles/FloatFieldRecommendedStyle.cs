@@ -15,7 +15,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         protected override void ApplyRootElementStyle()
         {
-            var inputElement = _floatField[1];
+            var inputFieldIndex = 1;
+
+            if (string.IsNullOrEmpty(_floatField.label))
+                inputFieldIndex = 0;
+
+            var inputElement = _floatField[inputFieldIndex];
 
             _floatField.labelElement.style.minWidth = Length.Auto();
             inputElement.style.minWidth = MIN_WIDTH;
