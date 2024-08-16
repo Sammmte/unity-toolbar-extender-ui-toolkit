@@ -1,6 +1,12 @@
 # Changelog
 
-## [1.0.0] - 0000-00-00
+## [1.0.1]
+
+### Fixed
+
+- Recommended styles throwing exceptions when some of them have no label element created
+
+## [1.0.0]
 
 ### Added
 
