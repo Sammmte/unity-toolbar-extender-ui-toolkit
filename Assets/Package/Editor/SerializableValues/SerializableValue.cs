@@ -1,6 +1,8 @@
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using System.Reflection;
+using System;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -41,6 +43,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             {
                 var value = JsonUtility.FromJson<T>(serializedValue);
 
+                if (JsonUtility.ToJson(value) == JSON_UTILITY_DEFAULT_STRING)
+                    return JsonConvert.DeserializeObject<T>(serializedValue);
+
                 return value;
             }
             catch
@@ -59,6 +64,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 serializedValue = JsonConvert.SerializeObject(value);
 
             EditorPrefs.SetString(_saveKey, serializedValue);
+        }
+
+        public override string ToString()
+        {
+            var serializedType = typeof(T);
+            var toStringMethod = serializedType.GetMethod(nameof(ToString), Type.EmptyTypes);
+
+            if(toStringMethod.DeclaringType != serializedType)
+                return EditorPrefs.GetString(_saveKey);
+
+            return Value.ToString();
         }
     }
 }
