@@ -10,5 +10,11 @@
 
         public static IMainToolbarElementRepository MainToolbarElementRepository =
             new ByAttributeMainToolbarElementRepository();
+
+        public static ISerializableValuesSerializer SerializableValuesSerializer =
+            new MultiJsonSerializableValuesSerializer();
+
+        public static ISerializableValuesRepository SerializableValuesRepository =
+            new EditorPrefsSerializableValuesRepository(SerializableValuesSerializer);
     }
 }

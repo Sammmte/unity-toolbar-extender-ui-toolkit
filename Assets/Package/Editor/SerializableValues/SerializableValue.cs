@@ -1,80 +1,56 @@
-using Newtonsoft.Json;
-using UnityEditor;
-using UnityEngine;
-using System.Reflection;
-using System;
-
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     public class SerializableValue<T>
     {
-        private const string JSON_UTILITY_DEFAULT_STRING = "{}";
+        public static SerializableValue<T> Create(string saveKey) => Create(saveKey, default);
+        public static SerializableValue<T> Create(string saveKey, T defaultValue) => Create(saveKey, defaultValue, defaultValue);
+        public static SerializableValue<T> Create(string saveKey, T defaultValue, T initialValue)
+        {
+            var serializableValue = new SerializableValue<T>(ServicesAndRepositories.SerializableValuesRepository, saveKey, defaultValue);
 
+            if(!serializableValue.HasValue())
+                serializableValue.Value = initialValue;
+
+            return serializableValue;
+        }
+
+        private readonly ISerializableValuesRepository _repository;
         private string _saveKey;
-        public T DefaultValue { get; set; }
+        private T _defaultValue;
+
         public T Value
         {
             get => GetValue();
             set => SetValue(value);
         }
 
-        public SerializableValue(string saveKey) : this(saveKey, default)
+        internal SerializableValue(ISerializableValuesRepository repository, string saveKey, T defaultValue)
         {
-            
-        }
-
-        public SerializableValue(string saveKey, T defaultValue) : this(saveKey, defaultValue, defaultValue)
-        {
-
-        }
-
-        public SerializableValue(string saveKey, T defaultValue, T initialValue)
-        {
+            _repository = repository;
             _saveKey = saveKey;
-            DefaultValue = defaultValue;
-            SetValue(initialValue);
+            _defaultValue = defaultValue;
         }
 
         private T GetValue()
         {
-            var serializedValue = EditorPrefs.GetString(_saveKey);
+            var maybeValue = _repository.Get<T>(_saveKey);
 
-            try
-            {
-                var value = JsonUtility.FromJson<T>(serializedValue);
+            if (!maybeValue.HasValue)
+                return _defaultValue;
 
-                if (JsonUtility.ToJson(value) == JSON_UTILITY_DEFAULT_STRING)
-                    return JsonConvert.DeserializeObject<T>(serializedValue);
+            return maybeValue.Value;
+        }
 
-                return value;
-            }
-            catch
-            {
-                var value = JsonConvert.DeserializeObject<T>(serializedValue);
+        public bool HasValue()
+        {
+            var maybeValue = _repository.Get<T>(_saveKey);
 
-                return value;
-            }
+            return maybeValue.HasValue;
         }
 
         private void SetValue(T value)
         {
-            var serializedValue = JsonUtility.ToJson(value);
-
-            if (serializedValue == JSON_UTILITY_DEFAULT_STRING)
-                serializedValue = JsonConvert.SerializeObject(value);
-
-            EditorPrefs.SetString(_saveKey, serializedValue);
-        }
-
-        public override string ToString()
-        {
-            var serializedType = typeof(T);
-            var toStringMethod = serializedType.GetMethod(nameof(ToString), Type.EmptyTypes);
-
-            if(toStringMethod.DeclaringType != serializedType)
-                return EditorPrefs.GetString(_saveKey);
-
-            return Value.ToString();
+            _repository.Save(_saveKey, value);
         }
     }
 }
