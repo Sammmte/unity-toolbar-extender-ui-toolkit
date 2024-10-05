@@ -51,15 +51,46 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public Maybe<string> Serialize<T>(T value)
         {
-            var serializedValue = JsonUtility.ToJson(value);
+            var maybeSerialized = SerializeWithJsonUtility(value);
 
-            if (!IsValidString(serializedValue))
-                serializedValue = JsonConvert.SerializeObject(value);
+            if (!maybeSerialized.HasValue)
+                return SerializeWithJsonNet(value);
 
-            if (!IsValidString(serializedValue))
+            return maybeSerialized;
+        }
+
+        private Maybe<string> SerializeWithJsonUtility<T>(T value)
+        {
+            try
+            {
+                var serializedValue = JsonUtility.ToJson(value);
+
+                if (!IsValidString(serializedValue))
+                    return Maybe<string>.None();
+
+                return Maybe<string>.Something(serializedValue);
+            }
+            catch
+            {
                 return Maybe<string>.None();
+            }
+        }
 
-            return Maybe<string>.Something(serializedValue);
+        private Maybe<string> SerializeWithJsonNet<T>(T value)
+        {
+            try
+            {
+                var serializedValue = JsonConvert.SerializeObject(value);
+
+                if (!IsValidString(serializedValue))
+                    return Maybe<string>.None();
+
+                return Maybe<string>.Something(serializedValue);
+            }
+            catch
+            {
+                return Maybe<string>.None();
+            }
         }
 
         private bool IsValidString(string serializedValue)
