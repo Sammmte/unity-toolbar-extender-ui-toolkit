@@ -13,6 +13,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         protected override void ApplyRootElementStyle()
         {
+            _dropdownField.labelElement.style.minWidth = Length.Auto();
+
             var inputFieldIndex = 1;
 
             if (string.IsNullOrEmpty(_dropdownField.label))

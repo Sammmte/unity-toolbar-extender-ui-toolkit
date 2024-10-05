@@ -78,6 +78,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return new ColorFieldRecommendedStyle(colorField);
             else if (visualElement is LayerField layerField)
                 return new LayerFieldRecommendedStyle(layerField);
+            else if (visualElement is EnumField enumField)
+                return new EnumFieldRecommendedStyle(enumField);
+            else if (visualElement is TagField tagField)
+                return new TagFieldRecommendedStyle(tagField);
 
             return null;
         }
