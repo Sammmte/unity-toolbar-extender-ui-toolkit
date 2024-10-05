@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Toolbars;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -73,6 +74,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return new Vector3FieldRecommendedStyle(vector3Field);
             else if (visualElement is Vector2Field vector2Field)
                 return new Vector2FieldRecommendedStyle(vector2Field);
+            else if (visualElement is ColorField colorField)
+                return new ColorFieldRecommendedStyle(colorField);
+            else if (visualElement is LayerField layerField)
+                return new LayerFieldRecommendedStyle(layerField);
 
             return null;
         }
