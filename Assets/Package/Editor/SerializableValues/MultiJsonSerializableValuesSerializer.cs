@@ -1,13 +1,69 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MultiJsonSerializableValuesSerializer : ISerializableValuesSerializer
     {
+        [Serializable]
+        private struct SerializedUnityObject
+        {
+            [SerializeField] private string _assetGuid;
+
+            public void SetValue(UnityEngine.Object value)
+            {
+                var assetGuid = AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(value)).ToString();
+
+                if (!IsValidAssetGuid(assetGuid))
+                    throw new ArgumentException("Object is not a valid asset");
+
+                _assetGuid = assetGuid;
+            }
+
+            private bool IsValidAssetGuid(string assetGuid)
+            {
+                return !assetGuid.All(character => character == '0');
+            }
+
+            public UnityEngine.Object GetValue()
+            {
+                var assetPath = AssetDatabase.GUIDToAssetPath(new GUID(_assetGuid));
+                var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
+
+                return obj;
+            }
+        }
+
         private const string EMPTY_OBJECT_STRING = "{}";
 
         public Maybe<T> Deserialize<T>(string serializedValue)
+        {
+            if(typeof(UnityEngine.Object).IsAssignableFrom(typeof(T)))
+                return DeserializeUnityObject<T>(serializedValue);
+            else
+                return InternalDeserialize<T>(serializedValue);
+        }
+
+        private Maybe<T> DeserializeUnityObject<T>(string serializedValue)
+        {
+            var maybe = InternalDeserialize<SerializedUnityObject>(serializedValue);
+
+            if (maybe.HasValue)
+            {
+                try
+                {
+                    var value = (T)(object)maybe.Value.GetValue();
+                    return Maybe<T>.Something(value);
+                } catch { }
+            }
+
+            return Maybe<T>.None();
+        }
+
+        private Maybe<T> InternalDeserialize<T>(string serializedValue)
         {
             var maybeValueWithJsonUtility = DeserializeWithJsonUtility<T>(serializedValue);
 
@@ -50,6 +106,30 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         }
 
         public Maybe<string> Serialize<T>(T value)
+        {
+            if (typeof(UnityEngine.Object).IsAssignableFrom(typeof(T)))
+                return SerializeUnityObject(value);
+            else
+                return InternalSerialize(value);
+        }
+
+        private Maybe<string> SerializeUnityObject<T>(T value)
+        {
+            var serializedUnityObject = new SerializedUnityObject();
+
+            try
+            {
+                var unityObject = (UnityEngine.Object)(object)value;
+                serializedUnityObject.SetValue(unityObject);
+                return InternalSerialize(serializedUnityObject);
+            }
+            catch
+            {
+                return Maybe<string>.None();
+            }
+        }
+
+        private Maybe<string> InternalSerialize<T>(T value)
         {
             var maybeSerialized = SerializeWithJsonUtility(value);
 
