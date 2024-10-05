@@ -69,6 +69,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return new TextFieldRecommendedStyle(textField);
             else if (visualElement is EditorToolbarToggle toolbarToggle)
                 return new EditorToolbarToggleRecommendedStyle(toolbarToggle);
+            else if (visualElement is Vector3Field vector3Field)
+                return new Vector3FieldRecommendedStyle(vector3Field);
+            else if (visualElement is Vector2Field vector2Field)
+                return new Vector2FieldRecommendedStyle(vector2Field);
 
             return null;
         }
