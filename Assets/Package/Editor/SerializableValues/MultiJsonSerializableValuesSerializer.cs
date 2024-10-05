@@ -8,10 +8,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MultiJsonSerializableValuesSerializer : ISerializableValuesSerializer
     {
-        [Serializable]
         private struct SerializedUnityObject
         {
-            [SerializeField] private string _assetGuid;
+            public string AssetGuid;
+            public string ComponentTypeFullName;
+            public long ComponentFileId;
 
             public void SetValue(UnityEngine.Object value)
             {
@@ -20,7 +21,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 if (!IsValidAssetGuid(assetGuid))
                     throw new ArgumentException("Object is not a valid asset");
 
-                _assetGuid = assetGuid;
+                if (value is Component)
+                {
+                    ComponentTypeFullName = value.GetType().FullName;
+                    AssetDatabase.TryGetGUIDAndLocalFileIdentifier(value, out string _, out ComponentFileId);
+                }
+
+                AssetGuid = assetGuid;
             }
 
             private bool IsValidAssetGuid(string assetGuid)
@@ -30,10 +37,39 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             public UnityEngine.Object GetValue()
             {
-                var assetPath = AssetDatabase.GUIDToAssetPath(new GUID(_assetGuid));
+                var assetPath = AssetDatabase.GUIDToAssetPath(new GUID(AssetGuid));
                 var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
+                
+                if (ComponentFileId > 0)
+                    obj = GetComponentFromFileId(obj as GameObject);
 
                 return obj;
+            }
+
+            private UnityEngine.Object GetComponentFromFileId(GameObject gameObject)
+            {
+                var allPossibleComponents = gameObject.GetComponents(ComponentTypeNameToType());
+
+                foreach (var component in allPossibleComponents)
+                {
+                    AssetDatabase.TryGetGUIDAndLocalFileIdentifier(component, out string _, out long fileId);
+
+                    if (fileId == ComponentFileId)
+                        return component;
+                }
+
+                return gameObject;
+            }
+
+            private Type ComponentTypeNameToType()
+            {
+                foreach(var type in TypeCache.GetTypesDerivedFrom<UnityEngine.Object>())
+                {
+                    if (type.FullName == ComponentTypeFullName)
+                        return type;
+                }
+
+                return null;
             }
         }
 
@@ -41,15 +77,20 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public Maybe<T> Deserialize<T>(string serializedValue)
         {
-            if(typeof(UnityEngine.Object).IsAssignableFrom(typeof(T)))
+            if (IsUnityObjectType<T>())
                 return DeserializeUnityObject<T>(serializedValue);
             else
                 return InternalDeserialize<T>(serializedValue);
         }
 
+        private bool IsUnityObjectType<T>()
+        {
+            return typeof(UnityEngine.Object).IsAssignableFrom(typeof(T));
+        }
+
         private Maybe<T> DeserializeUnityObject<T>(string serializedValue)
         {
-            var maybe = InternalDeserialize<SerializedUnityObject>(serializedValue);
+            var maybe = DeserializeWithJsonNet<SerializedUnityObject>(serializedValue);
 
             if (maybe.HasValue)
             {
@@ -57,7 +98,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 {
                     var value = (T)(object)maybe.Value.GetValue();
                     return Maybe<T>.Something(value);
-                } catch { }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning("Exception thrown while trying to deserialize Unity Object");
+                    Debug.LogException(ex);
+                }
             }
 
             return Maybe<T>.None();
@@ -107,7 +153,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public Maybe<string> Serialize<T>(T value)
         {
-            if (typeof(UnityEngine.Object).IsAssignableFrom(typeof(T)))
+            if (IsUnityObjectType<T>())
                 return SerializeUnityObject(value);
             else
                 return InternalSerialize(value);
@@ -121,7 +167,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             {
                 var unityObject = (UnityEngine.Object)(object)value;
                 serializedUnityObject.SetValue(unityObject);
-                return InternalSerialize(serializedUnityObject);
+                return SerializeWithJsonNet(serializedUnityObject);
             }
             catch
             {
