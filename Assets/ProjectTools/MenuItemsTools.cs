@@ -11,10 +11,20 @@ public class MenuItemsTools
     private const string README_RESOURCES_PATH_FROM_PACKAGE = "Readme-Resources~";
     private const string README_RESOURCES_PATH_FROM_ROOT = "Assets/Package/Readme-Resources~";
 
-    [MenuItem("Paps/Unity Toolbar Extender UI Toolkit/Debug EditorPrefs Content", priority = 1)]
-    public static void DebugEditorPrefsContent()
+    [MenuItem("Paps/Unity Toolbar Extender UI Toolkit/Debug Tool EditorPrefs Content", priority = 1)]
+    public static void DebugToolEditorPrefsContent()
     {
         var json = EditorPrefs.GetString("unity-toolbar-extender-ui-toolkit-editor-prefs");
+
+        json = JsonPrettify(json);
+
+        Debug.Log(json);
+    }
+
+    [MenuItem("Paps/Unity Toolbar Extender UI Toolkit/Debug User EditorPrefs Content", priority = 1)]
+    public static void DebugUserEditorPrefsContent()
+    {
+        var json = EditorPrefs.GetString("unity-toolbar-extender-ui-toolkit-editor-prefs-user");
 
         json = JsonPrettify(json);
 
