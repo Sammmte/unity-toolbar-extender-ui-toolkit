@@ -7,9 +7,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         private TagField _tagField;
 
-        public TagFieldRecommendedStyle(TagField dropdownField)
+        public TagFieldRecommendedStyle(TagField tagField)
         {
-            _tagField = dropdownField;
+            _tagField = tagField;
         }
 
         protected override void ApplyRootElementStyle()
