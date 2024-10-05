@@ -15,6 +15,6 @@
             new MultiJsonSerializableValuesSerializer();
 
         public static ISerializableValuesRepository SerializableValuesRepository =
-            new EditorPrefsSerializableValuesRepository(SerializableValuesSerializer);
+            new JsonEditorPrefsSerializableValuesRepository(SerializableValuesSerializer);
     }
 }

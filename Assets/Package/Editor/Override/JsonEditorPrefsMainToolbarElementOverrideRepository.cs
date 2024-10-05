@@ -61,12 +61,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void DeleteSave()
         {
-            JsonEditorPrefs.DeleteKey(SAVE_KEY);
+            JsonEditorPrefs.ToolDataRepository.DeleteKey(SAVE_KEY);
         }
 
         private Dictionary<string, MainToolbarElementOverride> LoadOverrides()
         {
-            var json = JsonEditorPrefs.GetString(SAVE_KEY, "{}");
+            var json = JsonEditorPrefs.ToolDataRepository.GetString(SAVE_KEY, "{}");
 
             var serializedDictionary = JsonConvert.DeserializeObject<Dictionary<string, SerializableOverride>>(json);
 
@@ -84,7 +84,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var json = JsonConvert.SerializeObject(serializableDictionary);
 
-            JsonEditorPrefs.SetString(SAVE_KEY, json);
+            JsonEditorPrefs.ToolDataRepository.SetString(SAVE_KEY, json);
         }
     }
 }

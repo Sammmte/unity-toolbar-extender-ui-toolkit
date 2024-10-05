@@ -22,21 +22,39 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 );
         }
 
-        public static void DeleteEditorPrefs()
+        public static void DeleteToolEditorPrefs()
         {
             ServicesAndRepositories.MainToolbarElementOverridesRepository.Clear();
-            JsonEditorPrefs.DeleteAll();
+            JsonEditorPrefs.ToolDataRepository.DeleteAll();
             MainToolbarAutomaticExtender.Refresh();
         }
 
-        public static void DeleteEditorPrefsIfUserAccepts()
+        public static void DeleteToolEditorPrefsIfUserAccepts()
         {
             ShowDialog(
                 "Delete Package Related Editor Prefs",
-                $"You are about to delete all Editor Prefs related to {ToolInfo.FRIENDLY_TOOL_NAME}.\nAre you sure you want to continue?",
+                $"You are about to delete all Editor Prefs {ToolInfo.FRIENDLY_TOOL_NAME} uses for self administration. They will be reconstructed later. Use this if you suspect that some cache data is causing trouble.\nAre you sure you want to continue?",
                 "Delete",
                 "Cancel",
-                DeleteEditorPrefs
+                DeleteToolEditorPrefs
+                );
+        }
+
+        public static void DeleteUserEditorPrefs()
+        {
+            ServicesAndRepositories.MainToolbarElementOverridesRepository.Clear();
+            JsonEditorPrefs.UserDataRepository.DeleteAll();
+            MainToolbarAutomaticExtender.Refresh();
+        }
+
+        public static void DeleteUserEditorPrefsIfUserAccepts()
+        {
+            ShowDialog(
+                "Delete User Related Editor Prefs",
+                $"You are about to delete all Editor Prefs {ToolInfo.FRIENDLY_TOOL_NAME} used to store values from your custom elements. All values stored by custom elements will be reset.\nAre you sure you want to continue?",
+                "Delete",
+                "Cancel",
+                DeleteUserEditorPrefs
                 );
         }
 

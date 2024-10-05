@@ -3,20 +3,20 @@ using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    internal class EditorPrefsSerializableValuesRepository : ISerializableValuesRepository
+    internal class JsonEditorPrefsSerializableValuesRepository : ISerializableValuesRepository
     {
         private const string NO_VALUE_FOUND_STRING = "NO_VALUE_FOUND";
 
         private readonly ISerializableValuesSerializer _serializer;
 
-        public EditorPrefsSerializableValuesRepository(ISerializableValuesSerializer serializer)
+        public JsonEditorPrefsSerializableValuesRepository(ISerializableValuesSerializer serializer)
         {
             _serializer = serializer;
         }
 
         public Maybe<T> Get<T>(string saveKey)
         {
-            var serializedValue = EditorPrefs.GetString(saveKey, NO_VALUE_FOUND_STRING);
+            var serializedValue = JsonEditorPrefs.UserDataRepository.GetString(saveKey, NO_VALUE_FOUND_STRING);
 
             if (!IsValidString(serializedValue))
                 return Maybe<T>.None();
@@ -39,7 +39,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return;
             }
 
-            EditorPrefs.SetString(saveKey, maybeSerializedValue.Value);
+            JsonEditorPrefs.UserDataRepository.SetString(saveKey, maybeSerializedValue.Value);
         }
     }
 }

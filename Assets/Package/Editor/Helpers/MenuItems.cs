@@ -25,7 +25,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Delete Actions/Delete Package Related EditorPrefs", priority = 23)]
         public static void DeletePackageRelatedEditorPrefs()
         {
-            GlobalActions.DeleteEditorPrefsIfUserAccepts();
+            GlobalActions.DeleteToolEditorPrefsIfUserAccepts();
+        }
+
+        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Delete Actions/Delete User Related EditorPrefs", priority = 23)]
+        public static void DeleteUserPackageRelatedEditorPrefs()
+        {
+            GlobalActions.DeleteUserEditorPrefsIfUserAccepts();
         }
     }
 }
