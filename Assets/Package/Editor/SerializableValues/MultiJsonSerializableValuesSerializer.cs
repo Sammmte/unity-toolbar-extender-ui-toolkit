@@ -10,12 +10,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         private struct SerializedUnityObject
         {
+            public bool IsNull;
             public string AssetGuid;
             public string ComponentTypeFullName;
             public long ComponentFileId;
 
             public void SetValue(UnityEngine.Object value)
             {
+                if(value == null)
+                {
+                    IsNull = true;
+                    return;
+                }    
+
                 var assetGuid = AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(value)).ToString();
 
                 if (!IsValidAssetGuid(assetGuid))
@@ -37,6 +44,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             public UnityEngine.Object GetValue()
             {
+                if(IsNull)
+                    return null;
+
                 var assetPath = AssetDatabase.GUIDToAssetPath(new GUID(AssetGuid));
                 var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
                 
