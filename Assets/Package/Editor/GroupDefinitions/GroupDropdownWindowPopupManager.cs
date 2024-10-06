@@ -38,16 +38,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void InitializeSpecialWindowTypes()
         {
-            var typeList = new List<Type>();
-
-            var uiToolkitDebuggerType = TypeCache.GetTypesDerivedFrom<EditorWindow>()
-                .FirstOrDefault(type => type.Name == "UIElementsDebugger");
-
-            var contextMenuType = TypeCache.GetTypesDerivedFrom<EditorWindow>()
-                .FirstOrDefault(type => type.FullName == "UnityEditor.UIElements.EditorMenuExtensions+ContextMenu");
-
-            typeList.Add(uiToolkitDebuggerType);
-            typeList.Add(contextMenuType);
+            var typeList = new List<Type>()
+            {
+                TypeCache.GetTypesDerivedFrom<EditorWindow>()
+                .FirstOrDefault(type => type.Name == "UIElementsDebugger"),
+                TypeCache.GetTypesDerivedFrom<EditorWindow>()
+                .FirstOrDefault(type => type.FullName == "UnityEditor.UIElements.EditorMenuExtensions+ContextMenu"),
+                TypeCache.GetTypesDerivedFrom<PopupWindowContent>()
+                .FirstOrDefault(type => type.FullName == "UnityEditor.UIElements.EditorGenericDropdownMenuWindowContent")
+            };
 
             _specialWindowTypes = typeList.Where(t => t != null).ToArray();
         }
@@ -66,7 +65,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 
                 var popupContentSpecificType = popupContent.GetType();
 
-                return _subWindowTypes.Contains(popupContentSpecificType);
+                return _subWindowTypes.Contains(popupContentSpecificType) || _specialWindowTypes.Contains(popupContentSpecificType);
             }
 
             return false;
