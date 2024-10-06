@@ -50,7 +50,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 var assetPath = AssetDatabase.GUIDToAssetPath(new GUID(AssetGuid));
                 var obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(assetPath);
                 
-                if (ComponentFileId > 0)
+                if (!string.IsNullOrEmpty(ComponentTypeFullName))
                     obj = GetComponentFromFileId(obj as GameObject);
 
                 return obj;
