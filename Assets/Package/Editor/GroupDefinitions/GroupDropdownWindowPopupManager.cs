@@ -12,6 +12,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     internal static class GroupDropdownWindowPopupManager
     {
         private const string POPUP_WINDOW_CONTENT_FIELD_NAME = "m_WindowContent";
+        private static readonly string[] SPECIAL_EDITOR_WINDOW_TYPE_NAMES =
+        {
+            "UIElementsDebugger",
+            "UnityEditor.UIElements.EditorMenuExtensions+ContextMenu",
+            "UnityEditor.ObjectSelector",
+            "UnityEditor.Search.SearchPickerWindow"
+        };
+        private static readonly string[] SPECIAL_POPUP_WINDOW_CONTENT_TYPE_NAMES =
+        {
+            "UnityEditor.UIElements.EditorGenericDropdownMenuWindowContent"
+        };
 
         private static FieldInfo _popupWindowContentField;
         private static Type[] _subWindowTypes = new Type[0];
@@ -38,15 +49,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void InitializeSpecialWindowTypes()
         {
-            var typeList = new List<Type>()
-            {
-                TypeCache.GetTypesDerivedFrom<EditorWindow>()
-                .FirstOrDefault(type => type.Name == "UIElementsDebugger"),
-                TypeCache.GetTypesDerivedFrom<EditorWindow>()
-                .FirstOrDefault(type => type.FullName == "UnityEditor.UIElements.EditorMenuExtensions+ContextMenu"),
-                TypeCache.GetTypesDerivedFrom<PopupWindowContent>()
-                .FirstOrDefault(type => type.FullName == "UnityEditor.UIElements.EditorGenericDropdownMenuWindowContent")
-            };
+            var typeList = new List<Type>();
+
+            typeList.AddRange(TypeCache.GetTypesDerivedFrom<EditorWindow>()
+                .Where(type => SPECIAL_EDITOR_WINDOW_TYPE_NAMES.Contains(type.Name) || SPECIAL_EDITOR_WINDOW_TYPE_NAMES.Contains(type.FullName)));
+
+            typeList.AddRange(TypeCache.GetTypesDerivedFrom<PopupWindowContent>()
+                .Where(type => SPECIAL_POPUP_WINDOW_CONTENT_TYPE_NAMES.Contains(type.Name) || SPECIAL_POPUP_WINDOW_CONTENT_TYPE_NAMES.Contains(type.FullName)));
 
             _specialWindowTypes = typeList.Where(t => t != null).ToArray();
         }
