@@ -6,7 +6,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MultiJsonSerializableValuesSerializer : ISerializableValuesSerializer
     {
-        private const string EMPTY_OBJECT_STRING = "{}";
+        private const string JSON_UTILITY_INVALID_OBJECT_STRING = "{}";
 
         public Maybe<T> Deserialize<T>(string serializedValue)
         {
@@ -59,7 +59,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 var value = JsonUtility.FromJson<T>(serializedValue);
                 var serializedValueWithJsonUtility = JsonUtility.ToJson(value);
 
-                if(!IsValidString(serializedValueWithJsonUtility))
+                if(!IsValidJsonUtilityString(serializedValueWithJsonUtility))
                     return Maybe<T>.None();
 
                 return Maybe<T>.Something(value);
@@ -124,7 +124,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             {
                 var serializedValue = JsonUtility.ToJson(value);
 
-                if (!IsValidString(serializedValue))
+                if (!IsValidJsonUtilityString(serializedValue))
                     return Maybe<string>.None();
 
                 return Maybe<string>.Something(serializedValue);
@@ -141,7 +141,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             {
                 var serializedValue = JsonConvert.SerializeObject(value);
 
-                if (!IsValidString(serializedValue))
+                if (!IsValidJsonNetString(serializedValue))
                     return Maybe<string>.None();
 
                 return Maybe<string>.Something(serializedValue);
@@ -152,9 +152,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
-        private bool IsValidString(string serializedValue)
+        private bool IsValidJsonUtilityString(string serializedValue)
         {
-            return !string.IsNullOrEmpty(serializedValue) && serializedValue != EMPTY_OBJECT_STRING;
+            return !string.IsNullOrEmpty(serializedValue) && serializedValue != JSON_UTILITY_INVALID_OBJECT_STRING;
+        }
+
+        private bool IsValidJsonNetString(string serializedValue)
+        {
+            return !string.IsNullOrEmpty(serializedValue);
         }
     }
 }
