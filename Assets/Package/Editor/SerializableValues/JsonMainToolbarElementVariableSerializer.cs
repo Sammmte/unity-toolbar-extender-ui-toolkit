@@ -1,0 +1,101 @@
+﻿using Newtonsoft.Json;
+using System.Linq;
+using UnityEditor;
+
+namespace Paps.UnityToolbarExtenderUIToolkit
+{
+    internal class JsonMainToolbarElementVariableSerializer : IMainToolbarElementVariableSerializer
+    {
+        private struct SerializableElementGroupDTO
+        {
+            [JsonProperty("elements")]
+            public SerializableElementDTO[] SerializableElements;
+        }
+
+        private struct SerializableElementDTO
+        {
+            [JsonProperty("elementType")]
+            public string ElementFullTypeName;
+            [JsonProperty("variables")]
+            public SerializableVariableDTO[] Variables;
+        }
+
+        private struct SerializableVariableDTO
+        {
+            [JsonProperty("type")]
+            public ValueHolderType Type;
+            [JsonProperty("key")]
+            public string Key;
+            [JsonProperty("serializedValue")]
+            public string SerializedValue;
+        }
+
+        public string Serialize(SerializableElementGroup serializableElementGroup)
+        {
+            var dto = ToDTO(serializableElementGroup);
+
+            return JsonConvert.SerializeObject(dto);
+        }
+
+        public SerializableElementGroup Deserialize(string serializedElementGroup)
+        {
+            var dto = JsonConvert.DeserializeObject<SerializableElementGroupDTO>(serializedElementGroup);
+
+            return FromDTO(dto);
+        }
+
+        private SerializableElementGroupDTO ToDTO(SerializableElementGroup group)
+        {
+            return new SerializableElementGroupDTO()
+            {
+                SerializableElements = group.SerializableElements.Select(e => ToDTO(e.Value)).ToArray()
+            };
+        }
+
+        private SerializableElementGroup FromDTO(SerializableElementGroupDTO dto)
+        {
+            return new SerializableElementGroup()
+            {
+                SerializableElements = dto.SerializableElements.Select(e => FromDTO(e)).ToDictionary(e => e.ElementFullTypeName, e => e)
+            };
+        }
+
+        private SerializableElementDTO ToDTO(SerializableElement serializableElement)
+        {
+            return new SerializableElementDTO()
+            {
+                ElementFullTypeName = serializableElement.ElementFullTypeName,
+                Variables = serializableElement.Variables.Select(v => new SerializableVariableDTO()
+                {
+                    Key = v.Key,
+                    Type = v.Type,
+                    SerializedValue = SerializeValue(v.Value)
+                }).ToArray()
+            };
+        }
+
+        private SerializableElement FromDTO(SerializableElementDTO dto)
+        {
+            return new SerializableElement()
+            {
+                ElementFullTypeName = dto.ElementFullTypeName,
+                Variables = dto.Variables.Select(v => new SerializableVariable()
+                {
+                    Key = v.Key,
+                    Type = v.Type,
+                    Value = DeserializeValue(v.SerializedValue)
+                }).ToArray()
+            };
+        }
+
+        private string SerializeValue(object value)
+        {
+            return null;
+        }
+
+        private object DeserializeValue(string serializedValue)
+        {
+            return null;
+        }
+    }
+}
