@@ -2,6 +2,8 @@
 using System.Linq;
 using UnityEditor;
 using System.Collections.Generic;
+using System;
+using System.Reflection;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -29,6 +31,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             public string Key;
             [JsonProperty("serializedValue")]
             public string SerializedValue;
+            [JsonProperty("serializedValueFullTypeName")]
+            public string SerializedValueFullTypeName;
+        }
+
+        private ISerializableValuesSerializer _valuesSerializer;
+        private MethodInfo _serializeValueMethod, _deserializeValueMethod;
+        
+        public JsonMainToolbarElementVariableSerializer(ISerializableValuesSerializer valuesSerializer)
+        {
+            _valuesSerializer = valuesSerializer;
+
+            _serializeValueMethod = _valuesSerializer.GetType().GetMethod("Serialize", BindingFlags.Instance | BindingFlags.Public);
+            _deserializeValueMethod = _valuesSerializer.GetType().GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.Public);
         }
 
         public string Serialize(SerializableElementGroup serializableElementGroup)
@@ -73,7 +88,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 {
                     Key = v.Key,
                     Type = v.Type,
-                    SerializedValue = SerializeValue(v.Value)
+                    SerializedValue = SerializeValue(v.Value),
+                    SerializedValueFullTypeName = v.Value.GetType().FullName
                 }).ToArray()
             };
         }
@@ -87,18 +103,42 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 {
                     Key = v.Key,
                     Type = v.Type,
-                    Value = DeserializeValue(v.SerializedValue)
+                    Value = DeserializeValue(Type.GetType(v.SerializedValueFullTypeName), v.SerializedValue)
                 }).ToArray()
             };
         }
 
         private string SerializeValue(object value)
         {
+            var genericMethod = _serializeValueMethod.MakeGenericMethod(value.GetType());
+
+            var maybeSerialized = (Maybe<string>)genericMethod.Invoke(_valuesSerializer, new object[] { value });
+
+            if(maybeSerialized.HasValue)
+                return maybeSerialized.Value;
+
             return null;
         }
 
-        private object DeserializeValue(string serializedValue)
+        private object DeserializeValue(Type type, string serializedValue)
         {
+            var genericMethod = _deserializeValueMethod.MakeGenericMethod(type);
+
+            var maybeDeserialized = genericMethod.Invoke(_valuesSerializer, new object[] { serializedValue });
+
+            var hasValue = (bool)maybeDeserialized.GetType()
+                .GetProperty("HasValue", BindingFlags.Public | BindingFlags.Instance)
+                .GetValue(maybeDeserialized);
+
+            if (hasValue)
+            {
+                var value = maybeDeserialized.GetType()
+                .GetProperty("Value", BindingFlags.Public | BindingFlags.Instance)
+                .GetValue(maybeDeserialized);
+
+                return value;
+            }
+
             return null;
         }
     }
