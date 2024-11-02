@@ -10,7 +10,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private struct SerializableElementGroupDTO
         {
             [JsonProperty("elements")]
-            public SerializableElementDTO[] SerializableElements;
+            public Dictionary<string, SerializableElementDTO> SerializableElements;
         }
 
         private struct SerializableElementDTO
@@ -49,18 +49,20 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return new SerializableElementGroupDTO()
             {
-                SerializableElements = group.SerializableElements == null ? new SerializableElementDTO[0] : group.SerializableElements.Select(e => ToDTO(e.Value)).ToArray()
+                SerializableElements = group.SerializableElements.ToDictionary(e => e.Key, e => ToDTO(e.Value))
             };
         }
+
 
         private SerializableElementGroup FromDTO(SerializableElementGroupDTO dto)
         {
             return new SerializableElementGroup()
             {
-                SerializableElements = dto.SerializableElements == null ? new Dictionary<string, SerializableElement>() : dto.SerializableElements.Select(e => FromDTO(e)).ToDictionary(e => e.ElementFullTypeName, e => e)
+                SerializableElements = dto.SerializableElements == null ? 
+                    new Dictionary<string, SerializableElement>() : 
+                    dto.SerializableElements.ToDictionary(e => e.Key, e => FromDTO(e.Value))
             };
         }
-
 
         private SerializableElementDTO ToDTO(SerializableElement serializableElement)
         {

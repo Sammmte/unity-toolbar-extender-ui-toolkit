@@ -16,7 +16,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _elementGroup = Load();
         }
 
-        public SerializableElement? Get(MainToolbarElement element)
+        public SerializableElement Get(MainToolbarElement element)
         {
             var fullTypeName = element.GetType().FullName;
 
