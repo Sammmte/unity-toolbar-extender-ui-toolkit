@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -32,7 +33,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private SerializableElementGroup Load()
         {
-            var serializedString = EditorPrefs.GetString(SAVE_KEY);
+            var serializedString = EditorPrefs.GetString(SAVE_KEY, "{}");
 
             return _serializer.Deserialize(serializedString);
         }

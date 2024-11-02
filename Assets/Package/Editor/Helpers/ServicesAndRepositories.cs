@@ -16,5 +16,11 @@
 
         public static ISerializableValuesRepository SerializableValuesRepository =
             new JsonEditorPrefsSerializableValuesRepository(SerializableValuesSerializer);
+
+        public static IMainToolbarElementVariableSerializer MainToolbarElementVariableSerializer =
+            new JsonMainToolbarElementVariableSerializer();
+
+        public static IMainToolbarElementVariableRepository MainToolbarElementVariableRepository =
+            new EditorPrefsMainToolbarElementVariableRepository(MainToolbarElementVariableSerializer);
     }
 }

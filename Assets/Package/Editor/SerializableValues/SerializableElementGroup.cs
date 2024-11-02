@@ -2,8 +2,8 @@
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    internal struct SerializableElementGroup
+    internal class SerializableElementGroup
     {
-        public Dictionary<string, SerializableElement> SerializableElements;
+        public Dictionary<string, SerializableElement> SerializableElements = new Dictionary<string, SerializableElement>();
     }
 }

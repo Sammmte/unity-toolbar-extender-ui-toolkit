@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using UnityEditor;
+using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -9,21 +11,34 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         private const BindingFlags BINDING_FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-        private readonly MainToolbarElementWithSerializableVariables[] _elementsWithVariables;
+        private const double SERIALIZE_EVERY_SECONDS = 0.5f;
+        private static double _nextSerializeTime = SERIALIZE_EVERY_SECONDS;
+
+        private MainToolbarElementWithSerializableVariables[] _elementsWithVariables;
         private readonly IMainToolbarElementVariableRepository _repository;
 
-        public MainToolbarElementVariableWatcher(MainToolbarElement[] elements, IMainToolbarElementVariableRepository repository)
+        public MainToolbarElementVariableWatcher(IMainToolbarElementVariableRepository repository)
         {
             _repository = repository;
-            _elementsWithVariables = GetElementsWithVariables(elements);
         }
 
-        public void RestoreValues()
+        public void RestoreValues(MainToolbarElement[] elements)
         {
+            _elementsWithVariables = GetElementsWithVariables(elements);
 
+            Debug.Log(_elementsWithVariables.Length);
         }
 
-        public void WatchChanges()
+        public void Update()
+        {
+            if (EditorApplication.timeSinceStartup > _nextSerializeTime)
+            {
+                _nextSerializeTime = EditorApplication.timeSinceStartup + SERIALIZE_EVERY_SECONDS;
+                WatchChanges();
+            }
+        }
+
+        private void WatchChanges()
         {
             var anyChange = false;
 
@@ -54,16 +69,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private FieldSerializableVariable[] GetSerializableFields(MainToolbarElement element)
         {
-            return element.GetType().GetFields(BINDING_FLAGS)
-                .Where(field => field.GetCustomAttribute<SerializableAttribute>() != null)
+            return element.VisualElement.GetType().GetFields(BINDING_FLAGS)
+                .Where(field => field.GetCustomAttribute<SerializeAttribute>() != null)
                 .Select(field => new FieldSerializableVariable(element, field))
                 .ToArray();
         }
 
         private PropertySerializableVariable[] GetSerializableProperties(MainToolbarElement element)
         {
-            return element.GetType().GetProperties(BINDING_FLAGS)
-                .Where(property => property.GetCustomAttribute<SerializableAttribute>() != null)
+            return element.VisualElement.GetType().GetProperties(BINDING_FLAGS)
+                .Where(property => property.GetCustomAttribute<SerializeAttribute>() != null)
                 .Select(property => new PropertySerializableVariable(element, property))
                 .ToArray();
         }
@@ -72,7 +87,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return new SerializableElement()
             {
-                ElementFullTypeName = elementWithVariables.MainToolbarElement.GetType().FullName,
+                ElementFullTypeName = elementWithVariables.MainToolbarElement.VisualElement.GetType().FullName,
                 Variables = elementWithVariables.Fields.Select(f => new SerializableVariable()
                 {
                     Type = ValueHolderType.Field,

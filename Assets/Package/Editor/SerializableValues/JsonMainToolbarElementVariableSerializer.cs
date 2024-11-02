@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Linq;
 using UnityEditor;
+using System.Collections.Generic;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -48,7 +49,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return new SerializableElementGroupDTO()
             {
-                SerializableElements = group.SerializableElements.Select(e => ToDTO(e.Value)).ToArray()
+                SerializableElements = group.SerializableElements == null ? new SerializableElementDTO[0] : group.SerializableElements.Select(e => ToDTO(e.Value)).ToArray()
             };
         }
 
@@ -56,9 +57,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return new SerializableElementGroup()
             {
-                SerializableElements = dto.SerializableElements.Select(e => FromDTO(e)).ToDictionary(e => e.ElementFullTypeName, e => e)
+                SerializableElements = dto.SerializableElements == null ? new Dictionary<string, SerializableElement>() : dto.SerializableElements.Select(e => FromDTO(e)).ToDictionary(e => e.ElementFullTypeName, e => e)
             };
         }
+
 
         private SerializableElementDTO ToDTO(SerializableElement serializableElement)
         {

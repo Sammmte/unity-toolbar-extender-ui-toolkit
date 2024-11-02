@@ -17,19 +17,23 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public object Get()
         {
-            return Property.GetValue(Element);
+            return Property.GetValue(Element.VisualElement);
         }
 
         public void Set(object value)
         {
-            Property.SetValue(Element, value);
+            Property.SetValue(Element.VisualElement, value);
         }
 
         public bool DidChange()
         {
             var currentValue = Get();
 
-            return !currentValue.Equals(_lastValue);
+            var changed = !currentValue.Equals(_lastValue);
+
+            _lastValue = currentValue;
+
+            return changed;
         }
     }
 }
