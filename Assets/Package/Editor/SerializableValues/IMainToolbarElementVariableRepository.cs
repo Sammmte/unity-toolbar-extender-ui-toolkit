@@ -3,7 +3,7 @@
     internal interface IMainToolbarElementVariableRepository
     {
         public void Set(SerializableElement serializableElement);
-        public SerializableElement Get(MainToolbarElement element);
+        public SerializableElement[] GetAll();
         public void Save();
     }
 }

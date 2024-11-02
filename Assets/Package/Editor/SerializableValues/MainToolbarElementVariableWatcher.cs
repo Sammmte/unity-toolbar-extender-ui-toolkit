@@ -26,7 +26,51 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             _elementsWithVariables = GetElementsWithVariables(elements);
 
-            Debug.Log(_elementsWithVariables.Length);
+            var serializedElements = _repository.GetAll();
+
+            foreach(var element in _elementsWithVariables)
+            {
+                var matchingSerialized = serializedElements.FirstOrDefault(serialized => serialized.ElementFullTypeName == 
+                    element.MainToolbarElement.VisualElement.GetType().FullName);
+
+                if(matchingSerialized != null)
+                {
+                    RestoreFields(element, matchingSerialized);
+                    RestoreProperties(element, matchingSerialized);
+                }
+            }
+        }
+
+        private void RestoreFields(MainToolbarElementWithSerializableVariables element, SerializableElement matchingSerialized)
+        {
+            foreach (var field in element.Fields)
+            {
+                var matchingField = matchingSerialized.Variables.FirstOrDefault(v =>
+                    v.Key == field.Field.Name &&
+                    v.Type == ValueHolderType.Field &&
+                    v.Value.GetType() == field.Field.FieldType);
+
+                if (matchingField.Key != null)
+                {
+                    field.Set(matchingField.Value);
+                }
+            }
+        }
+
+        private void RestoreProperties(MainToolbarElementWithSerializableVariables element, SerializableElement matchingSerialized)
+        {
+            foreach (var property in element.Properties)
+            {
+                var matchingField = matchingSerialized.Variables.FirstOrDefault(v =>
+                    v.Key == property.Property.Name &&
+                    v.Type == ValueHolderType.Field &&
+                    v.Value.GetType() == property.Property.PropertyType);
+
+                if (matchingField.Key != null)
+                {
+                    property.Set(matchingField.Value);
+                }
+            }
         }
 
         public void Update()

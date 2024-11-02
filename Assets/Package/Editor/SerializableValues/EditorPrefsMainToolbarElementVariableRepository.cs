@@ -16,19 +16,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _elementGroup = Load();
         }
 
-        public SerializableElement Get(MainToolbarElement element)
+        public SerializableElement[] GetAll()
         {
-            var fullTypeName = element.GetType().FullName;
-
-            if(_elementGroup.SerializableElements.ContainsKey(fullTypeName))
-                return _elementGroup.SerializableElements[fullTypeName];
-
-            return null;
+            return _elementGroup.SerializableElements.Values.ToArray();
         }
 
         public void Set(SerializableElement serializableElement)
         {
-            _elementGroup.SerializableElements[serializableElement.GetType().FullName] = serializableElement;
+            _elementGroup.SerializableElements[serializableElement.ElementFullTypeName] = serializableElement;
         }
 
         private SerializableElementGroup Load()

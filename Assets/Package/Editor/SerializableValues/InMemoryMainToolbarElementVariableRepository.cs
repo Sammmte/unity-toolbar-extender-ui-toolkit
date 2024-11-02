@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -6,12 +7,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         private Dictionary<string, SerializableElement> _serializableElements = new Dictionary<string, SerializableElement>();
 
-        public SerializableElement? Get(MainToolbarElement element)
+        public SerializableElement[] GetAll()
         {
-            if(_serializableElements.ContainsKey(element.GetType().FullName))
-                return _serializableElements[element.GetType().FullName];
-
-            return null;
+            return _serializableElements.Values.ToArray();
         }
 
         public void Save()
