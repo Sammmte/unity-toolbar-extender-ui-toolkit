@@ -27,7 +27,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             if (_isCollection)
             {
-                _lastValue = initialValue == null ? null : CloneCollection(initialValue as IEnumerable);
+                _lastValue = initialValue == null ? null : CloneCollection(initialValue as ICollection);
                 _collectionsCompareMethod = typeof(Variable).GetMethod(nameof(AreCollectionsEqualByValue), BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(ValueType);
             }
             else
