@@ -14,7 +14,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const double SERIALIZE_EVERY_SECONDS = 0.5f;
         private static double _nextSerializeTime = SERIALIZE_EVERY_SECONDS;
 
-        private MainToolbarElementWithSerializableVariables[] _elementsWithVariables;
+        private ElementVariables[] _elementsWithVariables;
         private readonly IMainToolbarElementVariableRepository _repository;
 
         public MainToolbarElementVariableWatcher(IMainToolbarElementVariableRepository repository)
@@ -39,9 +39,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     RestoreProperties(element, matchingSerialized);
                 }
             }
+
+            SaveCurrentState();
         }
 
-        private void RestoreFields(MainToolbarElementWithSerializableVariables element, SerializableElement matchingSerialized)
+        private void RestoreFields(ElementVariables element, SerializableElement matchingSerialized)
         {
             foreach (var field in element.Fields)
             {
@@ -57,7 +59,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
         }
 
-        private void RestoreProperties(MainToolbarElementWithSerializableVariables element, SerializableElement matchingSerialized)
+        private void RestoreProperties(ElementVariables element, SerializableElement matchingSerialized)
         {
             foreach (var property in element.Properties)
             {
@@ -100,9 +102,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 _repository.Save();
         }
 
-        private MainToolbarElementWithSerializableVariables[] GetElementsWithVariables(MainToolbarElement[] elements)
+        private void SaveCurrentState()
         {
-            return elements.Select(element => new MainToolbarElementWithSerializableVariables
+            foreach (var element in _elementsWithVariables)
+            {
+                _repository.Set(ToSerializable(element));
+            }
+
+            _repository.Save();
+        }
+
+        private ElementVariables[] GetElementsWithVariables(MainToolbarElement[] elements)
+        {
+            return elements.Select(element => new ElementVariables
             {
                 MainToolbarElement = element,
                 Fields = GetSerializableFields(element),
@@ -136,7 +148,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .ToArray();
         }
 
-        private SerializableElement ToSerializable(MainToolbarElementWithSerializableVariables elementWithVariables)
+        private SerializableElement ToSerializable(ElementVariables elementWithVariables)
         {
             return new SerializableElement()
             {

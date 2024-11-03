@@ -2,7 +2,7 @@
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    internal class MainToolbarElementWithSerializableVariables
+    internal class ElementVariables
     {
         public MainToolbarElement MainToolbarElement;
         public FieldVariable[] Fields;
