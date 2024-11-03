@@ -116,7 +116,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return element.VisualElement.GetType().GetFields(BINDING_FLAGS)
                 .Where(field => field.GetCustomAttribute<SerializeAttribute>() != null)
-                .Select(field => new FieldVariable(element, field))
+                .Select(field =>
+                {
+                    var attribute = field.GetCustomAttribute<SerializeAttribute>();
+                    return new FieldVariable(element, field, attribute.ContainsEqualityComparerType() ? attribute.CreateEqualityComparer() : null);
+                })
                 .ToArray();
         }
 
@@ -124,7 +128,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return element.VisualElement.GetType().GetProperties(BINDING_FLAGS)
                 .Where(property => property.GetCustomAttribute<SerializeAttribute>() != null)
-                .Select(property => new PropertyVariable(element, property))
+                .Select(property =>
+                {
+                    var attribute = property.GetCustomAttribute<SerializeAttribute>();
+                    return new PropertyVariable(element, property, attribute.ContainsEqualityComparerType() ? attribute.CreateEqualityComparer() : null);
+                })
                 .ToArray();
         }
 

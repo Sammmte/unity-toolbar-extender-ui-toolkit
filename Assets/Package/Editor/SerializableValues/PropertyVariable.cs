@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections;
+using System.Reflection;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -6,7 +7,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public readonly PropertyInfo Property;
 
-        public PropertyVariable(MainToolbarElement element, PropertyInfo property) : base(element, property.GetValue(element.VisualElement))
+        public PropertyVariable(MainToolbarElement element, PropertyInfo property, IEqualityComparer equalityComparer) 
+            : base(element, property.PropertyType, property.GetValue(element.VisualElement), equalityComparer)
         {
             Property = property;
         }
