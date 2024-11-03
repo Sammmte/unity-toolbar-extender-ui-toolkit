@@ -16,13 +16,11 @@ public class SampleRigidbodyFieldWithSerialization : ObjectField
 {
     [Serialize] private Rigidbody _rigidbodyValue;
 
-    public SampleRigidbodyFieldWithSerialization() : base("Sample Rigidbody")
-    {
-        
-    }
-
+    // Don't use constructors, use this method instead.
+    // Toolbar extender will try to find this method and execute it
     public void InitializeElement()
     {
+        label = "Sample Rigidbody";
         value = _rigidbodyValue;
 
         // Specify Unity Object type for the field to get the right component
