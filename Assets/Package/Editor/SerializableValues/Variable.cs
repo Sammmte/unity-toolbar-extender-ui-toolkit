@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -26,7 +27,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             if (_isCollection)
             {
-                _lastValue = initialValue == null ? null : CloneEnumerable(initialValue as IEnumerable);
+                _lastValue = initialValue == null ? null : CloneCollection(initialValue as IEnumerable);
                 _collectionsCompareMethod = typeof(Variable).GetMethod(nameof(AreCollectionsEqualByValue), BindingFlags.Instance | BindingFlags.NonPublic).MakeGenericMethod(ValueType);
             }
             else
@@ -87,16 +88,16 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public void UpdateValue()
         {
             if(IsCollection())
-                _lastValue = CloneEnumerable(Get() as IEnumerable);
+                _lastValue = CloneCollection(Get() as ICollection);
             else
                 _lastValue = Get();
         }
 
-        private List<object> CloneEnumerable(IEnumerable enumerable)
+        private List<object> CloneCollection(ICollection collection)
         {
             List<object> clone = null;
 
-            foreach( var item in enumerable)
+            foreach( var item in collection)
             {
                 if(clone == null)
                     clone = new List<object>();
