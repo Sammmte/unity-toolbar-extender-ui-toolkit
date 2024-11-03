@@ -112,19 +112,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .ToArray();
         }
 
-        private FieldSerializableVariable[] GetSerializableFields(MainToolbarElement element)
+        private FieldVariable[] GetSerializableFields(MainToolbarElement element)
         {
             return element.VisualElement.GetType().GetFields(BINDING_FLAGS)
                 .Where(field => field.GetCustomAttribute<SerializeAttribute>() != null)
-                .Select(field => new FieldSerializableVariable(element, field))
+                .Select(field => new FieldVariable(element, field))
                 .ToArray();
         }
 
-        private PropertySerializableVariable[] GetSerializableProperties(MainToolbarElement element)
+        private PropertyVariable[] GetSerializableProperties(MainToolbarElement element)
         {
             return element.VisualElement.GetType().GetProperties(BINDING_FLAGS)
                 .Where(property => property.GetCustomAttribute<SerializeAttribute>() != null)
-                .Select(property => new PropertySerializableVariable(element, property))
+                .Select(property => new PropertyVariable(element, property))
                 .ToArray();
         }
 

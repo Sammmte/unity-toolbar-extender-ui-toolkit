@@ -5,8 +5,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     internal class MainToolbarElementWithSerializableVariables
     {
         public MainToolbarElement MainToolbarElement;
-        public FieldSerializableVariable[] Fields;
-        public PropertySerializableVariable[] Properties;
+        public FieldVariable[] Fields;
+        public PropertyVariable[] Properties;
 
         public bool DidChange()
         {
