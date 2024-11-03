@@ -14,11 +14,16 @@ using UnityEngine.UIElements;
 [MainToolbarElement("SampleRigidbodyFieldWithSerialization")]
 public class SampleRigidbodyFieldWithSerialization : ObjectField
 {
-    private SerializableValue<Rigidbody> _rigidbodyValue = SerializableValue<Rigidbody>.Create("MyRigidbody");
+    [Serialize] private Rigidbody _rigidbodyValue;
 
     public SampleRigidbodyFieldWithSerialization() : base("Sample Rigidbody")
     {
-        value = _rigidbodyValue.Value;
+        
+    }
+
+    public void InitializeElement()
+    {
+        value = _rigidbodyValue;
 
         // Specify Unity Object type for the field to get the right component
         // Also this helps to filter when using the search tool
@@ -30,7 +35,7 @@ public class SampleRigidbodyFieldWithSerialization : ObjectField
         this.RegisterValueChangedCallback(ev =>
         {
             // You need to cast newValue to your Unity Object specific type
-            _rigidbodyValue.Value = (Rigidbody)ev.newValue;
+            _rigidbodyValue = (Rigidbody)ev.newValue;
         });
     }
 }

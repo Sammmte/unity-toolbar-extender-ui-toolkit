@@ -4,12 +4,17 @@ using UnityEngine.UIElements;
 [MainToolbarElement("SampleToggleWithSerialization")]
 public class SampleToggleWithSerialization : Toggle
 {
-    private SerializableValue<bool> _toggleValue = SerializableValue<bool>.Create("MyToggleValue");
+    [Serialize] private bool _toggleValue;
 
     public SampleToggleWithSerialization() : base("Toggle With Serialization")
     {
-        value = _toggleValue.Value;
+        
+    }
 
-        RegisterCallback<ChangeEvent<bool>>(ev => _toggleValue.Value = ev.newValue);
+    public void InitializeElement()
+    {
+        value = _toggleValue;
+
+        RegisterCallback<ChangeEvent<bool>>(ev => _toggleValue = ev.newValue);
     }
 }
