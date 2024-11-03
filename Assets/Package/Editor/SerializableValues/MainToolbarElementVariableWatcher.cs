@@ -50,7 +50,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 var matchingField = matchingSerialized.Variables.FirstOrDefault(v =>
                     v.Key == field.Field.Name &&
                     v.Type == ValueHolderType.Field &&
-                    v.Value.GetType() == field.Field.FieldType);
+                    v.ValueType == field.Field.FieldType);
 
                 if (matchingField.Key != null)
                 {
@@ -65,8 +65,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             {
                 var matchingField = matchingSerialized.Variables.FirstOrDefault(v =>
                     v.Key == property.Property.Name &&
-                    v.Type == ValueHolderType.Field &&
-                    v.Value.GetType() == property.Property.PropertyType);
+                    v.Type == ValueHolderType.Property &&
+                    v.ValueType == property.Property.PropertyType);
 
                 if (matchingField.Key != null)
                 {
@@ -106,6 +106,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             foreach (var element in _elementsWithVariables)
             {
+                element.UpdateValues();
                 _repository.Set(ToSerializable(element));
             }
 
