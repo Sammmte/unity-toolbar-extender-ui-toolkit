@@ -1,4 +1,6 @@
-﻿namespace Paps.UnityToolbarExtenderUIToolkit
+﻿using UnityEngine;
+
+namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class MainToolbarElementWithSerializableVariables
     {
@@ -17,6 +19,15 @@
                     return true;
 
             return false;
+        }
+
+        public void UpdateValues()
+        {
+            foreach (var field in Fields)
+                field.UpdateValue();
+
+            foreach (var property in Properties)
+                property.UpdateValue();
         }
     }
 }

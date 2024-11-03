@@ -29,11 +29,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             var currentValue = Get();
 
-            var changed = !currentValue.Equals(_lastValue);
+            if (currentValue == null)
+                return currentValue != _lastValue;
+            else
+                return !currentValue.Equals(_lastValue);
+        }
 
-            _lastValue = currentValue;
-
-            return changed;
+        public void UpdateValue()
+        {
+            _lastValue = Get();
         }
     }
 }

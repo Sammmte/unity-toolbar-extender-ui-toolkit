@@ -91,6 +91,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 if (element.DidChange())
                 {
                     anyChange = true;
+                    element.UpdateValues();
                     _repository.Set(ToSerializable(element));
                 }
             }
@@ -136,11 +137,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 {
                     Type = ValueHolderType.Field,
                     Key = f.Field.Name,
+                    ValueType = f.Field.FieldType,
                     Value = f.Get()
                 }).Concat(elementWithVariables.Properties.Select(p => new SerializableVariable()
                 {
                     Type = ValueHolderType.Property,
                     Key = p.Property.Name,
+                    ValueType = p.Property.PropertyType,
                     Value = p.Get()
                 })).ToArray()
             };

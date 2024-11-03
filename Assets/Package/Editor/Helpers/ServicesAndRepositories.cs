@@ -17,8 +17,11 @@
         public static ISerializableValuesRepository SerializableValuesRepository =
             new JsonEditorPrefsSerializableValuesRepository(SerializableValuesSerializer);
 
+        public static IValueSerializer ValueSerializer =
+            new UnitySerializationValueSerializer();
+
         public static IMainToolbarElementVariableSerializer MainToolbarElementVariableSerializer =
-            new JsonMainToolbarElementVariableSerializer(SerializableValuesSerializer);
+            new JsonMainToolbarElementVariableSerializer(ValueSerializer);
 
         public static IMainToolbarElementVariableRepository MainToolbarElementVariableRepository =
             new EditorPrefsMainToolbarElementVariableRepository(MainToolbarElementVariableSerializer);
