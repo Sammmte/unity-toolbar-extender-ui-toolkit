@@ -3,7 +3,7 @@
     internal static class ServicesAndRepositories
     {
         public static IMainToolbarElementOverrideRepository MainToolbarElementOverridesRepository =
-            new JsonEditorPrefsMainToolbarElementOverrideRepository();
+            new UserSettingsFileMainToolbarElementOverrideRepository();
 
         public static IGroupDefinitionRepository GroupDefinitionRepository =
             new ScriptableObjectGroupDefinitionRepository();

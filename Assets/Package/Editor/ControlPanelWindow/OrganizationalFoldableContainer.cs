@@ -30,12 +30,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void SaveFoldoutState(ChangeEvent<bool> eventArgs)
         {
-            JsonEditorPrefs.ToolDataRepository.SetBool(GetFullFoldoutStateSaveKey(), eventArgs.newValue);
+            UserSettingsPrefs.SetBool(GetFullFoldoutStateSaveKey(), eventArgs.newValue);
         }
 
         private bool GetSavedFoldoutState()
         {
-            return JsonEditorPrefs.ToolDataRepository.GetBool(GetFullFoldoutStateSaveKey(), false);
+            return UserSettingsPrefs.GetBool(GetFullFoldoutStateSaveKey(), false);
         }
 
         public void SetControllers(IEnumerable<MainToolbarElementController> controllers)

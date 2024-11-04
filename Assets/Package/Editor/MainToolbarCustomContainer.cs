@@ -67,12 +67,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private double LastScrollerPosition()
         {
-            return JsonEditorPrefs.ToolDataRepository.GetDouble(GetFullKey(), 0d);
+            return UserSettingsPrefs.GetDouble(GetFullKey(), 0d);
         }
 
         private void SaveScrollerPosition(float newPosition)
         {
-            JsonEditorPrefs.ToolDataRepository.SetDouble(GetFullKey(), newPosition);
+            UserSettingsPrefs.SetDouble(GetFullKey(), newPosition);
         }
 
         private string GetFullKey() => LAST_SCROLLER_POSITION_SAVE_KEY_BASE + _id;
