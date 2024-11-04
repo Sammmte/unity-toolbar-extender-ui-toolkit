@@ -18,6 +18,6 @@
             new JsonMainToolbarElementVariableSerializer(ValueSerializer);
 
         public static IMainToolbarElementVariableRepository MainToolbarElementVariableRepository =
-            new EditorPrefsMainToolbarElementVariableRepository(MainToolbarElementVariableSerializer);
+            new UserSettingsFileMainToolbarElementVariableRepository(MainToolbarElementVariableSerializer);
     }
 }
