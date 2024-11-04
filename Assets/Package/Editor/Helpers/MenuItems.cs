@@ -15,11 +15,5 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             MainToolbarControlPanelWindow.OpenWindow();
         }
-
-        [MenuItem(ToolInfo.EDITOR_MENU_BASE + "/Delete Actions/Reset Overrides", priority = 23)]
-        public static void ResetOverrides()
-        {
-            GlobalActions.ResetOverridesIfUserAccepts();
-        }
     }
 }
