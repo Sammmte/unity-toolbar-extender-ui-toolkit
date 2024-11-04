@@ -21,7 +21,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static MainToolbarElement[] _singleElements = new MainToolbarElement[0];
         private static MainToolbarElementOverrideApplier _overrideApplier = new MainToolbarElementOverrideApplier(ServicesAndRepositories.MainToolbarElementOverridesRepository);
         private static Dictionary<string, MainToolbarElement[]> _elementsByGroup = new Dictionary<string, MainToolbarElement[]>();
-        private static MainToolbarElementVariableWatcher _variableWatcher = new MainToolbarElementVariableWatcher(ServicesAndRepositories.MainToolbarElementVariableRepository);
+        private static MainToolbarElementVariableWatcher _variableWatcher = new MainToolbarElementVariableWatcher(ServicesAndRepositories.MainToolbarElementVariableRepository, ServicesAndRepositories.ValueSerializer);
 
         internal static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         internal static MainToolbarCustomContainer RightCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);

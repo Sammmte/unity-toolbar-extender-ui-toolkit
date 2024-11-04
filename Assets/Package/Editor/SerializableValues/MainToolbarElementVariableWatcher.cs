@@ -16,10 +16,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private ElementVariables[] _elementsWithVariables;
         private readonly IMainToolbarElementVariableRepository _repository;
+        private readonly IValueSerializer _valueSerializer;
 
-        public MainToolbarElementVariableWatcher(IMainToolbarElementVariableRepository repository)
+        public MainToolbarElementVariableWatcher(IMainToolbarElementVariableRepository repository, IValueSerializer valueSerializer)
         {
             _repository = repository;
+            _valueSerializer = valueSerializer;
         }
 
         public void RestoreValues(MainToolbarElement[] elements)
@@ -129,11 +131,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return element.VisualElement.GetType().GetFields(BINDING_FLAGS)
                 .Where(field => field.GetCustomAttribute<SerializeAttribute>() != null)
-                .Select(field =>
-                {
-                    var attribute = field.GetCustomAttribute<SerializeAttribute>();
-                    return new FieldVariable(element, field, attribute.ContainsEqualityComparerType() ? attribute.CreateEqualityComparer() : null);
-                })
+                .Select(field => new FieldVariable(element, field, _valueSerializer))
                 .ToArray();
         }
 
@@ -141,11 +139,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return element.VisualElement.GetType().GetProperties(BINDING_FLAGS)
                 .Where(property => property.GetCustomAttribute<SerializeAttribute>() != null)
-                .Select(property =>
-                {
-                    var attribute = property.GetCustomAttribute<SerializeAttribute>();
-                    return new PropertyVariable(element, property, attribute.ContainsEqualityComparerType() ? attribute.CreateEqualityComparer() : null);
-                })
+                .Select(property => new PropertyVariable(element, property, _valueSerializer))
                 .ToArray();
         }
 

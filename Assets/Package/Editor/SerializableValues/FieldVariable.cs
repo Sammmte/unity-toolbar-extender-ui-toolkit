@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -7,8 +6,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public readonly FieldInfo Field;
 
-        public FieldVariable(MainToolbarElement element, FieldInfo field, IEqualityComparer equalityComparer) 
-            : base(element, field.FieldType, field.GetValue(element.VisualElement), equalityComparer)
+        public FieldVariable(MainToolbarElement element, FieldInfo field, IValueSerializer valueSerializer) 
+            : base(element, field.FieldType, field.GetValue(element.VisualElement), valueSerializer)
         {
             Field = field;
         }
