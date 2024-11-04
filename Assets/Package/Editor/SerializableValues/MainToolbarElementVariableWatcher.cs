@@ -47,7 +47,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             foreach (var field in element.Fields)
             {
                 var matchingField = matchingSerialized.Variables.FirstOrDefault(v =>
-                    v.Key == field.Field.Name &&
+                    (v.Key == field.Attribute.SerializationKey || v.Key == field.Field.Name) &&
                     v.Type == ValueHolderType.Field &&
                     v.ValueType == field.Field.FieldType);
 
@@ -63,7 +63,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             foreach (var property in element.Properties)
             {
                 var matchingField = matchingSerialized.Variables.FirstOrDefault(v =>
-                    v.Key == property.Property.Name &&
+                    (v.Key == property.Attribute.SerializationKey || v.Key == property.Property.Name) &&
                     v.Type == ValueHolderType.Property &&
                     v.ValueType == property.Property.PropertyType);
 
@@ -124,7 +124,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return element.VisualElement.GetType().GetFields(BINDING_FLAGS)
                 .Where(field => field.GetCustomAttribute<SerializeAttribute>() != null)
-                .Select(field => new FieldVariable(element, field, _valueSerializer))
+                .Select(field => new FieldVariable(element, field, _valueSerializer, field.GetCustomAttribute<SerializeAttribute>()))
                 .ToArray();
         }
 
@@ -132,7 +132,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return element.VisualElement.GetType().GetProperties(BINDING_FLAGS)
                 .Where(property => property.GetCustomAttribute<SerializeAttribute>() != null)
-                .Select(property => new PropertyVariable(element, property, _valueSerializer))
+                .Select(property => new PropertyVariable(element, property, _valueSerializer, property.GetCustomAttribute<SerializeAttribute>()))
                 .ToArray();
         }
 
@@ -144,13 +144,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 Variables = elementWithVariables.Fields.Select(f => new SerializableVariable()
                 {
                     Type = ValueHolderType.Field,
-                    Key = f.Field.Name,
+                    Key = f.Attribute.SerializationKey ?? f.Field.Name,
                     ValueType = f.Field.FieldType,
                     Value = f.Get()
                 }).Concat(elementWithVariables.Properties.Select(p => new SerializableVariable()
                 {
                     Type = ValueHolderType.Property,
-                    Key = p.Property.Name,
+                    Key = p.Attribute.SerializationKey ?? p.Property.Name,
                     ValueType = p.Property.PropertyType,
                     Value = p.Get()
                 })).ToArray()

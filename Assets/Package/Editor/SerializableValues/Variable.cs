@@ -23,13 +23,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public MainToolbarElement Element { get; }
         public Type ValueType { get; }
+        public SerializeAttribute Attribute { get; }
 
-        public Variable(MainToolbarElement element, Type valueType, object initialValue, IValueSerializer valueSerializer)
+        public Variable(MainToolbarElement element, Type valueType, object initialValue, IValueSerializer valueSerializer, SerializeAttribute attribute)
         {
             Element = element;
             ValueType = valueType;
             _valueSerializer = valueSerializer;
-
+            Attribute = attribute;
             _serializeValueMethod = _valueSerializer.GetType().GetMethod("Serialize", BindingFlags.Instance | BindingFlags.Public);
             _deserializeValueMethod = _valueSerializer.GetType().GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.Public);
         }

@@ -6,8 +6,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public readonly FieldInfo Field;
 
-        public FieldVariable(MainToolbarElement element, FieldInfo field, IValueSerializer valueSerializer) 
-            : base(element, field.FieldType, field.GetValue(element.VisualElement), valueSerializer)
+        public FieldVariable(MainToolbarElement element, FieldInfo field, IValueSerializer valueSerializer, SerializeAttribute attribute) 
+            : base(element, field.FieldType, field.GetValue(element.VisualElement), valueSerializer, attribute)
         {
             Field = field;
         }

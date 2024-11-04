@@ -7,8 +7,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public readonly PropertyInfo Property;
 
-        public PropertyVariable(MainToolbarElement element, PropertyInfo property, IValueSerializer valueSerializer) 
-            : base(element, property.PropertyType, property.GetValue(element.VisualElement), valueSerializer)
+        public PropertyVariable(MainToolbarElement element, PropertyInfo property, IValueSerializer valueSerializer, SerializeAttribute attribute) 
+            : base(element, property.PropertyType, property.GetValue(element.VisualElement), valueSerializer, attribute)
         {
             Property = property;
         }
