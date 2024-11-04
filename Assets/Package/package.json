@@ -1,8 +1,8 @@
 {
   "name": "com.paps.unity-toolbar-extender-ui-toolkit",
   "displayName": "Unity Toolbar Extender UI Toolkit",
-  "version": "1.0.1",
-  "unity": "2022.2",
+  "version": "2.0.0",
+  "unity": "2022.3",
   "description": "Unity Toolbar Extender UI Toolkit provides a simple way to customize Unity's main toolbar (where play buttons are) with UI Toolkit.",
   "keywords": [
     "unity",
@@ -21,7 +21,7 @@
 	"email": "santiagoperez.-@hotmail.com"
   },
   "dependencies": {
-	"com.unity.nuget.newtonsoft-json": "3.0.1"
+	"com.unity.serialization": "3.1.2"
   },
   "files":[
 	"CHANGELOG.md",
