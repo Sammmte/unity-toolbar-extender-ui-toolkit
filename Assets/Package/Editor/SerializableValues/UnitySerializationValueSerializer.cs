@@ -11,7 +11,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public string Serialize<T>(T value)
         {
-            return JsonSerialization.ToJson(value);
+            return JsonSerialization.ToJson(value, new JsonSerializationParameters() { Minified = true } );
         }
     }
 }
