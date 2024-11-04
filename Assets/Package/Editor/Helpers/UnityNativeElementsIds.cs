@@ -25,6 +25,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         // ------------------- ELEMENTS NAMES ---------------------
 
         // LEFT
+        private const string TOOLBAR_PRODUCT_CAPTION_NAME = "ToolbarProductCaption";
         private const string ACCOUNT_DROPDOWN_ELEMENT_NAME = "AccountDropdown";
         private const string CLOUD_BUTTON_ELEMENT_NAME = "Cloud";
 
@@ -43,6 +44,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         // ------------------- FIXED IDS ---------------------
 
         // LEFT
+        public const string TOOLBAR_PRODUCT_CAPTION = "ToolbarProductCaption";
         public const string ACCOUNT_DROPDOWN_ID = "AccountDropdown";
         public const string CLOUD_BUTTON_ID = "CloudButton";
         public const string VERSION_CONTROL_ID = "VersionControlButton";
@@ -83,6 +85,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static readonly Dictionary<string, string> IDS_BY_NAME = new Dictionary<string, string>()
         {
             // LEFT
+            { TOOLBAR_PRODUCT_CAPTION_NAME, TOOLBAR_PRODUCT_CAPTION },
             { ACCOUNT_DROPDOWN_ELEMENT_NAME, ACCOUNT_DROPDOWN_ID },
             { CLOUD_BUTTON_ELEMENT_NAME, CLOUD_BUTTON_ID },
 
