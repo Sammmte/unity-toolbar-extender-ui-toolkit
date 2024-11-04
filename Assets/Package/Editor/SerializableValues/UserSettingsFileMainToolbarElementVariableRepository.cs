@@ -57,20 +57,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public void Save()
         {
             var serializedString = _serializer.Serialize(ElementGroup);
-            Debug.Log(serializedString);
             File.WriteAllText(FILE, serializedString);
-        }
-
-        [MenuItem("Paps/Clear Serializables")]
-        public static void Clear()
-        {
-            File.Delete(FILE);
-        }
-
-        [MenuItem("Paps/Show Serializables")]
-        public static void Show()
-        {
-            Debug.Log(File.Exists(FILE) ? File.ReadAllText(FILE) : "{}");
         }
     }
 }
