@@ -11,27 +11,36 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static readonly string FILE = Path.Combine(DIRECTORY, "serialized_values.json");
         private readonly IMainToolbarElementVariableSerializer _serializer;
         private SerializableElementGroup _elementGroup;
+        private SerializableElementGroup ElementGroup
+        {
+            get
+            {
+                if (_elementGroup == null)
+                    _elementGroup = Load();
+
+                return _elementGroup;
+            }
+            set => _elementGroup = value;
+        }
 
         public UserSettingsFileMainToolbarElementVariableRepository(IMainToolbarElementVariableSerializer serializer)
         {
             _serializer = serializer;
-
-            _elementGroup = Load();
         }
 
         public SerializableElement[] GetAll()
         {
-            return _elementGroup.SerializableElements.Values.ToArray();
+            return ElementGroup.SerializableElements.Values.ToArray();
         }
 
         public void Set(SerializableElement serializableElement)
         {
-            _elementGroup.SerializableElements[serializableElement.ElementFullTypeName] = serializableElement;
+            ElementGroup.SerializableElements[serializableElement.ElementFullTypeName] = serializableElement;
         }
 
         public void SetAll(SerializableElement[] serializableElements)
         {
-            _elementGroup.SerializableElements = serializableElements.ToDictionary(s => s.ElementFullTypeName, s => s);
+            ElementGroup.SerializableElements = serializableElements.ToDictionary(s => s.ElementFullTypeName, s => s);
         }
 
         private SerializableElementGroup Load()
@@ -47,7 +56,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public void Save()
         {
-            var serializedString = _serializer.Serialize(_elementGroup);
+            var serializedString = _serializer.Serialize(ElementGroup);
             Debug.Log(serializedString);
             File.WriteAllText(FILE, serializedString);
         }
