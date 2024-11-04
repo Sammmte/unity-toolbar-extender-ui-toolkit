@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 [MainToolbarElement(id: "SampleIMGUIContainer", alignment: ToolbarAlign.Right, order: 1)]
 public class SampleIMGUIContainer : IMGUIContainer
 {
-    public SampleIMGUIContainer() // you can also construct your object with base()
+    public void InitializeElement()
     {
         onGUIHandler = MyGUIMethod;
     }

@@ -4,8 +4,8 @@ using UnityEngine.UIElements;
 [MainToolbarElement("SampleTextField", ToolbarAlign.Right)]
 public class SampleTextField : TextField
 {
-    public SampleTextField() : base("Sample Text")
+    public void InitializeElement()
     {
-
+        label = "Sample Text";
     }
 }

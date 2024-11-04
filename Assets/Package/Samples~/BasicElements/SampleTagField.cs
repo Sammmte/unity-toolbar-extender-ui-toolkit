@@ -4,8 +4,8 @@ using UnityEditor.UIElements;
 [MainToolbarElement("SampleTagField")]
 public class SampleTagField : TagField
 {
-    public SampleTagField() : base("Sample Tag")
+    public void InitializeElement()
     {
-
+        label = "Sample Tag";
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine.UIElements;
 [MainToolbarElement("SampleVector3Field")]
 public class SampleVector3Field : Vector3Field
 {
-    public SampleVector3Field() : base("Sample Vector 3")
+    public void InitializeElement()
     {
-
+        label = "Sample Vector 3";
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine.UIElements;
 [MainToolbarElement("SampleIntegerField", ToolbarAlign.Right)]
 public class SampleIntegerField : IntegerField
 {
-    public SampleIntegerField() : base("Sample Integer")
+    public void InitializeElement()
     {
-        
+        label = "Sample Integer";
     }
 }

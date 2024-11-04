@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 [MainToolbarElement(id: "SampleDropdownField", alignment: ToolbarAlign.Left, order: 1)]
 public class SampleDropdownField : DropdownField
 {
-    public SampleDropdownField() // you can also construct your object with base()
+    public void InitializeElement()
     {
         label = "Sample Dropdown";
         choices = new List<string>() { "Option 1", "Option 2" };

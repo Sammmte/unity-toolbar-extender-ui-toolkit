@@ -4,8 +4,8 @@ using UnityEditor.UIElements;
 [MainToolbarElement("SampleObjectField")]
 public class SampleObjectField : ObjectField
 {
-    public SampleObjectField() : base("Sample Object")
+    public void InitializeElement()
     {
-
+        label = "Sample Object";
     }
 }

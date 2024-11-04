@@ -5,8 +5,9 @@ using UnityEngine.UIElements;
 [MainToolbarElement("SampleEnumField")]
 public class SampleEnumField : EnumField
 {
-    public SampleEnumField() : base("Sample Enum", KeyCode.A)
+    public void InitializeElement()
     {
-
+        label = "Sample Enum";
+        Init(KeyCode.A);
     }
 }

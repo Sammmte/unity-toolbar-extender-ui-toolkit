@@ -5,9 +5,10 @@ using UnityEditor.UIElements;
 [MainToolbarElement("SampleEnumFlagsField")]
 public class SampleEnumFlagsField : EnumFlagsField
 {
-    public SampleEnumFlagsField() : base("Sample Enum Flags", MovementStates.None)
+    public void InitializeElement()
     {
-
+        label = "Sample Enum Flags";
+        Init(MovementStates.None);
     }
 }
 

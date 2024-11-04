@@ -4,8 +4,8 @@ using UnityEditor.UIElements;
 [MainToolbarElement("SampleColorField")]
 public class SampleColorField : ColorField
 {
-    public SampleColorField() : base("Sample Color")
+    public void InitializeElement()
     {
-
+        label = "Sample Color";
     }
 }

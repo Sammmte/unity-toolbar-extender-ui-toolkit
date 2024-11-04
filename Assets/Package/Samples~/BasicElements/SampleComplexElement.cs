@@ -7,7 +7,7 @@ using System.Collections.Generic;
 [MainToolbarElement(id: "SampleComplexElement")]
 public class SampleComplexElement : VisualElement
 {
-    public SampleComplexElement()
+    public void InitializeElement()
     {
         style.flexDirection = FlexDirection.Column;
         style.flexGrow = 1;
@@ -15,7 +15,7 @@ public class SampleComplexElement : VisualElement
         var someLabel = new Label("This is a complex element");
         Add(someLabel);
 
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             int elementNumber = i + 1;
             var button = new Button(() => Debug.Log("I am button " + elementNumber));
