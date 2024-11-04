@@ -1,44 +1,37 @@
-﻿using Newtonsoft.Json;
-using System.Linq;
-using UnityEditor;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using System.Linq;
 using System.Reflection;
+using Unity.Serialization.Json;
+using UnityEditor;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    internal class JsonMainToolbarElementVariableSerializer : IMainToolbarElementVariableSerializer
+    internal class UnitySerializationMainToolbarElementVariableSerializer : IMainToolbarElementVariableSerializer
     {
         private struct SerializableElementGroupDTO
         {
-            [JsonProperty("elements")]
             public Dictionary<string, SerializableElementDTO> SerializableElements;
         }
 
         private struct SerializableElementDTO
         {
-            [JsonProperty("elementType")]
             public string ElementFullTypeName;
-            [JsonProperty("variables")]
             public SerializableVariableDTO[] Variables;
         }
 
         private struct SerializableVariableDTO
         {
-            [JsonProperty("type")]
             public ValueHolderType Type;
-            [JsonProperty("key")]
             public string Key;
-            [JsonProperty("serializedValue")]
             public string SerializedValue;
-            [JsonProperty("serializedValueTypeFullyQualifiedName")]
             public string SerializedValueTypeFullyQualifiedName;
         }
 
         private IValueSerializer _valuesSerializer;
         private MethodInfo _serializeValueMethod, _deserializeValueMethod;
         
-        public JsonMainToolbarElementVariableSerializer(IValueSerializer valuesSerializer)
+        public UnitySerializationMainToolbarElementVariableSerializer(IValueSerializer valuesSerializer)
         {
             _valuesSerializer = valuesSerializer;
 
@@ -50,12 +43,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             var dto = ToDTO(serializableElementGroup);
 
-            return JsonConvert.SerializeObject(dto);
+            return JsonSerialization.ToJson(dto, new JsonSerializationParameters() { Minified = true });
         }
 
         public SerializableElementGroup Deserialize(string serializedElementGroup)
         {
-            var dto = JsonConvert.DeserializeObject<SerializableElementGroupDTO>(serializedElementGroup);
+            var dto = JsonSerialization.FromJson<SerializableElementGroupDTO>(serializedElementGroup);
 
             return FromDTO(dto);
         }

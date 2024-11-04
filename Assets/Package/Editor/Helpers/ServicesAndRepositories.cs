@@ -15,7 +15,7 @@
             new UnitySerializationValueSerializer();
 
         public static IMainToolbarElementVariableSerializer MainToolbarElementVariableSerializer =
-            new JsonMainToolbarElementVariableSerializer(ValueSerializer);
+            new UnitySerializationMainToolbarElementVariableSerializer(ValueSerializer);
 
         public static IMainToolbarElementVariableRepository MainToolbarElementVariableRepository =
             new UserSettingsFileMainToolbarElementVariableRepository(MainToolbarElementVariableSerializer);
