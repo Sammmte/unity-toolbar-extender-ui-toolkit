@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
-using System.Xml.Linq;
 using UnityEditor;
-using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -106,11 +103,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void SaveCurrentState()
         {
-            foreach (var element in _elementsWithVariables)
-            {
-                element.UpdateValues();
-                _repository.Set(ToSerializable(element));
-            }
+            _repository.SetAll(_elementsWithVariables.Select(e => ToSerializable(e)).ToArray());
 
             _repository.Save();
         }

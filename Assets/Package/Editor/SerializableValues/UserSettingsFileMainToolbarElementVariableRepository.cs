@@ -29,6 +29,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _elementGroup.SerializableElements[serializableElement.ElementFullTypeName] = serializableElement;
         }
 
+        public void SetAll(SerializableElement[] serializableElements)
+        {
+            _elementGroup.SerializableElements = serializableElements.ToDictionary(s => s.ElementFullTypeName, s => s);
+        }
+
         private SerializableElementGroup Load()
         {
             if(!Directory.Exists(DIRECTORY))
