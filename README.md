@@ -346,7 +346,7 @@ public class MyAwesomeInt : IntegerField
 }
 ```
 
-<!-- TOC --><a name="important-notes"></a>
+<!-- TOC --><a name="important-notes-1"></a>
 ## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
 - Use `InitializeElement` method to access restored values. Don't use constructors because the system injects the serialized values once the object is created.
@@ -465,7 +465,7 @@ public class PopupWindowContentThatWorksInASubgroup : PopupWindowContent
 
 ![](Assets/Package/Readme-Resources~/subwindow-demonstration.gif)
 
-<!-- TOC --><a name="important-notes-1"></a>
+<!-- TOC --><a name="important-notes-2"></a>
 ## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
 - Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
@@ -483,7 +483,7 @@ Hide any toolbar visual element, either Unity's or yours.
 
 ![](Assets/Package/Readme-Resources~/main-toolbar-control-panel-demonstration.gif)
 
-<!-- TOC --><a name="important-notes-2"></a>
+<!-- TOC --><a name="important-notes-3"></a>
 ## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
 - `MainToolbarAutomaticExtender` hides visual elements by setting their style property `display` to `Display.None`.
@@ -542,7 +542,7 @@ public static class MyOwnMainToolbarManager
 
 Unity's toolbar gets destroyed when the editor layout changes (through layout dropdown normally). When this happens `MainToolbar` class will try to get the new object. Because of this, any change made to the toolbar goes away, so you'll need to re-apply your changes. To do this, listen to `OnRefresh` event and you can do the same things you did when `OnInitialized` event happened.
 
-<!-- TOC --><a name="important-notes-3"></a>
+<!-- TOC --><a name="important-notes-4"></a>
 ## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
 - Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature while manipulating `MainToolbar` class directly.
