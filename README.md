@@ -488,7 +488,6 @@ Hide any toolbar visual element, either Unity's or yours.
 
 - `MainToolbarAutomaticExtender` hides visual elements by setting their style property `display` to `Display.None`.
 - There are 2 exceptions to the previous rule, Unity's `AccountDropdown` and `CloudButton` elements. These 2 elements can't be hidden by modifying `display` property, so the way this package hides them is by removing them from the hierarchy.
-- If you want to reset these overrides, go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Reset Overrides`.
 
 <!-- TOC --><a name="maintoolbar-class"></a>
 # MainToolbar Class
