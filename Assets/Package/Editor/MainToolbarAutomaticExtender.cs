@@ -289,6 +289,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             MainToolbar.RightContainer.style.width = Length.Auto();
 
             MainToolbar.CenterContainer.style.flexGrow = 1;
+
+            MainToolbar.CenterContainer.parent.style.paddingTop = 0;
+            MainToolbar.CenterContainer.parent.style.paddingBottom = 0;
         }
 
         private static void OnProjectChange()
