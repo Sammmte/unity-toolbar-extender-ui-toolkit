@@ -8,6 +8,7 @@
 - Recommended styles for: Vector2Field, Vector3Field, ColorField, LayerField, EnumField, EnumFlagsField, TagField and ObjectField
 - Ids for native elements on Unity 6
 - ObjectSelector, SearchPickerWindow and EditorGenericDropdownMenuWindowContent won't make group popup close
+- Support for Mac (mostly)
 
 ### Changed
 
