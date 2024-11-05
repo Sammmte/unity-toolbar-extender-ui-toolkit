@@ -115,7 +115,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static bool FocusedWindowIsValid()
         {
-            Debug.Log(EditorWindow.focusedWindow);
             return _windows.Contains(EditorWindow.focusedWindow) || 
                 _subWindowTypes.Contains(EditorWindow.focusedWindow.GetType()) ||
                 _specialWindowTypes.Contains(EditorWindow.focusedWindow.GetType()) ||
