@@ -14,7 +14,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private const string POPUP_WINDOW_CONTENT_FIELD_NAME = "m_WindowContent";
         private static readonly string[] SPECIAL_EDITOR_WINDOW_TYPE_NAMES =
         {
-            "UIElementsDebugger",
+            "UnityEditor.UIElements.Debugger.UIElementsDebugger",
             "UnityEditor.UIElements.EditorMenuExtensions+ContextMenu",
             "UnityEditor.ObjectSelector",
             "UnityEditor.Search.SearchPickerWindow"
@@ -115,6 +115,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static bool FocusedWindowIsValid()
         {
+            Debug.Log(EditorWindow.focusedWindow);
             return _windows.Contains(EditorWindow.focusedWindow) || 
                 _subWindowTypes.Contains(EditorWindow.focusedWindow.GetType()) ||
                 _specialWindowTypes.Contains(EditorWindow.focusedWindow.GetType()) ||
