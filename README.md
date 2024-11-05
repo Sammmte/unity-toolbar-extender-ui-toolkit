@@ -17,20 +17,23 @@ Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/
    * [Create Whatever Visual Element You Want](#create-whatever-visual-element-you-want)
    * [Don't Worry About Horizontal Space. It's Scrollable!](#dont-worry-about-horizontal-space-its-scrollable)
    * [Important Notes](#important-notes)
+- [Prevent data loss upon entering Play mode or closing the editor](#prevent-data-loss-upon-entering-play-mode-or-closing-the-editor)
+   * [Important Notes](#important-notes-1) 
 - [Group Your Elements to Save Space](#group-your-elements-to-save-space)
    * [Make Subgroups](#make-subgroups)
    * [Allow Subwindows](#allow-subwindows)
-   * [Important Notes](#important-notes-1)
-- [Hide Unity's Native Toolbar Visual Elements. Save Even More Space](#hide-unitys-native-toolbar-visual-elements-save-even-more-space)
    * [Important Notes](#important-notes-2)
-- [MainToolbar Class](#maintoolbar-class)
+- [Hide Unity's Native Toolbar Visual Elements. Save Even More Space](#hide-unitys-native-toolbar-visual-elements-save-even-more-space)
    * [Important Notes](#important-notes-3)
+- [MainToolbar Class](#maintoolbar-class)
+   * [Important Notes](#important-notes-4)
 - [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements)
 - [Eligible Classes for Recommended Style Application](#eligible-classes-for-recommended-style-application)
 - [Miscelaneous Information](#miscelaneous-information)
    * [About MainToolbarAutomaticExtender Class:](#about-maintoolbarautomaticextender-class)
    * [About How This Package Saves Its Data](#about-how-this-package-saves-its-data)
 - [Tested Versions](#tested-versions)
+- [Known Issues](#known-issues)
 - [License](#license)
 
 <!-- TOC end -->
@@ -92,7 +95,10 @@ using UnityEngine.UIElements;
 [MainToolbarElement(id: "TheAwesomeButton")]
 public class MyAwesomeButton : Button
 {
-    public MyAwesomeButton()
+    //avoid constructors, create a method called "InitializeElement"
+    //The tool will find it, no matter the access modifier
+    //This is like an Awake method
+    public void InitializeElement()
     {
         text = "Awesome Button";
         clicked += () => Debug.Log("Awesome debug");
@@ -112,7 +118,7 @@ using UnityEngine.UIElements;
 [MainToolbarElement(id: "LeftButton", ToolbarAlign.Left)]
 public class MyLeftButton : Button
 {
-    public MyLeftButton()
+    public void InitializeElement()
     {
         text = "Left Button";
     }
@@ -121,7 +127,7 @@ public class MyLeftButton : Button
 [MainToolbarElement(id: "RightButton", ToolbarAlign.Right)]
 public class MyRightButton : Button
 {
-    public MyRightButton()
+    public void InitializeElement()
     {
         text = "Right Button";
     }
@@ -142,7 +148,7 @@ using UnityEngine.UIElements;
 [MainToolbarElement(id: "FirstLeftButton", ToolbarAlign.Left, order: 1)]
 public class FirstLeftButton : Button
 {
-    public FirstLeftButton()
+    public void InitializeElement()
     {
         text = "1st Button";
     }
@@ -151,7 +157,7 @@ public class FirstLeftButton : Button
 [MainToolbarElement(id: "SecondLeftButton", ToolbarAlign.Left, order: 2)]
 public class SecondLeftButton : Button
 {
-    public SecondLeftButton()
+    public void InitializeElement()
     {
         text = "2nd Button";
     }
@@ -160,7 +166,7 @@ public class SecondLeftButton : Button
 [MainToolbarElement(id: "FirstRightButton", ToolbarAlign.Right, order: 1)]
 public class FirstRightButton : Button
 {
-    public FirstRightButton()
+    public void InitializeElement()
     {
         text = "1st Button";
     }
@@ -169,7 +175,7 @@ public class FirstRightButton : Button
 [MainToolbarElement(id: "SecondRightButton", ToolbarAlign.Right, order: 2)]
 public class SecondRightButton : Button
 {
-    public SecondRightButton()
+    public void InitializeElement()
     {
         text = "2nd Button";
     }
@@ -189,42 +195,39 @@ using System.Collections.Generic;
 [MainToolbarElement(id: "AwesomeToggle", ToolbarAlign.Left)]
 public class MyAwesomeToggle : Toggle
 {
-    public MyAwesomeToggle() : base(label: "Awesome Toggle")
+    public void InitializeElement()
     {
-
+        label = "Awesome Toggle";
     }
 }
 
 [MainToolbarElement(id: "AwesomeDropdownField", ToolbarAlign.Right)]
 public class MyAwesomeDropdownField : DropdownField
 {
-    public MyAwesomeDropdownField() : base(
-        label: "Awesome Dropdown", 
-        choices: new List<string>() { "Option 1", "Option 2"}, 
-        defaultIndex: 0)
+    public void InitializeElement()
     {
-
+        label = "Awesome Dropdown";
+        choices = new List<string>() { "Option 1", "Option 2"};
     }
 }
 
 [MainToolbarElement(id: "AwesomeSlider", ToolbarAlign.Left)]
 public class MyAwesomeSlider : Slider
 {
-    public MyAwesomeSlider() : base(
-        label: "Awesome Slider", 
-        start: 0, 
-        end: 100)
+    public void InitializeElement()
     {
-
+        label = "Awesome Slider";
+        lowValue = 0;
+        highValue = 100;
     }
 }
 
 [MainToolbarElement("MyAwesomeIntField", ToolbarAlign.Right)]
 public class MyAwesomeIntegerField : IntegerField
 {
-    public MyAwesomeIntegerField() : base("My Awesome Int")
+    public void InitializeElement()
     {
-
+        label = "Awesome Int";
     }
 }
 ```
@@ -246,7 +249,7 @@ public class MyAwesomeWhatever : VisualElement
     private Toggle _displaySliderToggle;
     private Slider _slider;
 
-    public MyAwesomeWhatever()
+    public void InitializeElement()
     {
         _displaySliderToggle = new Toggle("Display slider");
         _slider = new Slider(0, 100);
@@ -290,6 +293,66 @@ public class MyAwesomeWhatever : VisualElement
 - If you want to apply custom style to your elements, please read [Styling Your Main Toolbar Elements](#styling-your-main-toolbar-elements) section.
 - You can define a main toolbar element that inherits from `IMGUIContainer` to render stuff with `IMGUI`. Remember to use `GUILayout.BeginHorizontal` and `GUILayout.EndHorizontal` to render your things in row.
 - Main toolbar elements may be instantiated more than once, whenever `MainToolbarAutomaticExtender` refreshes. Take it into account if you need to make some heavy process with your elements.
+
+<!-- TOC --><a name="prevent-data-loss-upon-entering-play-mode-or-closing-the-editor"></a>
+# Prevent data loss upon entering Play mode or closing the editor
+
+Mark a field or property with the `SerializeAttribute` to save its value whenever it changes. Otherwise if you enter Play mode or close the editor data will be reset.
+
+```csharp
+using Paps.UnityToolbarExtenderUIToolkit;
+using UnityEngine.UIElements;
+
+[MainToolbarElement("AwesomeInt")]
+public class MyAwesomeInt : IntegerField
+{
+    [Serialize] private int _intValue;
+
+    public void InitializeElement()
+    {
+        value = _intValue; // set saved value to integer field value
+        label = "Awesome Int";
+
+        RegisterCallback<ChangeEvent<int>>(ev =>
+        {
+            _intValue = ev.newValue;
+        });
+    }
+}
+```
+
+Fields and properties are serialized with their names by default.
+
+You can set your own serialization key to prevent data loss when a field or property name changes due to, for example, refactors.
+
+```csharp
+using Paps.UnityToolbarExtenderUIToolkit;
+using UnityEngine.UIElements;
+
+[MainToolbarElement("AwesomeInt")]
+public class MyAwesomeInt : IntegerField
+{
+    [Serialize("fixed-int-name")] private int _intValue;
+
+    public void InitializeElement()
+    {
+        value = _intValue; // set saved value to integer field value
+        label = "Awesome Int";
+
+        RegisterCallback<ChangeEvent<int>>(ev =>
+        {
+            _intValue = ev.newValue;
+        });
+    }
+}
+```
+
+<!-- TOC --><a name="important-notes-1"></a>
+## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
+
+- Use `InitializeElement` method to access restored values. Don't use constructors because the system injects the serialized values once the object is created.
+- To serialize values this tool uses [Unity Serialization Package](https://docs.unity3d.com/Packages/com.unity.serialization@3.1/manual/index.html), therefore you can use its features, like `JsonAdapters` to serialize your objects the way you want. You can add a custom `JsonAdapter` from a method with `InitializeOnLoadMethod`, then add a global `JsonAdapter` (check the docs).
+- You can serialize anything `Unity Serialization Package` serializes, including dictionaries, custom classes and structs, Unity objects like GameObject, any component, etc.
 
 <!-- TOC --><a name="group-your-elements-to-save-space"></a>
 # Group Your Elements to Save Space
@@ -403,7 +466,7 @@ public class PopupWindowContentThatWorksInASubgroup : PopupWindowContent
 
 ![](Assets/Package/Readme-Resources~/subwindow-demonstration.gif)
 
-<!-- TOC --><a name="important-notes-1"></a>
+<!-- TOC --><a name="important-notes-2"></a>
 ## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
 - Elements inside a group don't have alignment. The `Alignment` property on visual elements marked with `MainToolbarElementAttribute` will be ignored.
@@ -421,12 +484,11 @@ Hide any toolbar visual element, either Unity's or yours.
 
 ![](Assets/Package/Readme-Resources~/main-toolbar-control-panel-demonstration.gif)
 
-<!-- TOC --><a name="important-notes-2"></a>
+<!-- TOC --><a name="important-notes-3"></a>
 ## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
 - `MainToolbarAutomaticExtender` hides visual elements by setting their style property `display` to `Display.None`.
 - There are 2 exceptions to the previous rule, Unity's `AccountDropdown` and `CloudButton` elements. These 2 elements can't be hidden by modifying `display` property, so the way this package hides them is by removing them from the hierarchy.
-- If you want to reset these overrides, go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Reset Overrides`.
 
 <!-- TOC --><a name="maintoolbar-class"></a>
 # MainToolbar Class
@@ -481,7 +543,7 @@ public static class MyOwnMainToolbarManager
 
 Unity's toolbar gets destroyed when the editor layout changes (through layout dropdown normally). When this happens `MainToolbar` class will try to get the new object. Because of this, any change made to the toolbar goes away, so you'll need to re-apply your changes. To do this, listen to `OnRefresh` event and you can do the same things you did when `OnInitialized` event happened.
 
-<!-- TOC --><a name="important-notes-3"></a>
+<!-- TOC --><a name="important-notes-4"></a>
 ## Important Notes ![](Assets/Package/Readme-Resources~/warning.png)
 
 - Visual elements with `MainToolbarElementAttribute` are handled by `MainToolbarAutomaticExtender` static class. Although you could, it's not officially supported to use this feature while manipulating `MainToolbar` class directly.
@@ -526,6 +588,15 @@ If your custom main toolbar element meets at least one of the following criteria
 - Inherits from `IntegerField`
 - Inherits from `FloatField`
 - Inherits from `TextField`
+- Inherits from `EditorToolbarToggle`
+- Inherits from `Vector2Field`
+- Inherits from `Vector3Field`
+- Inherits from `ColorField`
+- Inherits from `LayerField`
+- Inherits from `EnumField`
+- Inherits from `EnumFlagsField`
+- Inherits from `TagField`
+- Inherits from `ObjectField`
 
 Remember that you can disable this feature by setting `useRecommendedStyles` to `false` in `MainToolbarElementAttribute` constructor.
 
@@ -542,18 +613,25 @@ Remember that you can disable this feature by setting `useRecommendedStyles` to 
 <!-- TOC --><a name="about-how-this-package-saves-its-data"></a>
 ## About How This Package Saves Its Data
 
-- This package uses EditorPrefs and json tool from Newtonsoft. A single EditorPrefs key is used to save a json object and the other classes write to this json object. If you experience some weird behaviour and you suspect it could be this cache data, you can delete it to start over. To do this go to `Paps -> Unity Toolbar Extender UI Toolkit -> Delete Actions -> Delete package related EditorPrefs`.
+- This package saves json files serialized with [Unity Serialization Package](https://docs.unity3d.com/Packages/com.unity.serialization@3.1/manual/index.html) inside `UserSettings` folder. `UserSettings` is a folder that should not be under your version control (e.g. Git) and is a place to save project-and-user preferences. If you experience some weird behaviour and you suspect it could be this cache data, you can delete the related file to start over.
 
 # Tested Versions
 
 This package was tested in:
 
-- Unity 2022.2
-    - Windows
 - Unity 2022.3
     - Windows
-- Unity 2023.2
+    - MacOS
+- Unity 6000.0
     - Windows
+    - MacOS
+
+<!-- TOC --><a name="known-issues"></a>
+# Known Issues
+
+## MacOS
+- Input fields (e.g. `IntegerField`, `TextField`) might not work when being root toolbar objects. They work inside a group.
+- Group popup windows close when UI Toolkit Debugger window is focused.
 
 <!-- TOC --><a name="license"></a>
 # License

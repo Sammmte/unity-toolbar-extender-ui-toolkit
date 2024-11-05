@@ -4,8 +4,8 @@ using UnityEngine.UIElements;
 [MainToolbarElement("SampleFloatField", ToolbarAlign.Right)]
 public class SampleFloatField : FloatField
 {
-    public SampleFloatField() : base("Sample Float")
+    public void InitializeElement()
     {
-
+        label = "Sample Float";
     }
 }

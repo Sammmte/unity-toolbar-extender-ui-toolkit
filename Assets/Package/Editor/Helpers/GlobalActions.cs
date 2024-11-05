@@ -22,24 +22,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 );
         }
 
-        public static void DeleteEditorPrefs()
-        {
-            ServicesAndRepositories.MainToolbarElementOverridesRepository.Clear();
-            JsonEditorPrefs.DeleteAll();
-            MainToolbarAutomaticExtender.Refresh();
-        }
-
-        public static void DeleteEditorPrefsIfUserAccepts()
-        {
-            ShowDialog(
-                "Delete Package Related Editor Prefs",
-                $"You are about to delete all Editor Prefs related to {ToolInfo.FRIENDLY_TOOL_NAME}.\nAre you sure you want to continue?",
-                "Delete",
-                "Cancel",
-                DeleteEditorPrefs
-                );
-        }
-
         public static void ShowDialog(string title, string message, string okMessage,
             string cancelMessage, Action onOk = null, Action onCancel = null)
         {

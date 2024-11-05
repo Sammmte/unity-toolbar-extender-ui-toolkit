@@ -1,22 +1,25 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using Unity.Serialization.Json;
+using UnityEngine;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
-    internal class JsonEditorPrefsMainToolbarElementOverrideRepository : IMainToolbarElementOverrideRepository
+    internal class UserSettingsFileMainToolbarElementOverrideRepository : IMainToolbarElementOverrideRepository
     {
+        private static readonly string DIRECTORY = Path.Combine(Directory.GetParent(Application.dataPath).FullName, "UserSettings/", "unity-toolbar-extender-ui-toolkit", "overrides");
+        private static readonly string FILE = Path.Combine(DIRECTORY, "overrides.json");
+
         private struct SerializableOverride
         {
             public string ElementId;
             public bool Visible;
         }
 
-        private const string SAVE_KEY = "main-toolbar-element-overrides";
-
         private Dictionary<string, MainToolbarElementOverride> _overrides = new Dictionary<string, MainToolbarElementOverride>();
 
-        public JsonEditorPrefsMainToolbarElementOverrideRepository()
+        public UserSettingsFileMainToolbarElementOverrideRepository()
         {
             _overrides = LoadOverrides();
         }
@@ -61,14 +64,20 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void DeleteSave()
         {
-            JsonEditorPrefs.DeleteKey(SAVE_KEY);
+            File.Delete(FILE);
         }
 
         private Dictionary<string, MainToolbarElementOverride> LoadOverrides()
         {
-            var json = JsonEditorPrefs.GetString(SAVE_KEY, "{}");
+            if (!Directory.Exists(DIRECTORY))
+                Directory.CreateDirectory(DIRECTORY);
 
-            var serializedDictionary = JsonConvert.DeserializeObject<Dictionary<string, SerializableOverride>>(json);
+            if (!File.Exists(FILE))
+                return JsonSerialization.FromJson<Dictionary<string, MainToolbarElementOverride>>("{}");
+
+            var json = File.ReadAllText(FILE);
+
+            var serializedDictionary = JsonSerialization.FromJson<Dictionary<string, SerializableOverride>>(json);
 
             return serializedDictionary.Values
                 .ToDictionary(serializedOverride => serializedOverride.ElementId,
@@ -82,9 +91,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 mainToolbarElementOverride => ToSerialized(mainToolbarElementOverride)
                 );
 
-            var json = JsonConvert.SerializeObject(serializableDictionary);
+            var json = JsonSerialization.ToJson(serializableDictionary);
 
-            JsonEditorPrefs.SetString(SAVE_KEY, json);
+            File.WriteAllText(FILE, json);
         }
     }
 }

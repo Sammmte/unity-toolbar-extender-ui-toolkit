@@ -6,7 +6,7 @@ using UnityEngine;
 [MainToolbarElement(id: "SampleButtonWithIcon", alignment: ToolbarAlign.Left, order: 2)]
 public class SampleButtonWithIcon : EditorToolbarButton
 {
-    public SampleButtonWithIcon() // you can also construct your object with base()
+    public void InitializeElement()
     {
         icon = (Texture2D)EditorGUIUtility.IconContent("_Popup@2x").image;
         tooltip = "This is an example of a toolbar button with an icon";

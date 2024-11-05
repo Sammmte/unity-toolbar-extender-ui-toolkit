@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 [MainToolbarElement(id: "SampleButton", alignment: ToolbarAlign.Left, order: 0)]
 public class SampleButton : Button
 {
-    public SampleButton() // you can also construct your object with base()
+    public void InitializeElement()
     {
         text = "Sample Button";
         tooltip = "This is an example of a toolbar button";

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Toolbars;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -69,6 +70,22 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return new TextFieldRecommendedStyle(textField);
             else if (visualElement is EditorToolbarToggle toolbarToggle)
                 return new EditorToolbarToggleRecommendedStyle(toolbarToggle);
+            else if (visualElement is Vector3Field vector3Field)
+                return new Vector3FieldRecommendedStyle(vector3Field);
+            else if (visualElement is Vector2Field vector2Field)
+                return new Vector2FieldRecommendedStyle(vector2Field);
+            else if (visualElement is ColorField colorField)
+                return new ColorFieldRecommendedStyle(colorField);
+            else if (visualElement is LayerField layerField)
+                return new LayerFieldRecommendedStyle(layerField);
+            else if (visualElement is EnumField enumField)
+                return new EnumFieldRecommendedStyle(enumField);
+            else if (visualElement is TagField tagField)
+                return new TagFieldRecommendedStyle(tagField);
+            else if (visualElement is ObjectField objectField)
+                return new ObjectFieldRecommendedStyle(objectField);
+            else if (visualElement is EnumFlagsField enumFlagsField)
+                return new EnumFlagsFieldRecommendedStyle(enumFlagsField);
 
             return null;
         }

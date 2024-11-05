@@ -1,17 +1,17 @@
 {
     "name": "Paps.UnityToolbarExtenderUIToolkit",
     "rootNamespace": "Paps.UnityToolbarExtenderUIToolkit",
-    "references": [],
+    "references": [
+        "Unity.Serialization"
+    ],
     "includePlatforms": [
         "Editor"
     ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": true,
-    "precompiledReferences": [
-        "Newtonsoft.Json.dll"
-    ],
-    "autoReferenced": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
     "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine.UIElements;
+using System.Reflection;
+using UnityEngine;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
@@ -17,6 +21,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static MainToolbarElement[] _singleElements = new MainToolbarElement[0];
         private static MainToolbarElementOverrideApplier _overrideApplier = new MainToolbarElementOverrideApplier(ServicesAndRepositories.MainToolbarElementOverridesRepository);
         private static Dictionary<string, MainToolbarElement[]> _elementsByGroup = new Dictionary<string, MainToolbarElement[]>();
+        private static MainToolbarElementVariableWatcher _variableWatcher = new MainToolbarElementVariableWatcher(ServicesAndRepositories.MainToolbarElementVariableRepository, ServicesAndRepositories.ValueSerializer);
 
         internal static MainToolbarCustomContainer LeftCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderLeftContainer", FlexDirection.RowReverse);
         internal static MainToolbarCustomContainer RightCustomContainer { get; private set; } = new MainToolbarCustomContainer("ToolbarAutomaticExtenderRightContainer", FlexDirection.Row);
@@ -93,10 +98,30 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _singleElements = GetSingles();
             _rootElements = GetRootElements();
             _overrideApplier.SetCustomElements(_mainToolbarElements.Concat(_groupElements).ToArray());
+            _variableWatcher.RestoreValues(CustomMainToolbarElements);
 
+            InitializeCustomElements();
             RegisterElementsForRecommendedStyles();
 
             AddRootElementsToContainers();
+
+            EditorApplication.update += Update;
+        }
+
+        private static void InitializeCustomElements()
+        {
+            foreach(var customElement in CustomMainToolbarElements)
+            {
+                var typeOfElement = customElement.VisualElement.GetType();
+
+                var initializeMethod = typeOfElement.GetMethod("InitializeElement", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                initializeMethod?.Invoke(customElement.VisualElement, null);
+            }
+        }
+
+        private static void Update()
+        {
+            _variableWatcher.Update();
         }
 
         private static void InitializeGroups()
@@ -264,6 +289,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             MainToolbar.RightContainer.style.width = Length.Auto();
 
             MainToolbar.CenterContainer.style.flexGrow = 1;
+
+            MainToolbar.CenterContainer.parent.style.paddingTop = 0;
+            MainToolbar.CenterContainer.parent.style.paddingBottom = 0;
         }
 
         private static void OnProjectChange()

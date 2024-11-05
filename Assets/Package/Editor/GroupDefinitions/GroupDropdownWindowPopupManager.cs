@@ -12,6 +12,17 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     internal static class GroupDropdownWindowPopupManager
     {
         private const string POPUP_WINDOW_CONTENT_FIELD_NAME = "m_WindowContent";
+        private static readonly string[] SPECIAL_EDITOR_WINDOW_TYPE_NAMES =
+        {
+            "UnityEditor.UIElements.Debugger.UIElementsDebugger",
+            "UnityEditor.UIElements.EditorMenuExtensions+ContextMenu",
+            "UnityEditor.ObjectSelector",
+            "UnityEditor.Search.SearchPickerWindow"
+        };
+        private static readonly string[] SPECIAL_POPUP_WINDOW_CONTENT_TYPE_NAMES =
+        {
+            "UnityEditor.UIElements.EditorGenericDropdownMenuWindowContent"
+        };
 
         private static FieldInfo _popupWindowContentField;
         private static Type[] _subWindowTypes = new Type[0];
@@ -40,14 +51,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             var typeList = new List<Type>();
 
-            var uiToolkitDebuggerType = TypeCache.GetTypesDerivedFrom<EditorWindow>()
-                .FirstOrDefault(type => type.Name == "UIElementsDebugger");
+            typeList.AddRange(TypeCache.GetTypesDerivedFrom<EditorWindow>()
+                .Where(type => SPECIAL_EDITOR_WINDOW_TYPE_NAMES.Contains(type.Name) || SPECIAL_EDITOR_WINDOW_TYPE_NAMES.Contains(type.FullName)));
 
-            var contextMenuType = TypeCache.GetTypesDerivedFrom<EditorWindow>()
-                .FirstOrDefault(type => type.FullName == "UnityEditor.UIElements.EditorMenuExtensions+ContextMenu");
-
-            typeList.Add(uiToolkitDebuggerType);
-            typeList.Add(contextMenuType);
+            typeList.AddRange(TypeCache.GetTypesDerivedFrom<PopupWindowContent>()
+                .Where(type => SPECIAL_POPUP_WINDOW_CONTENT_TYPE_NAMES.Contains(type.Name) || SPECIAL_POPUP_WINDOW_CONTENT_TYPE_NAMES.Contains(type.FullName)));
 
             _specialWindowTypes = typeList.Where(t => t != null).ToArray();
         }
@@ -66,7 +74,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 
                 var popupContentSpecificType = popupContent.GetType();
 
-                return _subWindowTypes.Contains(popupContentSpecificType);
+                return _subWindowTypes.Contains(popupContentSpecificType) || _specialWindowTypes.Contains(popupContentSpecificType);
             }
 
             return false;
@@ -124,7 +132,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _windows.Add(window);
 
             window.Initialize(elements);
+
+#if UNITY_EDITOR_WIN
             window.ShowPopup();
+#elif UNITY_EDITOR_OSX
+            window.ShowAsDropdownForMainToolbar(activatorRect, window.position.size);
+#endif
+    
         }
     }
 }
