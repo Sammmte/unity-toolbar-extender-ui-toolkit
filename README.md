@@ -33,6 +33,7 @@ Inspired on marijnz's great [Unity Toolbar Extender](https://github.com/marijnz/
    * [About MainToolbarAutomaticExtender Class:](#about-maintoolbarautomaticextender-class)
    * [About How This Package Saves Its Data](#about-how-this-package-saves-its-data)
 - [Tested Versions](#tested-versions)
+- [Known Issues](#known-issues)
 - [License](#license)
 
 <!-- TOC end -->
@@ -620,10 +621,15 @@ This package was tested in:
 
 - Unity 2022.3
     - Windows
-- Unity 2023.2
-    - Windows
+    - MacOS
 - Unity 6000.0
     - Windows
+    - MacOS
+
+<!-- TOC --><a name="known-issues"></a>
+# Known Issues
+
+- Input fields (e.g. `IntegerField`, `TextField`) may not work on MacOS systems when being root objects
 
 <!-- TOC --><a name="license"></a>
 # License
