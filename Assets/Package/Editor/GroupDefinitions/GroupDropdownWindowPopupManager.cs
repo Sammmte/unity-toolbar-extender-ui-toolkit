@@ -132,7 +132,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             _windows.Add(window);
 
             window.Initialize(elements);
-            window.ShowAsDropdownForMainToolbar(activatorRect, window.position.size);
+            window.ShowPopup();
         }
     }
 }
