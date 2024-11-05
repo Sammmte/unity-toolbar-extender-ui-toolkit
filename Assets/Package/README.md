@@ -629,7 +629,9 @@ This package was tested in:
 <!-- TOC --><a name="known-issues"></a>
 # Known Issues
 
-- Input fields (e.g. `IntegerField`, `TextField`) may not work on MacOS systems when being root objects
+## MacOS
+- Input fields (e.g. `IntegerField`, `TextField`) might not work when being root toolbar objects. They work inside a group.
+- Group popup windows close when UI Toolkit Debugger window is focused.
 
 <!-- TOC --><a name="license"></a>
 # License
