@@ -308,6 +308,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         internal static void ShowOrphanElementsGroup(Rect rect)
         {
+            if (OrphanElements.Length == 0)
+            {
+                Debug.LogWarning("No visual elements with Paps MainToolbarElementAttribute were found. You need create some. Check the docs.");
+                return;
+            }
+            
             GroupDropdownWindowPopupManager.Show(rect,
                 OrphanElements.Select(e => e.VisualElement).ToArray());
             

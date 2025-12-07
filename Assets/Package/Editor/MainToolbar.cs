@@ -41,7 +41,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             }
             else
             {
-                Debug.Log("REFRESHING TOOLBAR");
                 OnRefresh?.Invoke();
             }
         }
