@@ -93,6 +93,9 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
             var json = JsonSerialization.ToJson(serializableDictionary);
 
+            if(!Directory.Exists(DIRECTORY))
+                Directory.CreateDirectory(DIRECTORY);
+            
             File.WriteAllText(FILE, json);
         }
     }

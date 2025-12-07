@@ -11,9 +11,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         [SerializeField]
         [Tooltip("Text to display in group element dropdown")]
         private string _groupName;
-        [SerializeField]
-        [Tooltip("Alignment when used as root element. Ignored inside other groups")]
-        private ToolbarAlign _alignment;
         [Tooltip("Order when used as root element. Ignored inside other groups. Order of elements inside a group is determined by ToolbarElementsIds array elements order.")]
         [SerializeField] private int _order;
         [SerializeField]
@@ -22,7 +19,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         public string GroupId => _groupId;
         public string GroupName => _groupName;
-        public ToolbarAlign Alignment => _alignment;
         public int Order => _order;
         public string[] ToolbarElementsIds => _toolbarElementsIds == null ? new string[0] : _toolbarElementsIds;
 

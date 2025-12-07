@@ -18,7 +18,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .Select(scriptableGroupDefinition => new GroupDefinition(
                     scriptableGroupDefinition.GroupId,
                     scriptableGroupDefinition.GroupName,
-                    scriptableGroupDefinition.Alignment,
                     scriptableGroupDefinition.Order,
                     FilterIds(scriptableGroupDefinition)
                     )

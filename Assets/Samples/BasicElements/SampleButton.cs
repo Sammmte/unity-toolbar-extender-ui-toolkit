@@ -2,7 +2,7 @@ using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[MainToolbarElement(id: "SampleButton", alignment: ToolbarAlign.Left, order: 0)]
+[MainToolbarElement(id: "SampleButton", order: 0)]
 public class SampleButton : Button
 {
     public void InitializeElement()

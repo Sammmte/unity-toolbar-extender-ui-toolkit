@@ -24,7 +24,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             if (string.IsNullOrEmpty(elementInstance.name))
                 elementInstance.name = elementInstance.GetType().Name;
 
-            return new MainToolbarElement(attribute.Id, elementInstance, attribute.Alignment, 
+            return new MainToolbarElement(attribute.Id, elementInstance, 
                 attribute.Order, attribute.UseRecommendedStyles);
         }
 

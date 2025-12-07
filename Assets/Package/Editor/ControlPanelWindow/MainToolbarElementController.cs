@@ -23,14 +23,12 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public string Id { get; }
         public VisualElement ControlledVisualElement { get; }
         public bool HoldsAGroup => _foldout != null;
-        public bool HoldsANativeElement { get; private set; }
 
         public MainToolbarElementController(OverridableElement overridableElement,
             IMainToolbarElementOverrideRepository overridesRepository, params OverridableElement[] subElements)
         {
             Id = overridableElement.Id;
             ControlledVisualElement = overridableElement.VisualElement;
-            HoldsANativeElement = overridableElement.IsNative;
             name = Id + "-Controller";
             _overridesRepository = overridesRepository;
 

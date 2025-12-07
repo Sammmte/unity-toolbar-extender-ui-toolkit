@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UIElements;
 
 // Configured in Sample Group
-[MainToolbarElement(id: "SampleDropdownField", alignment: ToolbarAlign.Left, order: 1)]
+[MainToolbarElement(id: "SampleDropdownField", order: 1)]
 public class SampleDropdownField : DropdownField
 {
     public void InitializeElement()

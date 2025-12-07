@@ -107,12 +107,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             _controllers = CreateControllers();
 
-            var controllersOfNativeElements = _controllers
-                .Where(controller => controller.HoldsANativeElement);
             var controllersOfGroups = _controllers
                 .Where(controller => controller.HoldsAGroup);
             var controllersOfSingleElements = _controllers
-                .Where(controller => !controller.HoldsAGroup && !controller.HoldsANativeElement)
+                .Where(controller => !controller.HoldsAGroup)
                 .Where(controller => SingleControllerIsNotInsideAGroupController(controller, controllersOfGroups));
 
             _singleElementsContainer.SetControllers(controllersOfSingleElements);
@@ -156,8 +154,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return MainToolbarAutomaticExtender.GetElementsOfGroup(overridableElement.Id)
                     .Select(el => new OverridableElement(
                         el.Id,
-                        el.VisualElement,
-                        false)
+                        el.VisualElement)
                     )
                     .ToArray();
             }
@@ -171,9 +168,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 .Concat(MainToolbarAutomaticExtender.GroupElements)
                 .Select(mainToolbarElement => new OverridableElement(
                     mainToolbarElement.Id,
-                    mainToolbarElement.VisualElement,
-                    false
-                    )
+                    mainToolbarElement.VisualElement)
                 );
 
             return customElements.ToArray();

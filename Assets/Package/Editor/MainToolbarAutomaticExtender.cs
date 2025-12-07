@@ -219,7 +219,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 var groupToolbarElement = new MainToolbarElement(
                     groupDefinition.GroupId,
                     new GroupElement(groupDefinition.GroupName),
-                    groupDefinition.Alignment,
                     groupDefinition.Order,
                     true
                     );
