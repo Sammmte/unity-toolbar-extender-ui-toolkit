@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df7c06c2de586e41bb0c33bfd80766f, type: 3}
+  m_Name: RootGroup2
+  m_EditorClassIdentifier: Paps.UnityToolbarExtenderUIToolkit::Paps.UnityToolbarExtenderUIToolkit.ScriptableGroupDefinition
+  _groupId: MyRootGroup2
+  _groupName: Root Group 2
+  _alignment: 0
+  _order: 0
+  _toolbarElementsIds:
+  - SampleEnumField
+  - SampleFloatField
