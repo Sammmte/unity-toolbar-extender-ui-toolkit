@@ -1,7 +1,7 @@
 ﻿using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine.UIElements;
 
-[MainToolbarElement("SampleTextField", ToolbarAlign.Right)]
+[MainToolbarElement("SampleTextField")]
 public class SampleTextField : TextField
 {
     public void InitializeElement()

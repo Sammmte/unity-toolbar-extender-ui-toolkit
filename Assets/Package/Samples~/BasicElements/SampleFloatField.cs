@@ -1,7 +1,7 @@
 ﻿using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine.UIElements;
 
-[MainToolbarElement("SampleFloatField", ToolbarAlign.Right)]
+[MainToolbarElement("SampleFloatField")]
 public class SampleFloatField : FloatField
 {
     public void InitializeElement()

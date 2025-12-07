@@ -2,8 +2,9 @@
 using UnityEditor;
 using UnityEditor.Toolbars;
 using UnityEngine;
+using MainToolbarElement = Paps.UnityToolbarExtenderUIToolkit.MainToolbarElementAttribute;
 
-[MainToolbarElement(id: "SampleButtonWithIcon", alignment: ToolbarAlign.Left, order: 2)]
+[MainToolbarElement(id: "SampleButtonWithIcon", order: 2)]
 public class SampleButtonWithIcon : EditorToolbarButton
 {
     public void InitializeElement()

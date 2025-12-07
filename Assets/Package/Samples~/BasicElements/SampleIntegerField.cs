@@ -1,7 +1,7 @@
 using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine.UIElements;
 
-[MainToolbarElement("SampleIntegerField", ToolbarAlign.Right)]
+[MainToolbarElement("SampleIntegerField")]
 public class SampleIntegerField : IntegerField
 {
     public void InitializeElement()

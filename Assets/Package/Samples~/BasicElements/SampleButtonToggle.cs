@@ -2,8 +2,9 @@
 using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.UIElements;
+using MainToolbarElement = Paps.UnityToolbarExtenderUIToolkit.MainToolbarElementAttribute;
 
-[MainToolbarElement(id: "SampleButtonToggle", alignment: ToolbarAlign.Right, order: 0)]
+[MainToolbarElement(id: "SampleButtonToggle", order: 0)]
 public class SampleButtonToggle : EditorToolbarToggle
 {
     public void InitializeElement()

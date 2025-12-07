@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.0.0]
+
+### Added
+
+- Support to work along Unity's new toolbar customization API
+
+### Removed
+
+- ToolbarAlign enum and anything related to native Unity elements
+
 ## [2.0.0]
 
 ### Added

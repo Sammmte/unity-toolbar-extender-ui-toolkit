@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.UIElements;
+using MainToolbarElement = Paps.UnityToolbarExtenderUIToolkit.MainToolbarElementAttribute;
 
 [MainToolbarElement(nameof(DropdownInGroupWithWindow))]
 public class DropdownInGroupWithWindow : EditorToolbarDropdown
