@@ -17,6 +17,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             _slider.style.flexWrap = Wrap.NoWrap;
             _slider.style.flexShrink = 1;
+            _slider.labelElement.style.minWidth = 0;
+            _slider.style.minWidth = MIN_WIDTH;
         }
 
         protected override void ApplyRootElementStyle()
