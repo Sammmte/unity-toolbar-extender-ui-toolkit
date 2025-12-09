@@ -2,10 +2,10 @@ using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleSlider")]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: "SampleSlider")]
 public class SampleSlider : Slider
 {
-    [UnityEditor.Toolbars.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleSlider", defaultDockPosition = MainToolbarDockPosition.Left)]
+    [UnityEditor.Toolbars.MainToolbarElement("SampleSlider", defaultDockPosition = MainToolbarDockPosition.Left)]
     public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
     {
         // Return null here

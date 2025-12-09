@@ -2,10 +2,10 @@
 using UnityEditor.Toolbars;
 using UnityEditor.UIElements;
 
-[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleEnumFlagsField")]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement("SampleEnumFlagsField")]
 public class SampleEnumFlagsField : EnumFlagsField
 {
-    [UnityEditor.Toolbars.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleEnumFlagsField", defaultDockPosition = MainToolbarDockPosition.Left)]
+    [UnityEditor.Toolbars.MainToolbarElement("SampleEnumFlagsField", defaultDockPosition = MainToolbarDockPosition.Left)]
     public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
     {
         // Return null here

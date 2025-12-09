@@ -1,10 +1,10 @@
 ﻿using UnityEditor.Toolbars;
 using UnityEngine.UIElements;
 
-[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleVector3Field")]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement("SampleVector3Field")]
 public class SampleVector3Field : Vector3Field
 {
-    [UnityEditor.Toolbars.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleVector3Field", defaultDockPosition = MainToolbarDockPosition.Left)]
+    [UnityEditor.Toolbars.MainToolbarElement("SampleVector3Field", defaultDockPosition = MainToolbarDockPosition.Left)]
     public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
     {
         // Return null here

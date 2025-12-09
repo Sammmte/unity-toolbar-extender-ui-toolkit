@@ -1,10 +1,10 @@
 ﻿using UnityEditor.Toolbars;
 using UnityEditor.UIElements;
 
-[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleLayerField")]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement("SampleLayerField")]
 public class SampleLayerField : LayerField
 {
-    [UnityEditor.Toolbars.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleLayerField", defaultDockPosition = MainToolbarDockPosition.Left)]
+    [UnityEditor.Toolbars.MainToolbarElement("SampleLayerField", defaultDockPosition = MainToolbarDockPosition.Left)]
     public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
     {
         // Return null here

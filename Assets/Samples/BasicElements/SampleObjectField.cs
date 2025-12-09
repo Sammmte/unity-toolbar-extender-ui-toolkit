@@ -1,10 +1,10 @@
 ﻿using UnityEditor.Toolbars;
 using UnityEditor.UIElements;
 
-[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleObjectField")]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement("SampleObjectField")]
 public class SampleObjectField : ObjectField
 {
-    [UnityEditor.Toolbars.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleObjectField", defaultDockPosition = MainToolbarDockPosition.Left)]
+    [UnityEditor.Toolbars.MainToolbarElement("SampleObjectField", defaultDockPosition = MainToolbarDockPosition.Left)]
     public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
     {
         // Return null here

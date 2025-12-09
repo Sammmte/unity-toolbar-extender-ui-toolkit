@@ -4,10 +4,10 @@ using UnityEditor.Toolbars;
 using UnityEngine;
 using MainToolbarElement = Paps.UnityToolbarExtenderUIToolkit.MainToolbarElementAttribute;
 
-[MainToolbarElement(id: ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleButtonWithIcon", order: 2)]
+[MainToolbarElement(id: "SampleButtonWithIcon", order: 2)]
 public class SampleButtonWithIcon : EditorToolbarButton
 {
-    [UnityEditor.Toolbars.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleButtonWithIcon", defaultDockPosition = MainToolbarDockPosition.Left)]
+    [UnityEditor.Toolbars.MainToolbarElement("SampleButtonWithIcon", defaultDockPosition = MainToolbarDockPosition.Left)]
     public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
     {
         // Return null here

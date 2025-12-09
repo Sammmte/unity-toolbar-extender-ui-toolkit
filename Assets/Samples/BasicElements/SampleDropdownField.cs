@@ -3,10 +3,10 @@ using UnityEditor.Toolbars;
 using UnityEngine.UIElements;
 
 // Configured in Sample Group
-[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleDropdownField", order: 1)]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: "SampleDropdownField", order: 1)]
 public class SampleDropdownField : DropdownField
 {
-    [UnityEditor.Toolbars.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleDropdownField", defaultDockPosition = MainToolbarDockPosition.Right)]
+    [UnityEditor.Toolbars.MainToolbarElement("SampleDropdownField", defaultDockPosition = MainToolbarDockPosition.Right)]
     public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
     {
         // Return null here

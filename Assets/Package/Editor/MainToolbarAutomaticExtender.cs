@@ -309,7 +309,15 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             if (OrphanElements.Length == 0)
             {
-                Debug.LogWarning("No visual elements with Paps MainToolbarElementAttribute were found. You need create some. Check the docs.");
+                if (_mainToolbarElements.Length == 0)
+                {
+                    Debug.LogWarning("No visual elements with Paps MainToolbarElementAttribute were found. You need create some. Check the docs.");
+                }
+                else
+                {
+                    Debug.LogWarning("No orphan visual elements found. All your elements are either in a group or in the root toolbar");
+                }
+
                 return;
             }
             
