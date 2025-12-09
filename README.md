@@ -91,6 +91,14 @@ public class AwesomeButton : Button
 
 ![](Assets/Package/Readme-Resources~/common-button-example.png)
 
+## IMPORTANT ![](Assets/Package/Readme-Resources~/warning.png)
+
+Everytime you create a new toolbar element you will probably not see it on the toolbar. Although [Unity says it should be enabled and displayed by default](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Toolbars.MainToolbarElement.html) this does not happen. So you need to go to the 3 dots and enable it once. From now on it will be enabled or disabled as you configured it.
+
+![](Assets/Package/Readme-Resources~/main-toolbar-3-dots.png)
+
+This is a bug Unity will surely fix in near future.
+
 ### Any VisualElement type works
 
 ```csharp
