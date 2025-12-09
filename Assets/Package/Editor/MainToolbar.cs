@@ -10,9 +10,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     [InitializeOnLoad]
     internal static class MainToolbar
     {
-        private static Type _toolbarType = typeof(Editor).Assembly.GetType("UnityEditor.MainToolbarWindow");
+        private static Type _toolbarWindowType = typeof(Editor).Assembly.GetType("UnityEditor.MainToolbarWindow");
         private static EditorWindow _toolbarWindow;
-        private static VisualElement _rootToolbar;
         private static int _lastOverlayToolbarCount;
 
         public static event Action OnInitialized;
@@ -47,7 +46,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static void FindUnityToolbar()
         {
-            _toolbarWindow = EditorWindow.GetWindow(_toolbarType);
+            _toolbarWindow = EditorWindow.GetWindow(_toolbarWindowType);
         }
 
         private static void OnUpdate()

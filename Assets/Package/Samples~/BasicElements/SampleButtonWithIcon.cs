@@ -7,6 +7,13 @@ using MainToolbarElement = Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement
 [MainToolbarElement(id: "SampleButtonWithIcon", order: 2)]
 public class SampleButtonWithIcon : EditorToolbarButton
 {
+    [UnityEditor.Toolbars.MainToolbarElement("SampleButtonWithIcon", defaultDockPosition = MainToolbarDockPosition.Left)]
+    public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
+    {
+        // Return null here
+        return null;
+    }
+    
     public void InitializeElement()
     {
         icon = (Texture2D)EditorGUIUtility.IconContent("_Popup@2x").image;

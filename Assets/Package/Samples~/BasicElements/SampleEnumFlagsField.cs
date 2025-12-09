@@ -1,10 +1,17 @@
-﻿using Paps.UnityToolbarExtenderUIToolkit;
-using System;
+﻿using System;
+using UnityEditor.Toolbars;
 using UnityEditor.UIElements;
 
-[MainToolbarElement("SampleEnumFlagsField")]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement("SampleEnumFlagsField")]
 public class SampleEnumFlagsField : EnumFlagsField
 {
+    [UnityEditor.Toolbars.MainToolbarElement("SampleEnumFlagsField", defaultDockPosition = MainToolbarDockPosition.Left)]
+    public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
+    {
+        // Return null here
+        return null;
+    }
+    
     public void InitializeElement()
     {
         label = "Sample Enum Flags";

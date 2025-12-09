@@ -1,11 +1,18 @@
-﻿using Paps.UnityToolbarExtenderUIToolkit;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEditor.Toolbars;
 using UnityEngine.UIElements;
 
 // Configured in Sample Group
-[MainToolbarElement(id: "SampleDropdownField", order: 1)]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleDropdownField", order: 1)]
 public class SampleDropdownField : DropdownField
 {
+    [UnityEditor.Toolbars.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleDropdownField", defaultDockPosition = MainToolbarDockPosition.Right)]
+    public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
+    {
+        // Return null here
+        return null;
+    }
+    
     public void InitializeElement()
     {
         label = "Sample Dropdown";

@@ -25,7 +25,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 elementInstance.name = elementInstance.GetType().Name;
 
             return new MainToolbarElement(attribute.Id, elementInstance, 
-                attribute.Order, attribute.UseRecommendedStyles);
+                attribute.UseRecommendedStyles);
         }
 
         private bool IsValidVisualElementType(Type type)

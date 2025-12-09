@@ -4,9 +4,16 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using MainToolbarElement = Paps.UnityToolbarExtenderUIToolkit.MainToolbarElementAttribute;
 
-[MainToolbarElement(id: "SampleButtonToggle", order: 0)]
+[MainToolbarElement(id: ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleButtonToggle", order: 0)]
 public class SampleButtonToggle : EditorToolbarToggle
 {
+    [UnityEditor.Toolbars.MainToolbarElement(ToolbarExtenderSamplesInfo.SAMPLES_MAIN_TOOLBAR_MENU_BASE + "/SampleButtonToggle", defaultDockPosition = MainToolbarDockPosition.Middle)]
+    public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
+    {
+        // Return null here
+        return null;
+    }
+    
     public void InitializeElement()
     {
         text = "Sample Button Toggle";

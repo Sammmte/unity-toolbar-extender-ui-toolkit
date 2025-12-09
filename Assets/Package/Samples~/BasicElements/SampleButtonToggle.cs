@@ -7,6 +7,13 @@ using MainToolbarElement = Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement
 [MainToolbarElement(id: "SampleButtonToggle", order: 0)]
 public class SampleButtonToggle : EditorToolbarToggle
 {
+    [UnityEditor.Toolbars.MainToolbarElement("SampleButtonToggle", defaultDockPosition = MainToolbarDockPosition.Middle)]
+    public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
+    {
+        // Return null here
+        return null;
+    }
+    
     public void InitializeElement()
     {
         text = "Sample Button Toggle";
