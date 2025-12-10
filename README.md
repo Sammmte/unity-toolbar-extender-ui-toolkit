@@ -16,27 +16,6 @@ You can learn more about this new API at [Unity docs](https://docs.unity3d.com/6
 
 # Install
 
-## via npm
-
-Open `Packages/manifest.json` with your favorite text editor. Add a [scoped registry](https://docs.unity3d.com/Manual/upm-scoped.html) and following line to dependencies block:
-```json
-{
-  "scopedRegistries": [
-    {
-      "name": "npmjs",
-      "url": "https://registry.npmjs.org/",
-      "scopes": [
-        "com.paps"
-      ]
-    }
-  ],
-  "dependencies": {
-    "com.paps.unity-toolbar-extender-ui-toolkit": "1.0.0"
-  }
-}
-```
-Package should now appear in package manager.
-
 ## via OpenUPM
 
 The package is also available on the [openupm registry](https://openupm.com/packages/com.paps.unity-toolbar-extender-ui-toolkit). You can install it eg. via [openupm-cli](https://github.com/openupm/openupm-cli).
