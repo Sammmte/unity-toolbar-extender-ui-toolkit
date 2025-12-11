@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.0.1]
+
+### Fixed
+
+- Git conflict
+
 ## [3.0.0]
 
 ### Added
