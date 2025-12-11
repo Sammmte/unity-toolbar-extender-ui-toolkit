@@ -1,10 +1,17 @@
-using Paps.UnityToolbarExtenderUIToolkit;
+using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[MainToolbarElement(id: "SampleButton", alignment: ToolbarAlign.Left, order: 0)]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: "SampleButton", order: 0)]
 public class SampleButton : Button
 {
+    [UnityEditor.Toolbars.MainToolbarElement("SampleButton", defaultDockPosition = MainToolbarDockPosition.Middle)]
+    public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
+    {
+        // Return null here
+        return null;
+    }
+    
     public void InitializeElement()
     {
         text = "Sample Button";

@@ -6,15 +6,13 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public string GroupId { get; }
         public string GroupName { get; }
-        public ToolbarAlign Alignment { get; }
         public int Order { get; }
         public string[] ToolbarElementsIds { get; }
 
-        public GroupDefinition(string groupId, string groupName, ToolbarAlign alignment, int order, string[] toolbarElementsIds)
+        public GroupDefinition(string groupId, string groupName, int order, string[] toolbarElementsIds)
         {
             GroupId = groupId;
             GroupName = string.IsNullOrEmpty(groupName) ? groupId : groupName;
-            Alignment = alignment;
             Order = order;
             ToolbarElementsIds = toolbarElementsIds;
         }
@@ -23,7 +21,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             return GroupId == other.GroupId &&
                 GroupName == other.GroupName &&
-                Alignment == other.Alignment &&
                 Order == other.Order &&
                 AreEquals(ToolbarElementsIds, other.ToolbarElementsIds);
         }

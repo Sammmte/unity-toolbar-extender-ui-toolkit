@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.0.0]
+
+### Added
+
+- Support to work along Unity's new toolbar customization API
+- Ever present group with any MainToolbarElement that can't be placed into the toolbar directly
+
+### Changed
+
+- MainToolbarElement must have a Unity toolbar API counterpart with same id to be placed into the toolbar
+- Root groups are only possible if a Unity toolbar API element with same id as the group exists
+- How most of recommended styles work
+
+### Removed
+
+- ToolbarAlign enum
+- Unity Native elements from main control panel window. If you want to hide Unity elements, use Unity's new API
+- MainToolbar class from public API
+
 ## [2.0.0]
 
 ### Added

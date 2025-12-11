@@ -8,9 +8,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     public class MainToolbarControlPanelWindow : EditorWindow
     {
-        private const string NATIVE_ELEMENTS_CONTAINER_NAME = "UnityNativeElementsContainer";
-        private const string NATIVE_ELEMENTS_FOLDOUT_TEXT = "Unity Native Elements";
-
         private const string SINGLE_ELEMENTS_CONTAINER_NAME = "SingleElementsContainer";
         private const string SINGLE_ELEMENTS_FOLDOUT_TEXT = "Single Elements";
 
@@ -19,7 +16,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private const float MAIN_CONTAINER_PADDING_TOP = 5;
 
-        private OrganizationalFoldableContainer _nativeElementsContainer;
         private OrganizationalFoldableContainer _singleElementsContainer;
         private OrganizationalFoldableContainer _groupElementsContainer;
         private MainToolbarElementController[] _controllers;
@@ -38,7 +34,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void CreateGUI()
         {
-            MainToolbarAutomaticExtender.OnAddedCustomContainersToToolbar += Refresh;
             MainToolbarAutomaticExtender.OnRefresh += Refresh;
 
             BuildFixedGUI();
@@ -50,7 +45,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private void OnDestroy()
         {
-            MainToolbarAutomaticExtender.OnAddedCustomContainersToToolbar -= Refresh;
             MainToolbarAutomaticExtender.OnRefresh -= Refresh;
         }
 
@@ -71,8 +65,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                     SINGLE_ELEMENTS_CONTAINER_NAME, SINGLE_ELEMENTS_FOLDOUT_TEXT);
             _groupElementsContainer = new OrganizationalFoldableContainer(
                     GROUP_ELEMENTS_CONTAINER_NAME, GROUP_ELEMENTS_FOLDOUT_TEXT);
-            _nativeElementsContainer = new OrganizationalFoldableContainer(
-                    NATIVE_ELEMENTS_CONTAINER_NAME, NATIVE_ELEMENTS_FOLDOUT_TEXT);
 
             _noElementsMessageElement = CreateNoElementsMessageElement();
 
@@ -96,7 +88,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 {
                     _windowContainer.Add(_singleElementsContainer);
                     _windowContainer.Add(_groupElementsContainer);
-                    _windowContainer.Add(_nativeElementsContainer);
                 }
             }
             else
@@ -105,7 +96,6 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 {
                     _windowContainer.Remove(_singleElementsContainer);
                     _windowContainer.Remove(_groupElementsContainer);
-                    _windowContainer.Remove(_nativeElementsContainer);
                 }
                 
                 if (!_windowContainer.Contains(_noElementsMessageElement))
@@ -117,17 +107,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         {
             _controllers = CreateControllers();
 
-            var controllersOfNativeElements = _controllers
-                .Where(controller => controller.HoldsANativeElement);
             var controllersOfGroups = _controllers
                 .Where(controller => controller.HoldsAGroup);
             var controllersOfSingleElements = _controllers
-                .Where(controller => !controller.HoldsAGroup && !controller.HoldsANativeElement)
+                .Where(controller => !controller.HoldsAGroup)
                 .Where(controller => SingleControllerIsNotInsideAGroupController(controller, controllersOfGroups));
 
             _singleElementsContainer.SetControllers(controllersOfSingleElements);
             _groupElementsContainer.SetControllers(controllersOfGroups);
-            _nativeElementsContainer.SetControllers(controllersOfNativeElements);
         }
 
         private static bool SingleControllerIsNotInsideAGroupController(MainToolbarElementController controller, IEnumerable<MainToolbarElementController> controllersOfGroups)
@@ -167,8 +154,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 return MainToolbarAutomaticExtender.GetElementsOfGroup(overridableElement.Id)
                     .Select(el => new OverridableElement(
                         el.Id,
-                        el.VisualElement,
-                        false)
+                        el.VisualElement)
                     )
                     .ToArray();
             }
@@ -178,25 +164,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private OverridableElement[] GetOverridableElements()
         {
-            var nativeElements = MainToolbarAutomaticExtender.NativeElements
-                .Select(nativeElement => new OverridableElement(
-                    nativeElement.Id,
-                    nativeElement.VisualElement,
-                    true
-                    )
-                );
-
             var customElements = MainToolbarAutomaticExtender.CustomMainToolbarElements
                 .Concat(MainToolbarAutomaticExtender.GroupElements)
                 .Select(mainToolbarElement => new OverridableElement(
                     mainToolbarElement.Id,
-                    mainToolbarElement.VisualElement,
-                    false
-                    )
+                    mainToolbarElement.VisualElement)
                 );
 
-            return nativeElements.Concat(customElements)
-                .ToArray();
+            return customElements.ToArray();
         }
 
         private VisualElement CreateNoElementsMessageElement()

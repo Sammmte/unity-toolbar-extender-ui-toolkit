@@ -1,34 +1,23 @@
 using System;
-using System.Reflection;
+using System.Linq;
 using UnityEditor;
+using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Paps.UnityToolbarExtenderUIToolkit
 {
     [InitializeOnLoad]
-    public static class MainToolbar
+    internal static class MainToolbar
     {
-        private const string TOOLBAR_ROOT_ELEMENT_FIELD_NAME = "m_Root";
-        private const string TOOLBAR_CENTER_CONTAINER_NAME = "ToolbarZonePlayMode";
-        private const string TOOLBAR_LEFT_CONTAINER_NAME = "ToolbarZoneLeftAlign";
-        private const string TOOLBAR_RIGHT_CONTAINER_NAME = "ToolbarZoneRightAlign";
-        private const string TOOLBAR_PLAY_BUTTON_NAME = "Play";
-
-        private static Type _toolbarType = typeof(Editor).Assembly.GetType("UnityEditor.Toolbar");
-        private static ScriptableObject _innerToolbarObject;
+        private static Type _toolbarWindowType = typeof(Editor).Assembly.GetType("UnityEditor.MainToolbarWindow");
+        private static EditorWindow _toolbarWindow;
+        private static int _lastOverlayToolbarCount;
 
         public static event Action OnInitialized;
         public static event Action OnRefresh;
 
-        public static VisualElement UnityToolbarRoot { get; private set; }
-
-        public static VisualElement LeftContainer { get; private set; }
-        public static VisualElement CenterContainer { get; private set; }
-        public static VisualElement RightContainer { get; private set; }
-        public static VisualElement PlayModeButtonsContainer { get; private set; }
-
-        public static bool IsAvailable => _innerToolbarObject != null;
+        public static bool IsAvailable => _toolbarWindow != null;
 
         private static bool _initialized;
 
@@ -41,9 +30,8 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         private static void WrapNativeToolbar()
         {
             FindUnityToolbar();
-            if (_innerToolbarObject == null)
+            if (_toolbarWindow == null)
                 return;
-            CacheNativeToolbarContainers();
 
             if(!_initialized)
             {
@@ -51,25 +39,14 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 OnInitialized?.Invoke();
             }
             else
+            {
                 OnRefresh?.Invoke();
+            }
         }
 
         private static void FindUnityToolbar()
         {
-            var toolbars = Resources.FindObjectsOfTypeAll(_toolbarType);
-            _innerToolbarObject = toolbars.Length > 0 ? (ScriptableObject)toolbars[0] : null;
-        }
-
-        private static void CacheNativeToolbarContainers()
-        {
-            var unityToolbarRootFieldInfo = _innerToolbarObject.GetType()
-                .GetField(TOOLBAR_ROOT_ELEMENT_FIELD_NAME, BindingFlags.NonPublic | BindingFlags.Instance);
-            UnityToolbarRoot = unityToolbarRootFieldInfo.GetValue(_innerToolbarObject) as VisualElement;
-
-            LeftContainer = UnityToolbarRoot.Q(TOOLBAR_LEFT_CONTAINER_NAME);
-            CenterContainer = UnityToolbarRoot.Q(TOOLBAR_CENTER_CONTAINER_NAME);
-            RightContainer = UnityToolbarRoot.Q(TOOLBAR_RIGHT_CONTAINER_NAME);
-            PlayModeButtonsContainer = CenterContainer.Q(TOOLBAR_PLAY_BUTTON_NAME).parent;
+            _toolbarWindow = EditorWindow.GetWindow(_toolbarWindowType);
         }
 
         private static void OnUpdate()
@@ -82,7 +59,76 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 
         private static bool NeedsWrap()
         {
-            return _innerToolbarObject == null;
+            if (_toolbarWindow == null)
+                return true;
+
+            var query = _toolbarWindow.rootVisualElement.Query<OverlayToolbar>();
+
+            if (query.First() != null)
+            {
+                var currentOverlayToolbarCount = query.ToList().Count;
+
+                if (currentOverlayToolbarCount != _lastOverlayToolbarCount)
+                {
+                    _lastOverlayToolbarCount = currentOverlayToolbarCount;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool TryClearDummyToolbarElement(string id)
+        {
+            var mainContainerElement = _toolbarWindow.rootVisualElement.Q(id);
+
+            if (mainContainerElement == null)
+                return false;
+            
+            var overlayToolbarElement = mainContainerElement.Q<OverlayToolbar>();
+
+            if (overlayToolbarElement == null)
+                return false;
+
+            var children = overlayToolbarElement.Children().ToArray();
+            
+            foreach (VisualElement child in children)
+            {
+                overlayToolbarElement.Remove(child);
+            }
+
+            return true;
+        }
+
+        public static bool TryReplace(MainToolbarElement element)
+        {
+            var mainContainerElement = _toolbarWindow.rootVisualElement.Q(element.Id);
+
+            if (mainContainerElement == null)
+                return false;
+            
+            var overlayToolbarElement = mainContainerElement.Q<OverlayToolbar>();
+
+            if (overlayToolbarElement == null)
+                return false;
+
+            var children = overlayToolbarElement.Children().ToArray();
+            
+            foreach (VisualElement child in children)
+            {
+                overlayToolbarElement.Remove(child);
+            }
+            
+            overlayToolbarElement.Add(element.VisualElement);
+
+            return true;
+        }
+
+        public static bool CanBeReplaced(MainToolbarElement element)
+        {
+            var mainContainerElement = _toolbarWindow.rootVisualElement.Q(element.Id);
+
+            return mainContainerElement != null;
         }
     }
 }

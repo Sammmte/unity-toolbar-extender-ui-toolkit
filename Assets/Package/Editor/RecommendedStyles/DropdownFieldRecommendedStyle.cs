@@ -4,6 +4,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
 {
     internal class DropdownFieldRecommendedStyle : RecommendedStyle
     {
+        private const int MIN_WIDTH = 80;
         private DropdownField _dropdownField;
 
         public DropdownFieldRecommendedStyle(DropdownField dropdownField)
@@ -21,6 +22,7 @@ namespace Paps.UnityToolbarExtenderUIToolkit
                 inputFieldIndex = 0;
 
             var inputElement = _dropdownField[inputFieldIndex];
+            inputElement.style.minWidth = MIN_WIDTH;
             inputElement.style.overflow = Overflow.Visible;
         }
     }

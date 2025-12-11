@@ -10,7 +10,7 @@ public class MenuItemsTools
     private const string README_RESOURCES_PATH_FROM_PACKAGE = "Readme-Resources~";
     private const string README_RESOURCES_PATH_FROM_ROOT = "Assets/Package/Readme-Resources~";
 
-    [MenuItem("Paps/Unity Toolbar Extender UI Toolkit/Update Samples And Readme", priority = 1)]
+    [MenuItem("Tools/Paps/Unity Toolbar Extender UI Toolkit/Update Samples And Readme", priority = 1)]
     public static void UpdateSamplesAndReadme()
     {
         DeletePreviousSamples();

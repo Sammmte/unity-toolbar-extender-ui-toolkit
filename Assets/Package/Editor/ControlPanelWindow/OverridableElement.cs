@@ -6,13 +6,11 @@ namespace Paps.UnityToolbarExtenderUIToolkit
     {
         public string Id { get; }
         public VisualElement VisualElement { get; }
-        public bool IsNative { get; }
 
-        public OverridableElement(string id, VisualElement visualElement, bool isNative)
+        public OverridableElement(string id, VisualElement visualElement)
         {
             Id = id;
             VisualElement = visualElement;
-            IsNative = isNative;
         }
     }
 }

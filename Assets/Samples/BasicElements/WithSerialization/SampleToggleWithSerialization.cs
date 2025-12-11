@@ -1,7 +1,7 @@
 using Paps.UnityToolbarExtenderUIToolkit;
 using UnityEngine.UIElements;
 
-[MainToolbarElement("SampleToggleWithSerialization")]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement("SampleToggleWithSerialization")]
 public class SampleToggleWithSerialization : Toggle
 {
     [Serialize] private bool _toggleValue;

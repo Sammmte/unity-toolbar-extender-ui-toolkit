@@ -27,5 +27,19 @@ namespace Paps.UnityToolbarExtenderUIToolkit
             inputElement.style.minWidth = MIN_WIDTH;
             inputElement.style.overflow = Overflow.Visible;
         }
+
+        protected override void ApplyInsideGroupStyle()
+        {
+            var inputFieldIndex = 1;
+
+            if(string.IsNullOrEmpty(_integerField.label))
+                inputFieldIndex = 0;
+
+            var inputElement = _integerField[inputFieldIndex];
+
+            _integerField.labelElement.style.minWidth = Length.Auto();
+            inputElement.style.minWidth = MIN_WIDTH;
+            inputElement.style.overflow = Overflow.Visible;
+        }
     }
 }

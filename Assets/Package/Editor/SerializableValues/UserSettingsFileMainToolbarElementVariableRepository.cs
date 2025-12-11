@@ -57,6 +57,10 @@ namespace Paps.UnityToolbarExtenderUIToolkit
         public void Save()
         {
             var serializedString = _serializer.Serialize(ElementGroup);
+            
+            if(!Directory.Exists(DIRECTORY))
+                Directory.CreateDirectory(DIRECTORY);
+            
             File.WriteAllText(FILE, serializedString);
         }
     }

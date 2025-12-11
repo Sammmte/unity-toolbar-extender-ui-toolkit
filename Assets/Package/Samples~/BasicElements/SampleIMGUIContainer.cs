@@ -1,10 +1,17 @@
-﻿using Paps.UnityToolbarExtenderUIToolkit;
+﻿using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[MainToolbarElement(id: "SampleIMGUIContainer", alignment: ToolbarAlign.Right, order: 1)]
+[Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: "SampleIMGUIContainer", order: 1)]
 public class SampleIMGUIContainer : IMGUIContainer
 {
+    [UnityEditor.Toolbars.MainToolbarElement("SampleIMGUIContainer", defaultDockPosition = MainToolbarDockPosition.Left)]
+    public static UnityEditor.Toolbars.MainToolbarElement CreateDummyGroup()
+    {
+        // Return null here
+        return null;
+    }
+    
     public void InitializeElement()
     {
         onGUIHandler = MyGUIMethod;
