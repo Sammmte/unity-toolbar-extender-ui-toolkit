@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Package/Editor/Helpers/UserSettingsPrefs.cs.meta
 guid: fad7572312c85da4e80e115c63b2d164
-========
-guid: 267c04a3d47600c488137859ea7af2a9
->>>>>>>> develop:Assets/Package/Editor/Override/UserSettingsFileMainToolbarElementOverrideRepository.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
